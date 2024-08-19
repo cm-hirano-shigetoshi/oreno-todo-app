@@ -6,7 +6,7 @@ type DoneButtonType = {
     onClick: () => void;
 }
 
-export const DoneButton = (props: DoneButtonType) => {
+export const DoneButton = memo((props: DoneButtonType) => {
     console.log("=== DoneButton rendered ===");
     const {completed, onClick} = props;
     return (
@@ -14,5 +14,5 @@ export const DoneButton = (props: DoneButtonType) => {
             {completed ? '完了済' : '完了'}
         </button>
     )
-}
+});
 

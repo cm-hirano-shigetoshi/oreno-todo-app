@@ -11,7 +11,7 @@ type TodoRecordType = {
     onToggle: (id: number) => void;
 }
 
-export const TodoRecord = (props: TodoRecordType) => {
+export const TodoRecord = memo((props: TodoRecordType) => {
     console.log("=== TodoRecord rendered ===");
     const {todo, onTextChange, onToggle} = props;
     return (
@@ -20,5 +20,5 @@ export const TodoRecord = (props: TodoRecordType) => {
             <DoneButton completed={todo.completed} onClick={() => onToggle(todo.id)} />
         </div>
     )
-}
+});
 

@@ -7,7 +7,7 @@ type TodoListType = {
     onToggle: (id: number) => void;
 }
 
-export const TodoList = (props: TodoListType) => {
+export const TodoList = memo((props: TodoListType) => {
     console.log("=== TodoList rendered ===");
     const {todos, onTextChange, onToggle} = props;
     return (
@@ -22,5 +22,5 @@ export const TodoList = (props: TodoListType) => {
             ))}
         </div>
     )
-}
+});
 

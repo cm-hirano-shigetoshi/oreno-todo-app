@@ -1,9 +1,8 @@
-import {memo} from "react";
 import {TodoList} from '../organisms/TodoList';
 import {useState, useCallback} from 'react';
 
 
-export const Page = memo(() => {
+export const Page = () => {
     console.log("=== Page rendered ===");
     const [todos, setTodos] = useState([
         {id: 1, text: 'reactの勉強', completed: false},
@@ -28,4 +27,4 @@ export const Page = memo(() => {
             <TodoList todos={todos} onTextChange={updateTodoText} onToggle={toggleComplete} />
         </div>
     );
-});
+}

@@ -1,12 +1,9 @@
-import {memo} from "react";
-import {styled} from "styled-components";
-
 type DoneButtonType = {
     completed: boolean;
     onClick: () => void;
 }
 
-export const DoneButton = memo((props: DoneButtonType) => {
+export const DoneButton = (props: DoneButtonType) => {
     console.log("=== DoneButton rendered ===");
     const {completed, onClick} = props;
     return (
@@ -14,5 +11,5 @@ export const DoneButton = memo((props: DoneButtonType) => {
             {completed ? '完了済' : '完了'}
         </button>
     )
-});
+}
 

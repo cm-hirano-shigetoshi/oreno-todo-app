@@ -2,9 +2,7 @@ import {Page} from './components/page/Page';
 
 
 function App() {
-    return (
-        <Page />
-    );
+    return <Page />;
 }
 
 export default App;

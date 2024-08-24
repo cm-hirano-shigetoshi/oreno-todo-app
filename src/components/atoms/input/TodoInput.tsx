@@ -1,6 +1,3 @@
-import {memo} from "react";
-import {styled} from "styled-components";
-
 type TodoInputType = {
     value: string;
     onChange: (newText: string) => void;

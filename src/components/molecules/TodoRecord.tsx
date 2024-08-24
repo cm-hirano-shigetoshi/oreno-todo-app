@@ -1,8 +1,7 @@
 import {memo} from "react";
-import {useCallback} from 'react';
-import {useState} from 'react';
 import {TodoInput} from "../atoms/input/TodoInput";
 import {DoneButton} from "../atoms/button/DoneButton";
+
 
 type TodoRecordType = {
     key: number;

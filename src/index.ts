@@ -61,3 +61,13 @@ ipcMain.handle('read-file', async (_, filepath) => {
         throw error;
     }
 });
+
+ipcMain.handle('write-file', async (_, filePath, content) => {
+    try {
+        await fs.promises.writeFile(filePath, content, 'utf-8');
+        return true;
+    } catch (error) {
+        console.error('Error writing file:', error);
+        throw error;
+    }
+});

@@ -5,10 +5,7 @@ import {useState, useCallback, useEffect} from 'react';
 
 export const Page = () => {
     console.log("=== Page rendered ===");
-    const [todos, setTodos] = useState([
-        {id: 1, text: 'reactの勉強', completed: false},
-        {id: 2, text: 'todoアプリを作る', completed: false},
-    ]);
+    const [todos, setTodos] = useState([]);
 
     useEffect(() => {
         readFile();
@@ -26,6 +23,16 @@ export const Page = () => {
         }
     };
 
+    const writeFile = async () => {
+        try {
+            const content = JSON.stringify(todos, null, 2);
+            await window.electronAPI.writeFile('/tmp/sample.json', content);
+        } catch (error) {
+            console.error(error);
+            alert('Failed to save');
+        }
+    };
+
     const updateTodoText = useCallback((id: number, newText: string) => {
         setTodos(prevTodos => prevTodos.map(todo =>
             todo.id === id ? {...todo, text: newText} : todo
@@ -36,6 +43,7 @@ export const Page = () => {
         setTodos(prevTodos => prevTodos.map(todo =>
             todo.id === id ? {...todo, completed: !todo.completed} : todo
         ));
+        writeFile();
     }, []);
 
     return (

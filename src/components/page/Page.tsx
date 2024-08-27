@@ -1,19 +1,28 @@
 /// <reference path="../../renderer.d.ts" />
 import {TodoList} from '../organisms/TodoList';
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback, useEffect, useRef} from 'react';
 
 
 export const Page = () => {
     console.log("=== Page rendered ===");
     const [todos, setTodos] = useState([]);
+    const isInitialRender = useRef(true);
 
     useEffect(() => {
         readFile();
     }, []);
 
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+        } else {
+            writeFile();
+        }
+    }, [todos]);
+
     const readFile = async () => {
         try {
-            const content = await window.electronAPI.readFile('/tmp/date.txt');
+            const content = await window.electronAPI.readFile('/tmp/sample.json');
             const j = JSON.parse(content);
             console.log(j);
             setTodos(j);
@@ -25,7 +34,7 @@ export const Page = () => {
 
     const writeFile = async () => {
         try {
-            const content = JSON.stringify(todos, null, 2);
+            const content = JSON.stringify(todos, null, 4);
             await window.electronAPI.writeFile('/tmp/sample.json', content);
         } catch (error) {
             console.error(error);
@@ -43,7 +52,6 @@ export const Page = () => {
         setTodos(prevTodos => prevTodos.map(todo =>
             todo.id === id ? {...todo, completed: !todo.completed} : todo
         ));
-        writeFile();
     }, []);
 
     return (

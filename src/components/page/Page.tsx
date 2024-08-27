@@ -1,3 +1,4 @@
+/// <reference path="../../renderer.d.ts" />
 import {TodoList} from '../organisms/TodoList';
 import {useState, useCallback, useEffect} from 'react';
 

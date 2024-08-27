@@ -52,7 +52,7 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-ipcMain.handle('read-file', async (event, filepath) => {
+ipcMain.handle('read-file', async (_, filepath) => {
     try {
         const data = await fs.promises.readFile(filepath, 'utf-8');
         return data;

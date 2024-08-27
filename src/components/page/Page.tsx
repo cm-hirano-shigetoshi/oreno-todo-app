@@ -1,5 +1,5 @@
 import {TodoList} from '../organisms/TodoList';
-import {useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 
 
 export const Page = () => {
@@ -8,6 +8,22 @@ export const Page = () => {
         {id: 1, text: 'reactの勉強', completed: false},
         {id: 2, text: 'todoアプリを作る', completed: false},
     ]);
+
+    useEffect(() => {
+        readFile();
+    }, []);
+
+    const readFile = async () => {
+        try {
+            const content = await window.electronAPI.readFile('/tmp/date.txt');
+            const j = JSON.parse(content);
+            console.log(j);
+            setTodos(j);
+        } catch (error) {
+            console.error('Error reading file:', error);
+            //setFileContent('Error reading file');
+        }
+    };
 
     const updateTodoText = useCallback((id: number, newText: string) => {
         setTodos(prevTodos => prevTodos.map(todo =>

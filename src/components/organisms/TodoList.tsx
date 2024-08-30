@@ -1,8 +1,8 @@
-import {TodoRecord} from '../molecules/TodoRecord';
+import {TodoRecord, TodoType} from '../molecules/TodoRecord';
 
 
 type TodoListType = {
-    todos: Array<{id: number, text: string, completed: boolean}>;
+    todos: Array<TodoType>;
     onTextChange: (id: number, newText: string) => void;
     onToggle: (id: number) => void;
 }

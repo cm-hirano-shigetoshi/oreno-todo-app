@@ -1,18 +1,15 @@
 import {styled} from "styled-components";
 
 
-/*
 type DeleteButtonType = {
-    completed: boolean;
+    onClick: () => void;
 }
 
 export const DeleteButton = (props: DeleteButtonType) => {
-*/
-export const DeleteButton = () => {
     console.log("=== DeleteButton rendered ===");
-    //const {completed} = props;
+    const {onClick} = props;
     return (
-        <SCButton>
+        <SCButton onClick={onClick}>
             削除
         </SCButton>
     )

@@ -42,22 +42,61 @@ export const Page = () => {
         }
     };
 
-    const updateTodoText = useCallback((id: number, newText: string) => {
+    const onOrderChanged = useCallback((id: number, newText: string) => {
+        setTodos(prevTodos => prevTodos.map(todo =>
+            todo.id === id ? {...todo, tags: {Date: todo.tags.Date, Order: newText}} : todo
+        ));
+    }, []);
+
+    const onTextChange = useCallback((id: number, newText: string) => {
         setTodos(prevTodos => prevTodos.map(todo =>
             todo.id === id ? {...todo, text: newText} : todo
         ));
     }, []);
 
-    const toggleComplete = useCallback((id: number) => {
+    const onTaskcodeChanged = useCallback((id: number, newText: string) => {
+        setTodos(prevTodos => prevTodos.map(todo =>
+            todo.id === id ? {...todo, taskcode: newText} : todo
+        ));
+    }, []);
+
+    const onEstimatedMinutesChanged = useCallback((id: number, newText: string) => {
+        setTodos(prevTodos => prevTodos.map(todo =>
+            todo.id === id ? {...todo, estimate: newText} : todo
+        ));
+    }, []);
+
+    const onDoneButtonClicked = useCallback((id: number) => {
         setTodos(prevTodos => prevTodos.map(todo =>
             todo.id === id ? {...todo, completed: !todo.completed} : todo
+        ));
+    }, []);
+
+    const onCommentChanged = useCallback((id: number, newText: string) => {
+        setTodos(prevTodos => prevTodos.map(todo =>
+            todo.id === id ? {...todo, comment: newText} : todo
+        ));
+    }, []);
+
+    const onDeleteButtonClicked = useCallback((id: number) => {
+        console.log("=== delete button pushed ===");
+        setTodos(prevTodos => prevTodos.filter(todo =>
+            todo.id !== id
         ));
     }, []);
 
     return (
         <div>
             <h1>My Todo List</h1>
-            <TodoList todos={todos} onTextChange={updateTodoText} onToggle={toggleComplete} />
+            <TodoList todos={todos}
+                onOrderChanged={onOrderChanged}
+                onTextChange={onTextChange}
+                onTaskcodeChanged={onTaskcodeChanged}
+                onEstimatedMinutesChanged={onEstimatedMinutesChanged}
+                onDoneButtonClicked={onDoneButtonClicked}
+                onCommentChanged={onCommentChanged}
+                onDeleteButtonClicked={onDeleteButtonClicked}
+            />
         </div>
     );
 }

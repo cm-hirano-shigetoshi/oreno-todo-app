@@ -16,7 +16,11 @@
                 "node_modules/*"
             ]
         },
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "lib": [
+            "dom",
+            "es2018"
+        ]
     },
     "include": [
         "src/**/*"

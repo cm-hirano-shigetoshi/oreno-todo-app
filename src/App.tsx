@@ -9,26 +9,12 @@ function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
 
   useEffect(() => {
-    setTodos([
-      {
-        id: "1",
-        order: "1",
-        todo: "あれやる",
-        taskcode: "c123",
-        estimate: "120",
-        elapsed: "90",
-        memo: "hogehoge",
-      },
-      {
-        id: "1",
-        order: "100",
-        todo: "あれやる",
-        taskcode: "c123",
-        estimate: "120",
-        elapsed: "90",
-        memo: "hogehoge",
-      },
-    ]);
+    const fetchData = async () => {
+      const filePath = "/tmp/sample.json";
+      const data = await window.electronAPI.readFile(filePath);
+      setTodos(JSON.parse(data));
+    };
+    fetchData();
   }, []);
 
   return (

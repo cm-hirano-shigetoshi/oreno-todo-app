@@ -25,6 +25,7 @@
  *  });
  * ```
  */
+/// <reference path="./renderer.d.ts" />
 
 import './index.css';
 import './root';

@@ -17,12 +17,27 @@ function App() {
     fetchData();
   }, []);
 
+  const handleTodoChange = (id: string, newText: string) => {
+    const saveData = async (content: string) => {
+      const filePath = "/tmp/sample.json";
+      await window.electronAPI.writeFile(filePath, content);
+    };
+
+    setTodos((prevTodos) => {
+      const newTodos = prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, todo: newText } : todo
+      );
+      saveData(JSON.stringify(newTodos, null, "  "));
+      return newTodos;
+    });
+  };
+
   return (
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
           {todos.map((todo: Todo) => {
-            return <TodoItem todo={todo} />;
+            return <TodoItem todo={todo} handleTodoChange={handleTodoChange} />;
           })}
         </HeaderLayout>
       </ChakraProvider>

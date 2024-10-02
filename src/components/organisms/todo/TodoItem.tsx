@@ -51,9 +51,8 @@ export const TodoItem: FC<Props> = memo((props) => {
             }
           />
           <DoneButton
-            id={todo.id}
             isCompleted={todo.done}
-            handleDoneButtonClick={handleDoneButtonClick}
+            handleClick={() => handleDoneButtonClick(todo.id)}
           />
         </HStack>
         <HStack>

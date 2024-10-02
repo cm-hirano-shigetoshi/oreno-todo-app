@@ -8,7 +8,7 @@ import { DeleteButton } from "../../atoms/button/DeleteButton";
 export type Todo = {
   id: string;
   order: string;
-  todo: string;
+  summary: string;
   taskcode: string;
   estimate: string;
   elapsed: string;
@@ -17,11 +17,11 @@ export type Todo = {
 
 type Props = {
   todo: Todo;
-  handleTodoChange: (id: string, newText: string) => void;
+  handleSummaryChange: (id: string, newText: string) => void;
 };
 
 export const TodoItem: FC<Props> = memo((props) => {
-  const { todo, handleTodoChange } = props;
+  const { todo, handleSummaryChange } = props;
   return (
     <>
       <Stack
@@ -36,8 +36,8 @@ export const TodoItem: FC<Props> = memo((props) => {
           <Input px={2} w="4rem" value={todo.taskcode} />
           <Input
             px={2}
-            value={todo.todo}
-            onChange={(e) => handleTodoChange(todo.id, e.target.value)}
+            value={todo.summary}
+            onChange={(e) => handleSummaryChange(todo.id, e.target.value)}
           />
           <DoneButton />
         </HStack>

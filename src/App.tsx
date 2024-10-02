@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme/theme";
 
@@ -24,6 +24,7 @@ function useDebounce<T>(value: T, delay: number): T {
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const debouncedTodos = useDebounce(todos, 500);
+  const prevTodosRef = useRef<Todo[]>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +48,12 @@ function App() {
       const filePath = "/tmp/sample.json";
       await window.electronAPI.writeFile(filePath, content);
     };
-    saveData(JSON.stringify(debouncedTodos, null, "  "));
+
+    const prevTodos = prevTodosRef.current;
+    if (prevTodos && prevTodos !== debouncedTodos) {
+      saveData(JSON.stringify(debouncedTodos, null, "  "));
+    }
+    prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
   return (

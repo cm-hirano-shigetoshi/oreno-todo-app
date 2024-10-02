@@ -21,10 +21,10 @@ function App() {
     fetchData();
   }, []);
 
-  const handleSummaryChange = (id: string, newText: string) => {
+  const handleInputChange = (attrib: string, id: string, newText: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, summary: newText } : todo
+        todo.id === id ? { ...todo, [attrib]: newText } : todo
       )
     );
   };
@@ -46,7 +46,9 @@ function App() {
       <ChakraProvider theme={theme}>
         <HeaderLayout>
           {todos.map((todo: Todo) => {
-            return <TodoItem todo={todo} handleSummaryChange={handleSummaryChange} />;
+            return (
+              <TodoItem todo={todo} handleInputChange={handleInputChange} />
+            );
           })}
         </HeaderLayout>
       </ChakraProvider>

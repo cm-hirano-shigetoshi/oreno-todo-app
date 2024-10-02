@@ -17,11 +17,11 @@ export type Todo = {
 
 type Props = {
   todo: Todo;
-  handleSummaryChange: (id: string, newText: string) => void;
+  handleInputChange: (attrib: string, id: string, newText: string) => void;
 };
 
 export const TodoItem: FC<Props> = memo((props) => {
-  const { todo, handleSummaryChange } = props;
+  const { todo, handleInputChange } = props;
   return (
     <>
       <Stack
@@ -33,19 +33,46 @@ export const TodoItem: FC<Props> = memo((props) => {
       >
         <HStack>
           <StartButton />
-          <Input px={2} w="4rem" value={todo.taskcode} />
+          <Input
+            px={2}
+            w="4rem"
+            value={todo.taskcode}
+            onChange={(e) =>
+              handleInputChange("taskcode", todo.id, e.target.value)
+            }
+          />
           <Input
             px={2}
             value={todo.summary}
-            onChange={(e) => handleSummaryChange(todo.id, e.target.value)}
+            onChange={(e) =>
+              handleInputChange("summary", todo.id, e.target.value)
+            }
           />
           <DoneButton />
         </HStack>
         <HStack>
-          <Input px={2} w="4rem" value={todo.order} />
-          <Input px={2} w="4rem" value={todo.estimate} />
+          <Input
+            px={2}
+            w="4rem"
+            value={todo.order}
+            onChange={(e) =>
+              handleInputChange("order", todo.id, e.target.value)
+            }
+          />
+          <Input
+            px={2}
+            w="4rem"
+            value={todo.estimate}
+            onChange={(e) =>
+              handleInputChange("estimate", todo.id, e.target.value)
+            }
+          />
           <Input px={2} w="4rem" value={todo.elapsed} />
-          <Input px={2} value={todo.memo} />
+          <Input
+            px={2}
+            value={todo.memo}
+            onChange={(e) => handleInputChange("memo", todo.id, e.target.value)}
+          />
           <DeleteButton />
         </HStack>
       </Stack>

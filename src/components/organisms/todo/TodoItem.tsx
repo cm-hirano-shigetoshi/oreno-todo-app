@@ -13,15 +13,17 @@ export type Todo = {
   estimate: string;
   elapsed: string;
   memo: string;
+  done: boolean;
 };
 
 type Props = {
   todo: Todo;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
+  handleDoneButtonClick: (id: string) => void;
 };
 
 export const TodoItem: FC<Props> = memo((props) => {
-  const { todo, handleInputChange } = props;
+  const { todo, handleInputChange, handleDoneButtonClick } = props;
   return (
     <>
       <Stack
@@ -48,7 +50,11 @@ export const TodoItem: FC<Props> = memo((props) => {
               handleInputChange("summary", todo.id, e.target.value)
             }
           />
-          <DoneButton />
+          <DoneButton
+            id={todo.id}
+            isCompleted={todo.done}
+            handleDoneButtonClick={handleDoneButtonClick}
+          />
         </HStack>
         <HStack>
           <Input

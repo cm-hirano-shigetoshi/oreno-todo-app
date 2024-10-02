@@ -29,6 +29,14 @@ function App() {
     );
   };
 
+  const handleDoneButtonClick = (id: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    );
+  };
+
   useEffect(() => {
     const saveData = async (content: string) => {
       await window.electronAPI.writeFile(JSON_FILE, content);
@@ -47,7 +55,11 @@ function App() {
         <HeaderLayout>
           {todos.map((todo: Todo) => {
             return (
-              <TodoItem todo={todo} handleInputChange={handleInputChange} />
+              <TodoItem
+                todo={todo}
+                handleInputChange={handleInputChange}
+                handleDoneButtonClick={handleDoneButtonClick}
+              />
             );
           })}
         </HeaderLayout>

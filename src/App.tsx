@@ -37,6 +37,10 @@ function App() {
     );
   };
 
+  const handleDeleteButtonClick = (id: string) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  };
+
   useEffect(() => {
     const saveData = async (content: string) => {
       await window.electronAPI.writeFile(JSON_FILE, content);
@@ -59,6 +63,7 @@ function App() {
                 todo={todo}
                 handleInputChange={handleInputChange}
                 handleDoneButtonClick={handleDoneButtonClick}
+                handleDeleteButtonClick={handleDeleteButtonClick}
               />
             );
           })}

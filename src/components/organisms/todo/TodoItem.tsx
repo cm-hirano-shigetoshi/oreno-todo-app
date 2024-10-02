@@ -19,11 +19,17 @@ export type Todo = {
 type Props = {
   todo: Todo;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
+  handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
 };
 
 export const TodoItem: FC<Props> = memo((props) => {
-  const { todo, handleInputChange, handleDoneButtonClick } = props;
+  const {
+    todo,
+    handleInputChange,
+    handleDoneButtonClick,
+    handleDeleteButtonClick,
+  } = props;
   return (
     <>
       <Stack
@@ -78,7 +84,7 @@ export const TodoItem: FC<Props> = memo((props) => {
             value={todo.memo}
             onChange={(e) => handleInputChange("memo", todo.id, e.target.value)}
           />
-          <DeleteButton />
+          <DeleteButton handleClick={() => handleDeleteButtonClick(todo.id)} />
         </HStack>
       </Stack>
     </>

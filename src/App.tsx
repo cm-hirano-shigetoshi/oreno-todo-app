@@ -1,25 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
+
 import theme from "./theme/theme";
+import { useDebounce } from "./utils/hooks";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";
-
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);

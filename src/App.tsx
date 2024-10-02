@@ -8,14 +8,14 @@ import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";
 
 function App() {
+  const JSON_FILE = "/tmp/sample.json";
   const [todos, setTodos] = useState<Todo[]>([]);
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
   useEffect(() => {
     const fetchData = async () => {
-      const filePath = "/tmp/sample.json";
-      const data = await window.electronAPI.readFile(filePath);
+      const data = await window.electronAPI.readFile(JSON_FILE);
       setTodos(JSON.parse(data));
     };
     fetchData();
@@ -31,8 +31,7 @@ function App() {
 
   useEffect(() => {
     const saveData = async (content: string) => {
-      const filePath = "/tmp/sample.json";
-      await window.electronAPI.writeFile(filePath, content);
+      await window.electronAPI.writeFile(JSON_FILE, content);
     };
 
     const prevTodos = prevTodosRef.current;

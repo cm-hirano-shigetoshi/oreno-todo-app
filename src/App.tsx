@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { useDebounce } from "./utils/hooks";
+import { useDebounce } from "./utils/Hooks";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";

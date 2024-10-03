@@ -1,6 +1,8 @@
 import { memo, FC } from "react";
 import { Input, Stack, HStack } from "@chakra-ui/react";
 
+import { TimesType } from "../../../logic/Times";
+import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StartButton } from "../../atoms/button/StartButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { DeleteButton } from "../../atoms/button/DeleteButton";
@@ -11,7 +13,7 @@ export type Todo = {
   summary: string;
   taskcode: string;
   estimate: string;
-  elapsed: string;
+  times: TimesType;
   memo: string;
   done: boolean;
 };
@@ -78,7 +80,7 @@ export const TodoItem: FC<Props> = memo((props) => {
               handleInputChange("estimate", todo.id, e.target.value)
             }
           />
-          <Input px={2} w="4rem" value={todo.elapsed} />
+          <ElapsedTime times={todo.times} />
           <Input
             px={2}
             value={todo.memo}

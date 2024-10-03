@@ -57,16 +57,18 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
-          {todos.map((todo: Todo) => {
-            return (
-              <TodoItem
-                todo={todo}
-                handleInputChange={handleInputChange}
-                handleDoneButtonClick={handleDoneButtonClick}
-                handleDeleteButtonClick={handleDeleteButtonClick}
-              />
-            );
-          })}
+          {todos
+            .sort((a, b) => Number(a.order) - Number(b.order))
+            .map((todo: Todo) => {
+              return (
+                <TodoItem
+                  todo={todo}
+                  handleInputChange={handleInputChange}
+                  handleDoneButtonClick={handleDoneButtonClick}
+                  handleDeleteButtonClick={handleDeleteButtonClick}
+                />
+              );
+            })}
         </HeaderLayout>
       </ChakraProvider>
     </>

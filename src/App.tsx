@@ -71,6 +71,7 @@ function App() {
             .map((todo: Todo) => {
               return (
                 <TodoItem
+                  key={todo.id}
                   todo={todo}
                   handleInputChange={handleInputChange}
                   handleStartButtonClick={handleStartButtonClick}

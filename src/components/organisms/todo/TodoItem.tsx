@@ -1,7 +1,7 @@
 import { memo, FC } from "react";
 import { Input, Stack, HStack } from "@chakra-ui/react";
 
-import { TimesType } from "../../../logic/Times";
+import { TimeType } from "../../../logic/Times";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StartButton } from "../../atoms/button/StartButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
@@ -13,7 +13,7 @@ export type Todo = {
   summary: string;
   taskcode: string;
   estimate: string;
-  times: TimesType;
+  times: TimeType[];
   memo: string;
   done: boolean;
 };
@@ -21,6 +21,7 @@ export type Todo = {
 type Props = {
   todo: Todo;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
+  handleStartButtonClick: (id: string) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
 };
@@ -29,6 +30,7 @@ export const TodoItem: FC<Props> = memo((props) => {
   const {
     todo,
     handleInputChange,
+    handleStartButtonClick,
     handleDoneButtonClick,
     handleDeleteButtonClick,
   } = props;
@@ -42,7 +44,7 @@ export const TodoItem: FC<Props> = memo((props) => {
         spacing={1}
       >
         <HStack>
-          <StartButton />
+          <StartButton handleClick={() => handleStartButtonClick(todo.id)} />
           <Input
             px={2}
             w="4rem"

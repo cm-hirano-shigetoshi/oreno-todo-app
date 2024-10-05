@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { useDebounce } from "./utils/Hooks";
+import { startButtonClick } from "./logic/Times";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";
@@ -25,6 +26,14 @@ function App() {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id ? { ...todo, [attrib]: newText } : todo
+      )
+    );
+  };
+
+  const handleStartButtonClick = (id: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, times: startButtonClick(todo.times) } : todo
       )
     );
   };
@@ -64,6 +73,7 @@ function App() {
                 <TodoItem
                   todo={todo}
                   handleInputChange={handleInputChange}
+                  handleStartButtonClick={handleStartButtonClick}
                   handleDoneButtonClick={handleDoneButtonClick}
                   handleDeleteButtonClick={handleDeleteButtonClick}
                 />

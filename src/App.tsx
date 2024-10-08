@@ -15,6 +15,24 @@ function App() {
   const prevTodosRef = useRef<Todo[]>();
 
   useEffect(() => {
+    window.electronAPI.subscribeAddTask((summary: string) => {
+      setTodos((prevTodos) => [
+        ...prevTodos,
+        {
+          id: "3",
+          order: "100",
+          summary: summary,
+          taskcode: "c123",
+          estimate: "120",
+          times: [],
+          memo: "hogefuga",
+          done: false,
+        },
+      ]);
+    });
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       const data = await window.electronAPI.readFile(JSON_FILE);
       setTodos(JSON.parse(data));

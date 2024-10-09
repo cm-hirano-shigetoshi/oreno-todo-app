@@ -26,6 +26,18 @@ type Props = {
   handleDoneButtonClick: (id: string) => void;
 };
 
+const isRunning = (todo: Todo) => {
+  if (todo.times.length === 0) return false;
+  if (todo.times[todo.times.length - 1].end === null) return true;
+  return false;
+};
+
+const getTodoColor = (todo: Todo) => {
+  if (todo.done) return "green.300";
+  if (isRunning(todo)) return "blue.300";
+  return "blue.100";
+};
+
 export const TodoItem: FC<Props> = memo((props) => {
   const {
     todo,
@@ -38,7 +50,7 @@ export const TodoItem: FC<Props> = memo((props) => {
     <>
       <Stack
         key={todo.id}
-        bgColor="blue.300"
+        bgColor={getTodoColor(todo)}
         marginY={1}
         shadow="md"
         spacing={1}

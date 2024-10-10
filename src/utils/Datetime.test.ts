@@ -1,4 +1,4 @@
-import { calcDur, now } from "./Datetime";
+import { calcDur, dt2date } from "./Datetime";
 
 test("calcDur", () => {
   expect(calcDur("2024-04-01 10:00:00", "2024-04-01 11:00:00")).toStrictEqual(
@@ -6,8 +6,6 @@ test("calcDur", () => {
   );
 });
 
-/*
-test("now", () => {
-  expect(now()).toStrictEqual("2024-10-05 23:53:00");
+test("dt2date", () => {
+  expect(dt2date("2024-01-01 00:00:00") === "2024-01-01");
 });
-*/

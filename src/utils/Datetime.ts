@@ -9,12 +9,16 @@ function toDtString(date: Date): string {
   ).padStart(2, "0")}`;
 }
 
-export function calcDur(start_dt: string, end_dt: string) {
+export function calcDur(start_dt: string, end_dt: string): number {
   const startDate = new Date(start_dt);
   const endDate = new Date(end_dt);
   const diffInMs = endDate.getTime() - startDate.getTime();
   const diffInSeconds = Math.floor(diffInMs / 1000);
   return diffInSeconds;
+}
+
+export function dt2date(dt: string): string {
+  return dt.slice(0, 10);
 }
 
 export function now(): string {

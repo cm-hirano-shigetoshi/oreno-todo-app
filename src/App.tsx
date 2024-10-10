@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { now } from "./utils/Datetime";
+import { now, dt2date } from "./utils/Datetime";
 import { useDebounce } from "./utils/Hooks";
 import { startButtonClick } from "./logic/Times";
 
@@ -86,24 +86,47 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
+  const days = [
+    "2024-10-01",
+    "2024-10-02",
+    "2024-10-03",
+    "2024-10-04",
+    "2024-10-05",
+    "2024-10-06",
+    "2024-10-07",
+    "2024-10-08",
+    "2024-10-09",
+    "2024-10-10",
+  ];
+
   return (
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
-          {todos
-            .sort((a, b) => Number(a.order) - Number(b.order))
-            .map((todo: Todo) => {
-              return (
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  handleInputChange={handleInputChange}
-                  handleStartButtonClick={handleStartButtonClick}
-                  handleDoneButtonClick={handleDoneButtonClick}
-                  handleDeleteButtonClick={handleDeleteButtonClick}
-                />
-              );
-            })}
+          {days.reverse().map((day) => (
+            <>
+              <h1>{day}</h1>
+              <Stack border={10}>
+                {todos
+                  .filter(
+                    (todo) =>
+                      dt2date(todo.registered) <= day &&
+                      day <= (todo.done === "" ? "9999-99-99" : todo.done)
+                  )
+                  .sort((a, b) => Number(a.order) - Number(b.order))
+                  .map((todo: Todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      handleInputChange={handleInputChange}
+                      handleStartButtonClick={handleStartButtonClick}
+                      handleDoneButtonClick={handleDoneButtonClick}
+                      handleDeleteButtonClick={handleDeleteButtonClick}
+                    />
+                  ))}
+              </Stack>
+            </>
+          ))}
         </HeaderLayout>
       </ChakraProvider>
     </>

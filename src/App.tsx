@@ -27,6 +27,7 @@ function App() {
           estimate: "120",
           times: [],
           memo: "hogefuga",
+          registered: now(),
           done: "",
         },
       ]);

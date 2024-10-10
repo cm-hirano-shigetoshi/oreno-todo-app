@@ -15,6 +15,7 @@ export type Todo = {
   estimate: string;
   times: TimeType[];
   memo: string;
+  registered: string;
   done: string;
 };
 

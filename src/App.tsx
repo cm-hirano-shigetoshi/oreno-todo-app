@@ -17,20 +17,24 @@ function App() {
 
   useEffect(() => {
     window.electronAPI.subscribeAddTask((summary: string) => {
-      setTodos((prevTodos) => [
-        ...prevTodos,
-        {
-          id: "3",
-          order: "100",
-          summary: summary,
-          taskcode: "c123",
-          estimate: "120",
-          times: [],
-          memo: "hogefuga",
-          registered: now(),
-          done: "",
-        },
-      ]);
+      setTodos((prevTodos) => {
+        const current_dt = now();
+        const newTodos = [
+          ...prevTodos,
+          {
+            id: current_dt,
+            order: "100",
+            summary: summary,
+            taskcode: "c123",
+            estimate: "30",
+            times: [],
+            memo: "",
+            registered: now(),
+            done: "",
+          },
+        ];
+        return newTodos;
+      });
     });
   }, []);
 

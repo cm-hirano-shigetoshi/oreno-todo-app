@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
+import { now } from "./utils/Datetime";
 import { useDebounce } from "./utils/Hooks";
 import { startButtonClick } from "./logic/Times";
 
@@ -26,7 +27,7 @@ function App() {
           estimate: "120",
           times: [],
           memo: "hogefuga",
-          done: false,
+          done: "",
         },
       ]);
     });
@@ -59,7 +60,7 @@ function App() {
   const handleDoneButtonClick = (id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, done: !todo.done } : todo
+        todo.id === id ? { ...todo, done: todo.done === "" ? now() : "" } : todo
       )
     );
   };

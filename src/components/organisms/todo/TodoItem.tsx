@@ -15,7 +15,7 @@ export type Todo = {
   estimate: string;
   times: TimeType[];
   memo: string;
-  done: boolean;
+  done: string;
 };
 
 type Props = {
@@ -33,7 +33,7 @@ const isRunning = (todo: Todo) => {
 };
 
 const getTodoColor = (todo: Todo) => {
-  if (todo.done) return "green.300";
+  if (todo.done !== "") return "green.300";
   if (isRunning(todo)) return "blue.300";
   return "blue.100";
 };
@@ -73,7 +73,7 @@ export const TodoItem: FC<Props> = memo((props) => {
             }
           />
           <DoneButton
-            isCompleted={todo.done}
+            done={todo.done}
             handleClick={() => handleDoneButtonClick(todo.id)}
           />
         </HStack>

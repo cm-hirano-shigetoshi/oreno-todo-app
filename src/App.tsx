@@ -8,6 +8,7 @@ import { startButtonClick } from "./logic/Times";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";
+import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
   const JSON_FILE = "/tmp/sample.json";
@@ -45,6 +46,23 @@ function App() {
     };
     fetchData();
   }, []);
+
+  const handleNewDayButtonClick = () => {
+    const meetings: Todo[] = [
+      {
+        id: "2024-10-10 21:58:53",
+        order: "100",
+        summary: "新しいタスク",
+        taskcode: "c123",
+        estimate: "30",
+        times: [],
+        memo: "",
+        registered: "2024-10-10 21:58:53",
+        done: "",
+      },
+    ];
+    setTodos((prevTodos) => [...prevTodos, ...meetings]);
+  };
 
   const handleInputChange = (attrib: string, id: string, newText: string) => {
     setTodos((prevTodos) =>
@@ -103,10 +121,11 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
+          <NewDayButton handleClick={handleNewDayButtonClick} />
           {days.reverse().map((day) => (
             <>
               <h1>{day}</h1>
-              <Stack border={10}>
+              <Stack>
                 {todos
                   .filter(
                     (todo) =>

@@ -3,6 +3,7 @@ import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date } from "./utils/Datetime";
+import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import { startButtonClick } from "./logic/Times";
 
@@ -47,21 +48,11 @@ function App() {
     fetchData();
   }, []);
 
-  const handleNewDayButtonClick = () => {
-    const meetings: Todo[] = [
-      {
-        id: "2024-10-10 21:58:53",
-        order: "100",
-        summary: "新しいタスク",
-        taskcode: "c123",
-        estimate: "30",
-        times: [],
-        memo: "",
-        registered: "2024-10-10 21:58:53",
-        done: "",
-      },
-    ];
-    setTodos((prevTodos) => [...prevTodos, ...meetings]);
+  const handleNewDayButtonClick = async () => {
+    const x = await executeCommand("python python/get_meeting.py");
+    console.log(x);
+    setTodos((prevTodos) => [...prevTodos]);
+    //setTodos((prevTodos) => [...prevTodos, ...meetings]);
   };
 
   const handleInputChange = (attrib: string, id: string, newText: string) => {

@@ -1,0 +1,3 @@
+git+https://github.com/cm-hirano-shigetoshi/google-calendar-utils.git
+pytest
+

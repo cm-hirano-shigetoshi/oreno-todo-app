@@ -1,4 +1,5 @@
 import { TimeType } from "../logic/Times";
+import { calcDur } from "../utils/Datetime";
 
 export type Todo = {
   id: string;
@@ -12,17 +13,41 @@ export type Todo = {
   done: string;
 };
 
-export const getMeetings = (events: any[]) => {
-  const event: Todo = {
-    id: "2024-10-10 21:58:54",
-    order: "100",
-    summary: "新しいタスク",
-    taskcode: "c123",
-    estimate: "30",
-    times: [],
+export type GoogleCalendarEvent = {
+  start: { dateTime: string; timeZone: string };
+  end: { dateTime: string; timeZone: string };
+  summary: string;
+  created: string;
+};
+
+const getDt = (datetime: string): string => {
+  return datetime.replace("T", " ").slice(0, -6);
+};
+
+const getEstimate = (start: string, end: string): number => {
+  return Math.round(calcDur(getDt(start), getDt(end)) / 60);
+};
+
+const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
+  const newEvent: Todo = {
+    id: `MTG ${event.start.dateTime}`,
+    order: `MTG ${event.start.dateTime}`,
+    summary: event.summary,
+    taskcode: "",
+    estimate: getEstimate(event.start.dateTime, event.end.dateTime).toString(),
+    times: [
+      {
+        start: getDt(event.start.dateTime),
+        end: getDt(event.end.dateTime),
+      },
+    ],
     memo: "",
-    registered: "2024-10-10 21:58:52",
+    registered: getDt(event.start.dateTime),
     done: "",
   };
-  return [event];
+  return newEvent;
+};
+
+export const getMeetings = (events: Partial<GoogleCalendarEvent>[]): Todo[] => {
+  return events.map((event) => getMeeting(event));
 };

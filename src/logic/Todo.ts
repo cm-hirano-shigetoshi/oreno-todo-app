@@ -20,6 +20,20 @@ export type GoogleCalendarEvent = {
   created: string;
 };
 
+export enum TodoType {
+  Task = 0,
+  MTG = 1,
+}
+
+export const getTodoType = (todo: Todo): TodoType => {
+  if (todo.id.startsWith("MTG")) return TodoType.MTG;
+  return TodoType.Task;
+};
+
+export const isDone = (todo: Todo): boolean => {
+  return todo.done !== "";
+};
+
 const getDt = (datetime: string): string => {
   return datetime.replace("T", " ").slice(0, -6);
 };

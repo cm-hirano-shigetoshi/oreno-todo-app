@@ -2,11 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { now, dt2date } from "./utils/Datetime";
+import { now } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import { Todo, getMeetings } from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
+import { filterTodo } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -95,36 +96,19 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const days = [
-    "2024-10-09",
-    "2024-10-10",
-    "2024-10-11",
-    "2024-10-12",
-    "2024-10-13",
-    "2024-10-14",
-    "2024-10-15",
-    "2024-10-16",
-    "2024-10-17",
-    "2024-10-18",
-    "2024-10-19",
-    "2024-10-20",
-  ];
+  const days = ["2024-10-10", "2024-10-11", "2024-10-12"];
 
   return (
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
           <NewDayButton handleClick={handleNewDayButtonClick} />
-          {days.reverse().map((day) => (
+          {days.reverse().map((date) => (
             <>
-              <h1>{day}</h1>
+              <h1>{date}</h1>
               <Stack>
                 {todos
-                  .filter(
-                    (todo) =>
-                      dt2date(todo.registered) <= day &&
-                      day <= (todo.done === "" ? "9999-99-99" : todo.done)
-                  )
+                  .filter((todo) => filterTodo(todo, date))
                   .sort((a, b) => Number(a.order) - Number(b.order))
                   .map((todo: Todo) => (
                     <TodoItem

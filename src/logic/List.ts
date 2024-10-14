@@ -10,3 +10,13 @@ export const filterTodo = (todo: Todo, date: string): boolean => {
     return false;
   }
 };
+
+const mergeArrays = (A: Todo[], B: Todo[]): Todo[] => {
+  const idsInA = new Set(A.map((Todo) => Todo.id));
+  const filteredB = B.filter((Todo) => !idsInA.has(Todo.id));
+  return [...A, ...filteredB];
+};
+
+export const upsertMeetings = (todos: Todo[], meetings: Todo[]): Todo[] => {
+  return mergeArrays(todos, meetings);
+};

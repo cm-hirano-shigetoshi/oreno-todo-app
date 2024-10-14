@@ -7,7 +7,7 @@ import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import { Todo, getMeetings } from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
-import { filterTodo } from "./logic/List";
+import { filterTodo, upsertMeetings } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -51,9 +51,12 @@ function App() {
   }, []);
 
   const handleNewDayButtonClick = async () => {
-    const events_str = await executeCommand("python python/get_meeting.py");
+    const events_str = await executeCommand(
+      "python python/get_meeting.py | grep -v '^Please visit'"
+    );
     const meetings = getMeetings(JSON.parse(events_str));
-    setTodos((prevTodos) => [...prevTodos, ...meetings]);
+    setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
+    alert("今日の会議を取得しました。");
   };
 
   const handleInputChange = (attrib: string, id: string, newText: string) => {

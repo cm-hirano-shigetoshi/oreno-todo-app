@@ -44,8 +44,8 @@ const getEstimate = (start: string, end: string): number => {
 
 const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
   const newEvent: Todo = {
-    id: `MTG ${event.start.dateTime}`,
-    order: `MTG ${event.start.dateTime}`,
+    id: `MTG ${event.start.dateTime} ${event.created}`,
+    order: `MTG ${event.start.dateTime} ${event.created}`,
     summary: event.summary,
     taskcode: "",
     estimate: getEstimate(event.start.dateTime, event.end.dateTime).toString(),

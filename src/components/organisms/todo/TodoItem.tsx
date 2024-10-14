@@ -1,23 +1,11 @@
 import { memo, FC } from "react";
 import { Input, Stack, HStack } from "@chakra-ui/react";
 
-import { TimeType } from "../../../logic/Times";
+import { Todo } from "../../../logic/Todo";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StartButton } from "../../atoms/button/StartButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { DeleteButton } from "../../atoms/button/DeleteButton";
-
-export type Todo = {
-  id: string;
-  order: string;
-  summary: string;
-  taskcode: string;
-  estimate: string;
-  times: TimeType[];
-  memo: string;
-  registered: string;
-  done: string;
-};
 
 type Props = {
   todo: Todo;

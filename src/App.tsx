@@ -5,10 +5,11 @@ import theme from "./theme/theme";
 import { now, dt2date } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
+import { Todo, getMeetings } from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
-import { Todo, TodoItem } from "./components/organisms/todo/TodoItem";
+import { TodoItem } from "./components/organisms/todo/TodoItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
@@ -49,10 +50,9 @@ function App() {
   }, []);
 
   const handleNewDayButtonClick = async () => {
-    const x = await executeCommand("python python/get_meeting.py");
-    console.log(x);
-    setTodos((prevTodos) => [...prevTodos]);
-    //setTodos((prevTodos) => [...prevTodos, ...meetings]);
+    const events_str = await executeCommand("python python/get_meeting.py");
+    const meetings = getMeetings(JSON.parse(events_str));
+    setTodos((prevTodos) => [...prevTodos, ...meetings]);
   };
 
   const handleInputChange = (attrib: string, id: string, newText: string) => {

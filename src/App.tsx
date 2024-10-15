@@ -27,14 +27,14 @@ function App() {
           ...prevTodos,
           {
             id: current_dt,
-            updated: current_dt,
             order: "100",
             summary: summary,
             taskcode: "c123",
             estimate: "30",
             times: [],
             memo: "",
-            registered: now(),
+            created: current_dt,
+            updated: current_dt,
             done: "",
           },
         ];

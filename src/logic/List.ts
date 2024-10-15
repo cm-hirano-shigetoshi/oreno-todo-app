@@ -3,19 +3,32 @@ import { dt2date } from "../utils/Datetime";
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
   if (getTodoType(todo) === TodoType.MTG) {
-    return dt2date(todo.registered) === date;
+    return dt2date(todo.created) === date;
   } else {
     if (!isDone(todo)) return true;
-    if (dt2date(todo.registered) <= date) return true;
+    if (dt2date(todo.created) <= date) return true;
     return false;
   }
 };
 
-const mergeArrays = (A: Todo[], B: Todo[]): Todo[] => {
-  const idsInA = new Set(A.map((Todo) => Todo.id));
-  const filteredB = B.filter((Todo) => !idsInA.has(Todo.id));
-  return [...A, ...filteredB];
-};
+function mergeArrays(arrayA: Todo[], arrayB: Todo[]): Todo[] {
+  const result: Todo[] = [...arrayA];
+
+  arrayB.forEach((TodoB) => {
+    const indexInA = result.findIndex((TodoA) => TodoA.id === TodoB.id);
+
+    if (indexInA === -1) {
+      result.push(TodoB);
+    } else {
+      if (TodoB.updated >= result[indexInA].updated) {
+        // Aが手動で書き換えられていた場合のみAを残す
+        result[indexInA] = TodoB;
+      }
+    }
+  });
+
+  return result;
+}
 
 export const upsertMeetings = (todos: Todo[], meetings: Todo[]): Todo[] => {
   return mergeArrays(todos, meetings);

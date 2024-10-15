@@ -3,14 +3,14 @@ import { now, calcDur } from "../utils/Datetime";
 
 export type Todo = {
   id: string;
-  updated: string;
   order: string;
   summary: string;
   taskcode: string;
   estimate: string;
   times: TimeType[];
   memo: string;
-  registered: string;
+  created: string;
+  updated: string;
   done: string;
 };
 
@@ -46,7 +46,6 @@ const getEstimate = (start: string, end: string): number => {
 const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
   const newEvent: Todo = {
     id: `MTG ${event.start.dateTime} ${event.created}`,
-    updated: now(),
     order: `MTG ${event.start.dateTime} ${event.created}`,
     summary: event.summary,
     taskcode: "",
@@ -58,7 +57,8 @@ const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
       },
     ],
     memo: "",
-    registered: getDt(event.start.dateTime),
+    created: getDt(event.start.dateTime),
+    updated: getDt(event.start.dateTime),
     done: "",
   };
   return newEvent;

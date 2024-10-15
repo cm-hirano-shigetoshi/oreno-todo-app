@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { now } from "./utils/Datetime";
+import { now, dt2date } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import { Todo, getMeetings } from "./logic/Todo";
@@ -52,8 +52,9 @@ function App() {
   }, []);
 
   const handleNewDayButtonClick = async () => {
+    const today = dt2date(now());
     const events_str = await executeCommand(
-      "python python/get_meeting.py | grep -v '^Please visit'"
+      `python python/get_meeting.py ${today} | grep -v '^Please visit'`
     );
     const meetings = getMeetings(JSON.parse(events_str));
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
@@ -104,7 +105,14 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const days = ["2024-10-10", "2024-10-11", "2024-10-12"];
+  const days = [
+    "2024-10-11",
+    "2024-10-12",
+    "2024-10-13",
+    "2024-10-14",
+    "2024-10-15",
+    "2024-10-16",
+  ];
 
   return (
     <>

@@ -1,8 +1,9 @@
 import { TimeType } from "../logic/Times";
-import { calcDur } from "../utils/Datetime";
+import { now, calcDur } from "../utils/Datetime";
 
 export type Todo = {
   id: string;
+  updated: string;
   order: string;
   summary: string;
   taskcode: string;
@@ -45,6 +46,7 @@ const getEstimate = (start: string, end: string): number => {
 const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
   const newEvent: Todo = {
     id: `MTG ${event.start.dateTime} ${event.created}`,
+    updated: now(),
     order: `MTG ${event.start.dateTime} ${event.created}`,
     summary: event.summary,
     taskcode: "",

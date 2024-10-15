@@ -27,6 +27,7 @@ function App() {
           ...prevTodos,
           {
             id: current_dt,
+            updated: current_dt,
             order: "100",
             summary: summary,
             taskcode: "c123",
@@ -62,7 +63,7 @@ function App() {
   const handleInputChange = (attrib: string, id: string, newText: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, [attrib]: newText } : todo
+        todo.id === id ? { ...todo, [attrib]: newText, updated: now() } : todo
       )
     );
   };
@@ -70,7 +71,9 @@ function App() {
   const handleStartButtonClick = (id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, times: startButtonClick(todo.times) } : todo
+        todo.id === id
+          ? { ...todo, times: startButtonClick(todo.times), updated: now() }
+          : todo
       )
     );
   };
@@ -78,7 +81,9 @@ function App() {
   const handleDoneButtonClick = (id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, done: todo.done === "" ? now() : "" } : todo
+        todo.id === id
+          ? { ...todo, done: todo.done === "" ? now() : "", updated: now() }
+          : todo
       )
     );
   };

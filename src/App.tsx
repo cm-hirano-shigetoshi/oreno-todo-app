@@ -114,6 +114,8 @@ function App() {
     "2024-10-16",
   ];
 
+  const rendering_dt = now();
+
   return (
     <>
       <ChakraProvider theme={theme}>
@@ -131,6 +133,7 @@ function App() {
                       key={todo.id}
                       todo={todo}
                       date={date}
+                      rendering_dt={rendering_dt}
                       handleInputChange={handleInputChange}
                       handleStartButtonClick={handleStartButtonClick}
                       handleDoneButtonClick={handleDoneButtonClick}

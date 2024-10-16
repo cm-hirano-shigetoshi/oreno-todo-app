@@ -1,8 +1,8 @@
 import { memo, FC } from "react";
 import { Input, Stack, HStack } from "@chakra-ui/react";
 
-import { now, dt2date } from "../../../utils/Datetime";
-import { Todo, isDone } from "../../../logic/Todo";
+import { getTodoColor } from "../../../logic/List";
+import { Todo } from "../../../logic/Todo";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StartButton } from "../../atoms/button/StartButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
@@ -11,29 +11,18 @@ import { DeleteButton } from "../../atoms/button/DeleteButton";
 type Props = {
   todo: Todo;
   date: string;
+  rendering_dt: string;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
   handleStartButtonClick: (id: string) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
 };
 
-const isRunning = (todo: Todo) => {
-  if (todo.times.length === 0) return false;
-  if (todo.times[todo.times.length - 1].end === null) return true;
-  return false;
-};
-
-const getTodoColor = (todo: Todo, date: string) => {
-  if (isDone(todo)) return "green.300";
-  if (isRunning(todo)) return "blue.300";
-  if (date < dt2date(now())) return "gray.400";
-  return "blue.100";
-};
-
 export const TodoItem: FC<Props> = memo((props) => {
   const {
     todo,
     date,
+    rendering_dt,
     handleInputChange,
     handleStartButtonClick,
     handleDoneButtonClick,
@@ -43,7 +32,7 @@ export const TodoItem: FC<Props> = memo((props) => {
     <>
       <Stack
         key={todo.id}
-        bgColor={getTodoColor(todo, date)}
+        bgColor={getTodoColor(todo, date, rendering_dt)}
         marginY={1}
         shadow="md"
         spacing={1}

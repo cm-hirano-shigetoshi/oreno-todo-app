@@ -1,5 +1,12 @@
-import { Todo, TodoType, getTodoType, isDone } from "./Todo";
+import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
 import { dt2date } from "../utils/Datetime";
+
+export enum StatusColor {
+  COMPLETED = "green.300",
+  NOT_COMPLETED = "blue.100",
+  RUNNING = "blue.300",
+  EXPIRED = "gray.400",
+}
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
   if (getTodoType(todo) === TodoType.MTG) {
@@ -11,6 +18,18 @@ export const filterTodo = (todo: Todo, date: string): boolean => {
       return dt2date(todo.created) <= date;
     }
   }
+};
+
+export const getTodoColor = (
+  todo: Todo,
+  date: string,
+  rendering_dt: string
+) => {
+  if (isRunning(todo)) return StatusColor.RUNNING;
+  if (isDone(todo) && date == dt2date(rendering_dt))
+    return StatusColor.COMPLETED;
+  if (date < dt2date(rendering_dt)) return StatusColor.EXPIRED;
+  return StatusColor.NOT_COMPLETED;
 };
 
 function mergeArrays(arrayA: Todo[], arrayB: Todo[]): Todo[] {

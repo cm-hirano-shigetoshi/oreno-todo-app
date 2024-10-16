@@ -1,5 +1,5 @@
 import { Todo } from "./Todo";
-import { filterTodo } from "./List";
+import { StatusColor, filterTodo, getTodoColor } from "./List";
 
 test("filterTodo", () => {
   /*
@@ -50,4 +50,71 @@ test("filterTodo", () => {
   expect(filterTodo(complete, "2024-10-16")).toStrictEqual(true);
   // 完了翌日
   expect(filterTodo(complete, "2024-10-17")).toStrictEqual(false);
+});
+
+test("getTodoColor", () => {
+  /*
+   * 未完了タスク
+   */
+  const incomplete: Todo = {
+    id: "2024-10-16 20:58:14",
+    order: "100",
+    summary: "新しいタスク",
+    taskcode: "c123",
+    estimate: "30",
+    times: [],
+    memo: "",
+    created: "2024-10-15 20:58:14",
+    updated: "2024-10-16 21:10:27",
+    done: "",
+  };
+  // 登録当日の当日枠
+  expect(
+    getTodoColor(incomplete, "2024-10-15", "2024-10-15 00:00:00")
+  ).toStrictEqual(StatusColor.NOT_COMPLETED);
+  // 登録翌日の当日枠
+  expect(
+    getTodoColor(incomplete, "2024-10-16", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.NOT_COMPLETED);
+  // 登録翌日の前日枠
+  expect(
+    getTodoColor(incomplete, "2024-10-15", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
+
+  const complete: Todo = {
+    id: "2024-10-16 20:58:14",
+    order: "100",
+    summary: "新しいタスク",
+    taskcode: "c123",
+    estimate: "30",
+    times: [],
+    memo: "",
+    created: "2024-10-14 20:58:14",
+    updated: "2024-10-16 21:10:27",
+    done: "2024-10-16 21:10:27",
+  };
+
+  /*
+   * 完了タスク
+   */
+  // 登録当日の当日枠
+  expect(
+    getTodoColor(complete, "2024-10-14", "2024-10-15 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
+  // 登録翌日＝完了前日の当日枠
+  expect(
+    getTodoColor(complete, "2024-10-15", "2024-10-15 00:00:00")
+  ).toStrictEqual(StatusColor.COMPLETED);
+  // 登録翌日＝完了前日の前日枠
+  expect(
+    getTodoColor(complete, "2024-10-14", "2024-10-15 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
+  // 完了当日の当日枠
+  expect(
+    getTodoColor(complete, "2024-10-16", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.COMPLETED);
+  // 完了当日の前日枠
+  expect(
+    getTodoColor(complete, "2024-10-15", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
 });

@@ -31,6 +31,12 @@ export const getTodoType = (todo: Todo): TodoType => {
   return TodoType.Task;
 };
 
+export const isRunning = (todo: Todo) => {
+  if (todo.times.length === 0) return false;
+  if (todo.times[todo.times.length - 1].end === null) return true;
+  return false;
+};
+
 export const isDone = (todo: Todo): boolean => {
   return todo.done !== "";
 };

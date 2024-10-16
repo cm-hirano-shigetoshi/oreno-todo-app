@@ -81,6 +81,34 @@ test("getTodoColor", () => {
     getTodoColor(incomplete, "2024-10-15", "2024-10-16 00:00:00")
   ).toStrictEqual(StatusColor.EXPIRED);
 
+  /*
+   * 実行中タスク
+   */
+  const running: Todo = {
+    id: "2024-10-16 20:58:14",
+    order: "100",
+    summary: "新しいタスク",
+    taskcode: "c123",
+    estimate: "30",
+    times: [{ start: "2024-10-16 21:10:27", end: null }],
+    memo: "",
+    created: "2024-10-15 20:58:14",
+    updated: "2024-10-16 21:10:27",
+    done: "",
+  };
+  // 登録当日の当日枠
+  expect(
+    getTodoColor(running, "2024-10-15", "2024-10-15 00:00:00")
+  ).toStrictEqual(StatusColor.RUNNING);
+  // 登録翌日の当日枠
+  expect(
+    getTodoColor(running, "2024-10-16", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.RUNNING);
+  // 登録翌日の前日枠
+  expect(
+    getTodoColor(running, "2024-10-15", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
+
   const complete: Todo = {
     id: "2024-10-16 20:58:14",
     order: "100",

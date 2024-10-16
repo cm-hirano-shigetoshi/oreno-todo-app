@@ -7,7 +7,7 @@ import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import { Todo, getMeetings } from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
-import { filterTodo, upsertMeetings } from "./logic/List";
+import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -105,29 +105,21 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const days = [
-    "2024-10-11",
-    "2024-10-12",
-    "2024-10-13",
-    "2024-10-14",
-    "2024-10-15",
-    "2024-10-16",
-  ];
-
   const rendering_dt = now();
+  const rendering_days = [dt2date(rendering_dt)];
 
   return (
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
           <NewDayButton handleClick={handleNewDayButtonClick} />
-          {days.reverse().map((date) => (
+          {rendering_days.map((date) => (
             <>
               <h1>{date}</h1>
               <Stack>
                 {todos
                   .filter((todo) => filterTodo(todo, date))
-                  .sort((a, b) => Number(a.order) - Number(b.order))
+                  .sort((a, b) => compareTodo(a, b))
                   .map((todo: Todo) => (
                     <TodoItem
                       key={todo.id}

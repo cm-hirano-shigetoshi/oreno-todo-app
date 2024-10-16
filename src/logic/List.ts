@@ -20,15 +20,26 @@ export const filterTodo = (todo: Todo, date: string): boolean => {
   }
 };
 
+export const compareTodo = (todoA: Todo, todoB: Todo): number => {
+  if (todoA.order.startsWith("MTG") && todoB.order.startsWith("MTG")) {
+    return todoA.order < todoB.order ? -1 : 1;
+  } else if (todoA.order.startsWith("MTG")) {
+    return 1;
+  } else if (todoB.order.startsWith("MTG")) {
+    return -1;
+  } else {
+    return Number(todoA.order) < Number(todoB.order) ? -1 : 1;
+  }
+};
+
 export const getTodoColor = (
   todo: Todo,
   date: string,
   rendering_dt: string
 ) => {
-  if (isRunning(todo)) return StatusColor.RUNNING;
-  if (isDone(todo) && date == dt2date(rendering_dt))
-    return StatusColor.COMPLETED;
   if (date < dt2date(rendering_dt)) return StatusColor.EXPIRED;
+  if (isRunning(todo)) return StatusColor.RUNNING;
+  if (isDone(todo)) return StatusColor.COMPLETED;
   return StatusColor.NOT_COMPLETED;
 };
 

@@ -130,6 +130,7 @@ function App() {
                     <TodoItem
                       key={todo.id}
                       todo={todo}
+                      date={date}
                       handleInputChange={handleInputChange}
                       handleStartButtonClick={handleStartButtonClick}
                       handleDoneButtonClick={handleDoneButtonClick}

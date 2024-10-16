@@ -5,8 +5,11 @@ export const filterTodo = (todo: Todo, date: string): boolean => {
   if (getTodoType(todo) === TodoType.MTG) {
     return dt2date(todo.created) === date;
   } else {
-    if (!isDone(todo) && dt2date(todo.created) <= date) return true;
-    return false;
+    if (isDone(todo)) {
+      return dt2date(todo.created) <= date && date <= dt2date(todo.done);
+    } else {
+      return dt2date(todo.created) <= date;
+    }
   }
 };
 

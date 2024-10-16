@@ -37,14 +37,15 @@ test("getMeetings", () => {
   };
   expect(getMeetings([event])).toStrictEqual([
     {
-      id: "MTG 2024-10-11T15:30:00+09:00",
-      order: "MTG 2024-10-11T15:30:00+09:00",
+      id: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",
+      order: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",
       summary: "定例会議",
       taskcode: "",
       estimate: "90",
       times: [{ start: "2024-10-11 15:30:00", end: "2024-10-11 17:00:00" }],
       memo: "",
-      registered: "2024-10-11 15:30:00",
+      created: "2024-10-11 15:30:00",
+      updated: "2024-10-11 15:30:00",
       done: "",
     },
   ]);

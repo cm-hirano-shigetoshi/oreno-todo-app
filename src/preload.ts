@@ -3,8 +3,14 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  subscribeAddTask: (callback: (task: string) => void) =>
-    ipcRenderer.on("add-task", (_, task: string) => callback(task)),
+  subscribeAddTask: (
+    callback: (summary: string, taskcode: string, memo: string) => void
+  ) =>
+    ipcRenderer.on(
+      "add-task",
+      (_, summary: string, taskcode: string, memo: string) =>
+        callback(summary, taskcode, memo)
+    ),
   executeCommand: (command: string) =>
     ipcRenderer.invoke("execute-command", command),
   readFile: (filePath: string) => ipcRenderer.invoke("read-file", filePath),

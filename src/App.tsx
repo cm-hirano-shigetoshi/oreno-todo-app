@@ -20,27 +20,29 @@ function App() {
   const prevTodosRef = useRef<Todo[]>();
 
   useEffect(() => {
-    window.electronAPI.subscribeAddTask((summary: string) => {
-      setTodos((prevTodos) => {
-        const current_dt = now();
-        const newTodos = [
-          ...prevTodos,
-          {
-            id: current_dt,
-            order: "100",
-            summary: summary,
-            taskcode: "c123",
-            estimate: "30",
-            times: [],
-            memo: "",
-            created: current_dt,
-            updated: current_dt,
-            done: "",
-          },
-        ];
-        return newTodos;
-      });
-    });
+    window.electronAPI.subscribeAddTask(
+      (summary: string, taskcode: string, memo: string) => {
+        setTodos((prevTodos) => {
+          const current_dt = now();
+          const newTodos = [
+            ...prevTodos,
+            {
+              id: current_dt,
+              order: "",
+              summary: summary,
+              taskcode: taskcode,
+              estimate: "",
+              times: [],
+              memo: memo,
+              created: current_dt,
+              updated: current_dt,
+              done: "",
+            },
+          ];
+          return newTodos;
+        });
+      }
+    );
   }, []);
 
   useEffect(() => {

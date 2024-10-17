@@ -41,9 +41,9 @@ const PORT = 3001; // 任意のポート番号
 appExpress.use(bodyParser.json());
 
 appExpress.post("/addTask", (req, res) => {
-  const { task } = req.body;
-  if (task) {
-    mainWindow.webContents.send("add-task", task);
+  const { summary, taskcode, memo } = req.body;
+  if (summary !== "") {
+    mainWindow.webContents.send("add-task", summary, taskcode, memo);
     res.status(200).send({ message: "タスクを追加しました！" });
   } else {
     res.status(400).send({ message: "タスクが提供されていません。" });

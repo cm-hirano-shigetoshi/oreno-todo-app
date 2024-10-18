@@ -19,6 +19,7 @@ export type GoogleCalendarEvent = {
   end: { dateTime: string; timeZone: string };
   summary: string;
   created: string;
+  eventType?: string;
 };
 
 export enum TodoType {
@@ -70,6 +71,16 @@ const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
   return newEvent;
 };
 
+const isWorkingLocation = (event: Partial<GoogleCalendarEvent>): boolean => {
+  return event.eventType === "workingLocation";
+};
+
+const filterEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
+  if (isWorkingLocation(event)) return false;
+};
+
 export const getMeetings = (events: Partial<GoogleCalendarEvent>[]): Todo[] => {
-  return events.map((event) => getMeeting(event));
+  return events
+    .filter((event) => filterEvent(event))
+    .map((event) => getMeeting(event));
 };

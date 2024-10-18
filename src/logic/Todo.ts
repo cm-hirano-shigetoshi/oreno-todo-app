@@ -88,8 +88,11 @@ export const getMeetings = (events: Partial<GoogleCalendarEvent>[]): Todo[] => {
 
 export const adjustEnd = (times: TimeType[], minutes: number): TimeType[] => {
   if (times.length === 0) return times;
-  const latestTime = times[times.length - 1];
-  if (latestTime.end === null) return times;
-  latestTime.end = addSeconds(latestTime.end, minutes * 60);
-  return times;
+  if (times[times.length - 1].end === null) return times;
+  const newTimes = [...times];
+  newTimes[newTimes.length - 1].end = addSeconds(
+    newTimes[newTimes.length - 1].end,
+    minutes * 60
+  );
+  return newTimes;
 };

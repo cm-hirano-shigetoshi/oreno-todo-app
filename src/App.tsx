@@ -5,12 +5,13 @@ import theme from "./theme/theme";
 import { now, dt2date } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
-import { Todo, getMeetings } from "./logic/Todo";
+import { Todo, TodoType, getTodoType, getMeetings } from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
 import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
+import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
@@ -122,18 +123,35 @@ function App() {
                 {todos
                   .filter((todo) => filterTodo(todo, date))
                   .sort((a, b) => compareTodo(a, b))
-                  .map((todo: Todo) => (
-                    <TodoItem
-                      key={todo.id}
-                      todo={todo}
-                      date={date}
-                      rendering_dt={rendering_dt}
-                      handleInputChange={handleInputChange}
-                      handleStartButtonClick={handleStartButtonClick}
-                      handleDoneButtonClick={handleDoneButtonClick}
-                      handleDeleteButtonClick={handleDeleteButtonClick}
-                    />
-                  ))}
+                  .map((todo: Todo) => {
+                    if (getTodoType(todo) === TodoType.MTG) {
+                      return (
+                        <MeetingItem
+                          key={todo.id}
+                          todo={todo}
+                          date={date}
+                          rendering_dt={rendering_dt}
+                          handleInputChange={handleInputChange}
+                          handleStartButtonClick={handleStartButtonClick}
+                          handleDoneButtonClick={handleDoneButtonClick}
+                          handleDeleteButtonClick={handleDeleteButtonClick}
+                        />
+                      );
+                    } else {
+                      return (
+                        <TodoItem
+                          key={todo.id}
+                          todo={todo}
+                          date={date}
+                          rendering_dt={rendering_dt}
+                          handleInputChange={handleInputChange}
+                          handleStartButtonClick={handleStartButtonClick}
+                          handleDoneButtonClick={handleDoneButtonClick}
+                          handleDeleteButtonClick={handleDeleteButtonClick}
+                        />
+                      );
+                    }
+                  })}
               </Stack>
             </>
           ))}

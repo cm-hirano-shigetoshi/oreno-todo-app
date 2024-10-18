@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { now, dt2date } from "./utils/Datetime";
+import { now, dt2date, dateIter } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import {
@@ -22,6 +22,7 @@ import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
   const JSON_FILE = "/tmp/sample.json";
+  const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
   const [todos, setTodos] = useState<Todo[]>([]);
   const debouncedTodos = useDebounce(todos, 500);
@@ -128,8 +129,15 @@ function App() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   }, []);
 
+  const getShowingDays = (renderingDt: string, len: number): string[] => {
+    return [...dateIter(dt2date(renderingDt), len, -1)];
+  };
+
   const renderingDt = useMemo(() => now(), []);
-  const renderingDays = [dt2date(renderingDt)];
+  const renderingDays = useMemo(
+    () => getShowingDays(renderingDt, SHOWING_DAY_LENGTH),
+    []
+  );
 
   return (
     <>

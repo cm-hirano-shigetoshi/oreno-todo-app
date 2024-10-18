@@ -33,6 +33,26 @@ export function addSeconds(dt: string, sec: number): string {
   return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
+export function* dateIter(
+  startDate: string,
+  n: number,
+  step: number = 1
+): Generator<string, void, undefined> {
+  if (step === 0) {
+    for (let i = 0; i < n; i++) {
+      yield startDate;
+    }
+  } else {
+    let currentDate = new Date(startDate);
+    for (let i = 0; i < n; i++) {
+      const formattedDate = currentDate.toISOString().split("T")[0];
+      yield formattedDate;
+
+      currentDate.setDate(currentDate.getDate() + step);
+    }
+  }
+}
+
 export function now(): string {
   return toDtString(new Date());
 }

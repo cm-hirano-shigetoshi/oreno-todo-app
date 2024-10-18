@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
@@ -61,58 +61,6 @@ function App() {
     fetchData();
   }, []);
 
-  const handleNewDayButtonClick = async () => {
-    const today = dt2date(now());
-    const events_str = await executeCommand(
-      `python python/get_meeting.py ${today} | grep -v '^Please visit'`
-    );
-    const meetings = getMeetings(JSON.parse(events_str));
-    setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
-    alert("今日の会議を取得しました。");
-  };
-
-  const handleInputChange = (attrib: string, id: string, newText: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, [attrib]: newText, updated: now() } : todo
-      )
-    );
-  };
-
-  const handleStartButtonClick = (id: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id
-          ? { ...todo, times: startButtonClick(todo.times), updated: now() }
-          : todo
-      )
-    );
-  };
-
-  const handleAdjustButtonClick = (id: string, minutes: number) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id
-          ? { ...todo, times: adjustEnd(todo.times, minutes), updated: now() }
-          : todo
-      )
-    );
-  };
-
-  const handleDoneButtonClick = (id: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id
-          ? { ...todo, done: todo.done === "" ? now() : "", updated: now() }
-          : todo
-      )
-    );
-  };
-
-  const handleDeleteButtonClick = (id: string) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-  };
-
   useEffect(() => {
     const saveData = async (content: string) => {
       await window.electronAPI.writeFile(JSON_FILE, content);
@@ -125,7 +73,62 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const renderingDt = now();
+  const handleNewDayButtonClick = useCallback(async () => {
+    const today = dt2date(now());
+    const events_str = await executeCommand(
+      `python python/get_meeting.py ${today} | grep -v '^Please visit'`
+    );
+    const meetings = getMeetings(JSON.parse(events_str));
+    setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
+    alert("今日の会議を取得しました。");
+  }, []);
+
+  const handleInputChange = useCallback(
+    (attrib: string, id: string, newText: string) => {
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) =>
+          todo.id === id ? { ...todo, [attrib]: newText, updated: now() } : todo
+        )
+      );
+    },
+    []
+  );
+
+  const handleStartButtonClick = useCallback((id: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id
+          ? { ...todo, times: startButtonClick(todo.times), updated: now() }
+          : todo
+      )
+    );
+  }, []);
+
+  const handleAdjustButtonClick = useCallback((id: string, minutes: number) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id
+          ? { ...todo, times: adjustEnd(todo.times, minutes), updated: now() }
+          : todo
+      )
+    );
+  }, []);
+
+  const handleDoneButtonClick = useCallback((id: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id
+          ? { ...todo, done: todo.done === "" ? now() : "", updated: now() }
+          : todo
+      )
+    );
+  }, []);
+
+  const handleDeleteButtonClick = useCallback((id: string) => {
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  }, []);
+
+  const renderingDt = useMemo(() => now(), []);
   const renderingDays = [dt2date(renderingDt)];
 
   return (

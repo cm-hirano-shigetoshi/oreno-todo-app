@@ -5,7 +5,13 @@ import theme from "./theme/theme";
 import { now, dt2date } from "./utils/Datetime";
 import { executeCommand } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
-import { Todo, TodoType, getTodoType, getMeetings } from "./logic/Todo";
+import {
+  Todo,
+  TodoType,
+  getTodoType,
+  getMeetings,
+  adjustEnd,
+} from "./logic/Todo";
 import { startButtonClick } from "./logic/Times";
 import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
 
@@ -16,6 +22,7 @@ import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
   const JSON_FILE = "/tmp/sample.json";
+  const ADJUST_UNIT = 5;
   const [todos, setTodos] = useState<Todo[]>([]);
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
@@ -82,6 +89,16 @@ function App() {
     );
   };
 
+  const handleAdjustButtonClick = (id: string, minutes: number) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id
+          ? { ...todo, times: adjustEnd(todo.times, minutes), updated: now() }
+          : todo
+      )
+    );
+  };
+
   const handleDoneButtonClick = (id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
@@ -108,15 +125,15 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const rendering_dt = now();
-  const rendering_days = [dt2date(rendering_dt)];
+  const renderingDt = now();
+  const renderingDays = [dt2date(renderingDt)];
 
   return (
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
           <NewDayButton handleClick={handleNewDayButtonClick} />
-          {rendering_days.map((date) => (
+          {renderingDays.map((date) => (
             <>
               <h1>{date}</h1>
               <Stack>
@@ -130,9 +147,11 @@ function App() {
                           key={todo.id}
                           todo={todo}
                           date={date}
-                          rendering_dt={rendering_dt}
+                          renderingDt={renderingDt}
+                          adjustUnit={ADJUST_UNIT}
                           handleInputChange={handleInputChange}
                           handleStartButtonClick={handleStartButtonClick}
+                          handleAdjustButtonClick={handleAdjustButtonClick}
                           handleDoneButtonClick={handleDoneButtonClick}
                           handleDeleteButtonClick={handleDeleteButtonClick}
                         />
@@ -143,9 +162,10 @@ function App() {
                           key={todo.id}
                           todo={todo}
                           date={date}
-                          rendering_dt={rendering_dt}
+                          renderingDt={renderingDt}
                           handleInputChange={handleInputChange}
                           handleStartButtonClick={handleStartButtonClick}
+                          handleAdjustButtonClick={handleAdjustButtonClick}
                           handleDoneButtonClick={handleDoneButtonClick}
                           handleDeleteButtonClick={handleDeleteButtonClick}
                         />

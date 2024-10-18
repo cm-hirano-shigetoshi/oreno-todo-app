@@ -12,9 +12,11 @@ import { DeleteButton } from "../../atoms/button/DeleteButton";
 type Props = {
   todo: Todo;
   date: string;
-  rendering_dt: string;
+  renderingDt: string;
+  adjustUnit: number;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
   handleStartButtonClick: (id: string) => void;
+  handleAdjustButtonClick: (id: string, minutes: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
 };
@@ -23,9 +25,11 @@ export const MeetingItem: FC<Props> = memo((props) => {
   const {
     todo,
     date,
-    rendering_dt,
+    renderingDt,
+    adjustUnit,
     handleInputChange,
     handleStartButtonClick,
+    handleAdjustButtonClick,
     handleDoneButtonClick,
     handleDeleteButtonClick,
   } = props;
@@ -33,7 +37,7 @@ export const MeetingItem: FC<Props> = memo((props) => {
     <>
       <Stack
         key={todo.id}
-        bgColor={getTodoColor(todo, date, rendering_dt)}
+        bgColor={getTodoColor(todo, date, renderingDt)}
         marginY={1}
         shadow="md"
         spacing={1}
@@ -79,12 +83,12 @@ export const MeetingItem: FC<Props> = memo((props) => {
           />
           <ElapsedTime times={todo.times} />
           <AdjustButton
-            unitsize={-5}
-            handleClick={() => handleDeleteButtonClick(todo.id)}
+            adjustUnit={-adjustUnit}
+            handleClick={() => handleAdjustButtonClick(todo.id, -adjustUnit)}
           />
           <AdjustButton
-            unitsize={5}
-            handleClick={() => handleDeleteButtonClick(todo.id)}
+            adjustUnit={adjustUnit}
+            handleClick={() => handleAdjustButtonClick(todo.id, adjustUnit)}
           />
           <Input
             px={2}

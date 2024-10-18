@@ -11,9 +11,10 @@ import { DeleteButton } from "../../atoms/button/DeleteButton";
 type Props = {
   todo: Todo;
   date: string;
-  rendering_dt: string;
+  renderingDt: string;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
   handleStartButtonClick: (id: string) => void;
+  handleAdjustButtonClick: (id: string, seconds: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
 };
@@ -22,7 +23,7 @@ export const TodoItem: FC<Props> = memo((props) => {
   const {
     todo,
     date,
-    rendering_dt,
+    renderingDt,
     handleInputChange,
     handleStartButtonClick,
     handleDoneButtonClick,
@@ -32,7 +33,7 @@ export const TodoItem: FC<Props> = memo((props) => {
     <>
       <Stack
         key={todo.id}
-        bgColor={getTodoColor(todo, date, rendering_dt)}
+        bgColor={getTodoColor(todo, date, renderingDt)}
         marginY={1}
         shadow="md"
         spacing={1}

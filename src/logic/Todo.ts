@@ -1,5 +1,5 @@
 import { TimeType } from "../logic/Times";
-import { now, calcDur } from "../utils/Datetime";
+import { calcDur, addSeconds } from "../utils/Datetime";
 
 export type Todo = {
   id: string;
@@ -77,10 +77,19 @@ const isWorkingLocation = (event: Partial<GoogleCalendarEvent>): boolean => {
 
 const filterEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
   if (isWorkingLocation(event)) return false;
+  return true;
 };
 
 export const getMeetings = (events: Partial<GoogleCalendarEvent>[]): Todo[] => {
   return events
     .filter((event) => filterEvent(event))
     .map((event) => getMeeting(event));
+};
+
+export const adjustEnd = (times: TimeType[], minutes: number): TimeType[] => {
+  if (times.length === 0) return times;
+  const latestTime = times[times.length - 1];
+  if (latestTime.end === null) return times;
+  latestTime.end = addSeconds(latestTime.end, minutes * 60);
+  return times;
 };

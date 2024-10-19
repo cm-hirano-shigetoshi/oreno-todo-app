@@ -3,8 +3,8 @@ export interface IElectronAPI {
     callback: (summary: string, taskcode: string, memo: string) => void
   ) => void;
   executeCommand: (command: string) => Promise<string>;
-  readFile: (filePath: string) => Promise<string>;
-  writeFile: (filePath: string, content: string) => Promise<boolean>;
+  readFile: () => Promise<string>;
+  writeFile: (content: string) => Promise<boolean>;
 }
 
 declare global {

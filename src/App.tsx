@@ -21,7 +21,6 @@ import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
-  const JSON_FILE = "/tmp/sample.json";
   const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -56,7 +55,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await window.electronAPI.readFile(JSON_FILE);
+      const data = await window.electronAPI.readFile();
       setTodos(JSON.parse(data));
     };
     fetchData();
@@ -64,7 +63,7 @@ function App() {
 
   useEffect(() => {
     const saveData = async (content: string) => {
-      await window.electronAPI.writeFile(JSON_FILE, content);
+      await window.electronAPI.writeFile(content);
     };
 
     const prevTodos = prevTodosRef.current;

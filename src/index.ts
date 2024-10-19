@@ -98,6 +98,22 @@ ipcMain.handle("execute-command", async (_, command) => {
   }
 });
 
+ipcMain.handle("get-calendar-events", async (_, date) => {
+  try {
+    const pythonCode = `import json;import sys;from google_calendar_utils.calendar import Calendar;calendar_id = "main";from_date = sys.argv[1];to_date = sys.argv[2] if len(sys.argv) >= 3 else None;calendar = Calendar();events = calendar.collect_events_by_jst_date(calendar_id, from_date, to_date=to_date);print(json.dumps(events))`;
+    const command = `python3 -c '${pythonCode}' '${date}' | grep -v '^Please visit'`;
+
+    const { stdout, stderr } = await execPromise(command);
+    if (stderr) {
+      console.error(`エラーが発生したよ: ${stderr}`);
+    }
+    return stdout.trim();
+  } catch (error) {
+    console.error(`コマンド実行中にエラーが起きちゃった: ${error}`);
+    throw error;
+  }
+});
+
 ipcMain.handle("read-file", async (_) => {
   try {
     const data = await fs.promises.readFile(TODO_LIST_JSON, "utf-8");

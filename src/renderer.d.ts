@@ -3,6 +3,7 @@ export interface IElectronAPI {
     callback: (summary: string, taskcode: string, memo: string) => void
   ) => void;
   executeCommand: (command: string) => Promise<string>;
+  getCalendarEvents: (date: string) => Promise<string>;
   readFile: () => Promise<string>;
   writeFile: (content: string) => Promise<boolean>;
 }

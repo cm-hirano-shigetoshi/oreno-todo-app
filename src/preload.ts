@@ -13,6 +13,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ),
   executeCommand: (command: string) =>
     ipcRenderer.invoke("execute-command", command),
+  getCalendarEvents: (date: string) =>
+    ipcRenderer.invoke("get-calendar-events", date),
   readFile: () => ipcRenderer.invoke("read-file"),
   writeFile: (content: string) => ipcRenderer.invoke("write-file", content),
 });

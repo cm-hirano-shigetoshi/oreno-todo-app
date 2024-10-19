@@ -3,7 +3,7 @@ import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter } from "./utils/Datetime";
-import { executeCommand } from "./utils/Command";
+import { getCalendarEvents } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
@@ -75,9 +75,7 @@ function App() {
 
   const handleNewDayButtonClick = useCallback(async () => {
     const today = dt2date(now());
-    const events_str = await executeCommand(
-      `python python/get_meeting.py ${today} | grep -v '^Please visit'`
-    );
+    const events_str = await getCalendarEvents(today);
     const meetings = getMeetings(JSON.parse(events_str));
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
     alert("今日の会議を取得しました。");

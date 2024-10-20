@@ -6,6 +6,8 @@ export enum StatusColor {
   NOT_COMPLETED = "blue.100",
   RUNNING = "blue.300",
   EXPIRED = "gray.400",
+  MEETING = "red.100",
+  MEETING_DONE = "pink.300",
 }
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
@@ -37,10 +39,15 @@ export const getTodoColor = (
   date: string,
   rendering_dt: string
 ) => {
-  if (date < dt2date(rendering_dt)) return StatusColor.EXPIRED;
-  if (isRunning(todo)) return StatusColor.RUNNING;
-  if (isDone(todo)) return StatusColor.COMPLETED;
-  return StatusColor.NOT_COMPLETED;
+  if (getTodoType(todo) === TodoType.MTG) {
+    if (isDone(todo)) return StatusColor.MEETING_DONE;
+    return StatusColor.MEETING;
+  } else {
+    if (date < dt2date(rendering_dt)) return StatusColor.EXPIRED;
+    if (isRunning(todo)) return StatusColor.RUNNING;
+    if (isDone(todo)) return StatusColor.COMPLETED;
+    return StatusColor.NOT_COMPLETED;
+  }
 };
 
 function mergeArrays(arrayA: Todo[], arrayB: Todo[]): Todo[] {

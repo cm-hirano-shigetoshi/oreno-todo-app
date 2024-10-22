@@ -12,7 +12,7 @@ import {
   getMeetings,
   adjustEnd,
 } from "./logic/Todo";
-import { toggleTimer } from "./logic/Times";
+import { toggleTimer, stopTimer } from "./logic/Times";
 import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
@@ -113,10 +113,16 @@ function App() {
   }, []);
 
   const handleDoneButtonClick = useCallback((id: string) => {
+    const current_dt = now();
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id
-          ? { ...todo, done: todo.done === "" ? now() : "", updated: now() }
+          ? {
+              ...todo,
+              done: todo.done === "" ? current_dt : "",
+              times: stopTimer(todo.times, current_dt),
+              updated: now(),
+            }
           : todo
       )
     );

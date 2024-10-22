@@ -19,6 +19,7 @@ export type GoogleCalendarEvent = {
   end: { dateTime: string; timeZone: string };
   summary: string;
   created: string;
+  updated: string;
   eventType?: string;
 };
 
@@ -43,7 +44,7 @@ export const isDone = (todo: Todo): boolean => {
 };
 
 const getDt = (datetime: string): string => {
-  return datetime.replace("T", " ").slice(0, -6);
+  return datetime.replace("T", " ").slice(0, 19);
 };
 
 const getEstimate = (start: string, end: string): number => {
@@ -64,8 +65,8 @@ const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
       },
     ],
     memo: "",
-    created: getDt(event.start.dateTime),
-    updated: getDt(event.start.dateTime),
+    created: getDt(event.created),
+    updated: getDt(event.updated),
     done: "",
   };
   return newEvent;

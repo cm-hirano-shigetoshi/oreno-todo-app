@@ -12,7 +12,7 @@ export enum StatusColor {
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
   if (getTodoType(todo) === TodoType.MTG) {
-    return dt2date(todo.created) === date;
+    return dt2date(todo.times[0].start) === date;
   } else {
     if (isDone(todo)) {
       return dt2date(todo.created) <= date && date <= dt2date(todo.done);

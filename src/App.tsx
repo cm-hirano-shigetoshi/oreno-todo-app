@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChakraProvider, Stack } from "@chakra-ui/react";
+import { ChakraProvider, Stack, Heading } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter } from "./utils/Datetime";
@@ -143,8 +143,8 @@ function App() {
           <NewDayButton handleClick={handleNewDayButtonClick} />
           {renderingDays.map((date) => (
             <>
-              <h1>{date}</h1>
-              <Stack>
+              <Heading as="h1">{date}</Heading>
+              <Stack marginBottom={10}>
                 {todos
                   .filter((todo) => filterTodo(todo, date))
                   .sort((a, b) => compareTodo(a, b))

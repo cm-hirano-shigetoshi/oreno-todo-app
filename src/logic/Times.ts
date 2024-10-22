@@ -1,22 +1,29 @@
-import { calcDur, now } from "../utils/Datetime";
+import { calcDur } from "../utils/Datetime";
+
+const HESITATION_SECONDS = 10;
 
 export type TimeType = { start: string; end: string };
 
-export function recordTime(times: TimeType[], dt: string): TimeType[] {
-  if (times.length === 0) {
-    times.push({ start: dt, end: null });
-  } else {
-    if (times[times.length - 1].end === null) {
-      times[times.length - 1].end = dt;
-    } else {
-      times.push({ start: dt, end: null });
-    }
-  }
-  return times;
+function startTimer(times: TimeType[], dt: string): void {
+  times.push({ start: dt, end: null });
 }
 
-export function startButtonClick(times: TimeType[]): TimeType[] {
-  return recordTime(times, now());
+function stopTimer(times: TimeType[], dt: string): void {
+  const start = times[times.length - 1].start;
+  if (calcDur(start, dt) > HESITATION_SECONDS) {
+    times[times.length - 1].end = dt;
+  } else {
+    times.pop();
+  }
+}
+
+export function toggleTimer(times: TimeType[], dt: string): TimeType[] {
+  if (times.length > 0 && times[times.length - 1].end === null) {
+    stopTimer(times, dt);
+  } else {
+    startTimer(times, dt);
+  }
+  return times;
 }
 
 export function calcElapsedTime(times: TimeType[]): number {

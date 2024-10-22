@@ -12,7 +12,7 @@ import {
   getMeetings,
   adjustEnd,
 } from "./logic/Todo";
-import { startButtonClick } from "./logic/Times";
+import { toggleTimer } from "./logic/Times";
 import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
@@ -96,7 +96,7 @@ function App() {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id
-          ? { ...todo, times: startButtonClick(todo.times), updated: now() }
+          ? { ...todo, times: toggleTimer(todo.times, now()), updated: now() }
           : todo
       )
     );

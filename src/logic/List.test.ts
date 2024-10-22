@@ -127,15 +127,15 @@ test("getTodoColor", () => {
    */
   // 登録当日の当日枠
   expect(
-    getTodoColor(complete, "2024-10-14", "2024-10-15 00:00:00")
-  ).toStrictEqual(StatusColor.EXPIRED);
+    getTodoColor(complete, "2024-10-14", "2024-10-14 00:00:00")
+  ).toStrictEqual(StatusColor.COMPLETED);
   // 登録翌日＝完了前日の当日枠
   expect(
     getTodoColor(complete, "2024-10-15", "2024-10-15 00:00:00")
   ).toStrictEqual(StatusColor.COMPLETED);
   // 登録翌日＝完了前日の前日枠
   expect(
-    getTodoColor(complete, "2024-10-14", "2024-10-15 00:00:00")
+    getTodoColor(complete, "2024-10-15", "2024-10-16 00:00:00")
   ).toStrictEqual(StatusColor.COMPLETED);
   // 完了当日の当日枠
   expect(

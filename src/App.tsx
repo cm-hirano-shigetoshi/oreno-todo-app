@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChakraProvider, Stack, Heading } from "@chakra-ui/react";
+import { ChakraProvider, Stack, HStack, Heading } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter } from "./utils/Datetime";
@@ -73,12 +73,10 @@ function App() {
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
 
-  const handleNewDayButtonClick = useCallback(async () => {
-    const today = dt2date(now());
-    const events_str = await getCalendarEvents(today);
+  const handleNewDayButtonClick = useCallback(async (date: string) => {
+    const events_str = await getCalendarEvents(date);
     const meetings = getMeetings(JSON.parse(events_str));
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
-    alert("今日の会議を取得しました。");
   }, []);
 
   const handleInputChange = useCallback(
@@ -146,10 +144,14 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
-          <NewDayButton handleClick={handleNewDayButtonClick} />
           {renderingDays.map((date) => (
             <>
-              <Heading as="h1">{date}</Heading>
+              <HStack>
+                <Heading as="h1">{date}</Heading>
+                <NewDayButton
+                  handleClick={() => handleNewDayButtonClick(date)}
+                />
+              </HStack>
               <Stack marginBottom={10}>
                 {todos
                   .filter((todo) => filterTodo(todo, date))

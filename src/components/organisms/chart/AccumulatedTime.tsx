@@ -10,21 +10,33 @@ import {
   ReferenceLine,
 } from "recharts";
 
-const data = [
-  {
-    name: "",
-    uuu: 3.2,
-    sss: 2.5,
-    hhh: 0.5,
-  },
-];
+import { Todo, Project } from "../../../logic/Todo";
 
 type Props = {
-  hoge: string;
+  todos: Partial<Todo>[];
+  projects: { [date: string]: Project[] };
+};
+
+const createGraphData = (
+  todos: Partial<Todo>[],
+  projects: { [date: string]: Project[] }
+) => {
+  const graphData = [
+    { taskcode: "uuu", color: "red", time: 3 },
+    { taskcode: "sss", color: "green", time: 2 },
+    { taskcode: "hhh", color: "pink", time: 1 },
+  ];
+  return graphData;
 };
 
 export const AccumulatedTime: FC<Props> = memo((props) => {
-  const { hoge } = props;
+  const { todos, projects } = props;
+  const graphData = createGraphData(todos, projects);
+  const data = [{ name: "" }];
+  for (const x of graphData) {
+    data[0] = { ...data[0], [x.taskcode]: x.time };
+  }
+
   return (
     <ResponsiveContainer>
       <BarChart layout="vertical" data={data}>
@@ -35,10 +47,10 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
         <YAxis dataKey="name" type="category" />
         <Tooltip />
         <Legend />
-        <Bar dataKey="uuu" stackId="a" fill="#8884d8" />
-        <Bar dataKey="sss" stackId="a" fill="#82ca9d" />
-        <Bar dataKey="hhh" stackId="a" fill="#74ca1d" />
-        <ReferenceLine x={10} stroke="red" strokeWidth={2} />
+        {graphData.map((x) => (
+          <Bar dataKey={x.taskcode} stackId="a" fill={x.color} />
+        ))}
+        <ReferenceLine x={8} stroke="red" strokeWidth={2} />
       </BarChart>
     </ResponsiveContainer>
   );

@@ -8,6 +8,7 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
+  Project,
   getTodoType,
   getMeetings,
   adjustEnd,
@@ -34,6 +35,7 @@ const getYearMonth = (date: string): string => {
 function App() {
   const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
+  const [projects, setProjects] = useState<{ [date: string]: Project[] }>({});
   const [todos, setTodos] = useState<Todo[]>([]);
   const [dailyTodos, setDailyTodos] = useState<DailyTodos>({});
   const debouncedTodos = useDebounce(todos, 500);
@@ -67,8 +69,10 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await window.electronAPI.readFile("todo_list.json");
-      setTodos(JSON.parse(data));
+      const todoList = await window.electronAPI.readFile("todo_list.json");
+      setTodos(JSON.parse(todoList));
+      const projects = await window.electronAPI.readFile("project.json");
+      setProjects(JSON.parse(projects));
     };
     fetchData();
   }, []);
@@ -90,14 +94,11 @@ function App() {
   }, [todos]);
 
   const handleNewDayButtonClick = useCallback(async (date: string) => {
-    const readProjectsFile = async () => {
-      return await window.electronAPI.readFile("project.json");
-    };
-
     const events_str = await getCalendarEvents(date);
-    const projectFileContent = await readProjectsFile();
-    const projects = JSON.parse(projectFileContent)[getYearMonth(date)];
-    const meetings = getMeetings(JSON.parse(events_str), projects);
+    const meetings = getMeetings(
+      JSON.parse(events_str),
+      projects[getYearMonth(date)]
+    );
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
   }, []);
 
@@ -175,7 +176,7 @@ function App() {
                 />
               </HStack>
               <HStack style={{ width: "100%", height: 150 }}>
-                <AccumulatedTime hoge="" />
+                <AccumulatedTime todos={dailyTodos[date]} projects={projects} />
               </HStack>
               <Stack marginBottom={10}>
                 {todos

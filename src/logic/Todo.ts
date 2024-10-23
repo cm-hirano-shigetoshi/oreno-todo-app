@@ -73,8 +73,11 @@ export const assignTaskcode = (
   return "";
 };
 
-const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
-  const taskcode = assignTaskcode(event, []);
+const getMeeting = (
+  event: Partial<GoogleCalendarEvent>,
+  projects: Project[]
+): Todo => {
+  const taskcode = assignTaskcode(event, projects);
   const newEvent: Todo = {
     id: `MTG ${event.start.dateTime} ${event.created}`,
     order: `MTG ${event.start.dateTime} ${event.created}`,
@@ -112,10 +115,13 @@ const filterEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
   return true;
 };
 
-export const getMeetings = (events: Partial<GoogleCalendarEvent>[]): Todo[] => {
+export const getMeetings = (
+  events: Partial<GoogleCalendarEvent>[],
+  projects: Project[]
+): Todo[] => {
   return events
     .filter((event) => filterEvent(event))
-    .map((event) => getMeeting(event));
+    .map((event) => getMeeting(event, projects));
 };
 
 export const adjustEnd = (times: TimeType[], minutes: number): TimeType[] => {

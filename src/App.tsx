@@ -8,6 +8,7 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
+  Project,
   getTodoType,
   getMeetings,
   adjustEnd,
@@ -19,6 +20,10 @@ import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
 import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
+
+const getYearMonth = (date: string): string => {
+  return date.slice(0, 7);
+};
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;
@@ -55,7 +60,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await window.electronAPI.readFile();
+      const data = await window.electronAPI.readFile("todo_list.json");
       setTodos(JSON.parse(data));
     };
     fetchData();
@@ -63,7 +68,7 @@ function App() {
 
   useEffect(() => {
     const saveData = async (content: string) => {
-      await window.electronAPI.writeFile(content);
+      await window.electronAPI.writeFile("todo_list.json", content);
     };
 
     const prevTodos = prevTodosRef.current;
@@ -74,8 +79,14 @@ function App() {
   }, [debouncedTodos]);
 
   const handleNewDayButtonClick = useCallback(async (date: string) => {
+    const readProjectsFile = async () => {
+      return await window.electronAPI.readFile("project.json");
+    };
+
     const events_str = await getCalendarEvents(date);
-    const meetings = getMeetings(JSON.parse(events_str));
+    const projectFileContent = await readProjectsFile();
+    const projects = JSON.parse(projectFileContent)[getYearMonth(date)];
+    const meetings = getMeetings(JSON.parse(events_str), projects);
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
   }, []);
 

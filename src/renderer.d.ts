@@ -4,8 +4,8 @@ export interface IElectronAPI {
   ) => void;
   executeCommand: (command: string) => Promise<string>;
   getCalendarEvents: (date: string) => Promise<string>;
-  readFile: () => Promise<string>;
-  writeFile: (content: string) => Promise<boolean>;
+  readFile: (filename: string) => Promise<string>;
+  writeFile: (filename: string, content: string) => Promise<boolean>;
 }
 
 declare global {

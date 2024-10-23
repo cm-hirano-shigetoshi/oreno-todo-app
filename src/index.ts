@@ -12,9 +12,9 @@ import path = require("path");
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-const TODO_LIST_JSON = path.join(
+const LOCAL_SETTINGS_DIR = path.join(
   process.env.HOME,
-  ".local/share/oreno-todo-app/todo_list.json"
+  ".local/share/oreno-todo-app"
 );
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -114,9 +114,12 @@ ipcMain.handle("get-calendar-events", async (_, date) => {
   }
 });
 
-ipcMain.handle("read-file", async (_) => {
+ipcMain.handle("read-file", async (_, filename: string) => {
   try {
-    const data = await fs.promises.readFile(TODO_LIST_JSON, "utf-8");
+    const data = await fs.promises.readFile(
+      path.join(LOCAL_SETTINGS_DIR, filename),
+      "utf-8"
+    );
     return data;
   } catch (error) {
     console.error("Error reading file:", error);
@@ -124,9 +127,13 @@ ipcMain.handle("read-file", async (_) => {
   }
 });
 
-ipcMain.handle("write-file", async (_, content) => {
+ipcMain.handle("write-file", async (_, filename: string, content: string) => {
   try {
-    await fs.promises.writeFile(TODO_LIST_JSON, content, "utf-8");
+    await fs.promises.writeFile(
+      path.join(LOCAL_SETTINGS_DIR, filename),
+      content,
+      "utf-8"
+    );
     return true;
   } catch (error) {
     console.error("Error writing file:", error);

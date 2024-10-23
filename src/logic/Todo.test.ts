@@ -35,7 +35,7 @@ test("getMeetings", () => {
     },
     eventType: "default",
   };
-  expect(getMeetings([event])).toStrictEqual([
+  expect(getMeetings([event], [])).toStrictEqual([
     {
       id: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",
       order: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",

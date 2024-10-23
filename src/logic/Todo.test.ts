@@ -1,4 +1,4 @@
-import { getMeetings } from "./Todo";
+import { getMeetings, assignTaskcode } from "./Todo";
 
 test("getMeetings", () => {
   const event = {
@@ -49,4 +49,21 @@ test("getMeetings", () => {
       done: "",
     },
   ]);
+});
+
+test("assignTaskcode", () => {
+  const projects = [
+    {
+      taskcode: "XXX",
+      keywords: ["XXX", "xxx"],
+    },
+    {
+      taskcode: "XXXY",
+      keywords: ["XXXY", "xxxy"],
+    },
+  ];
+
+  expect(assignTaskcode({ summary: "[XXX] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
+  expect(assignTaskcode({ summary: "[XXXY] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
+  expect(assignTaskcode({ summary: "[XXYY] 定例会議" }, projects)).toStrictEqual(""); // prettier-ignore
 });

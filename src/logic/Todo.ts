@@ -23,6 +23,13 @@ export type GoogleCalendarEvent = {
   eventType?: string;
 };
 
+export type Project = {
+  taskcode: string;
+  keywords: string[];
+  color?: string;
+  assign?: number;
+};
+
 export enum TodoType {
   Task = 0,
   MTG = 1,
@@ -51,12 +58,28 @@ const getEstimate = (start: string, end: string): number => {
   return Math.round(calcDur(getDt(start), getDt(end)) / 60);
 };
 
+export const assignTaskcode = (
+  event: Partial<GoogleCalendarEvent>,
+  projects: Project[]
+): string => {
+  const summary = event.summary;
+  for (const project of projects) {
+    for (const keyword of project.keywords) {
+      if (summary.includes(keyword)) {
+        return project.taskcode;
+      }
+    }
+  }
+  return "";
+};
+
 const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
+  const taskcode = assignTaskcode(event, []);
   const newEvent: Todo = {
     id: `MTG ${event.start.dateTime} ${event.created}`,
     order: `MTG ${event.start.dateTime} ${event.created}`,
     summary: event.summary,
-    taskcode: "",
+    taskcode: taskcode,
     estimate: getEstimate(event.start.dateTime, event.end.dateTime).toString(),
     times: [
       {

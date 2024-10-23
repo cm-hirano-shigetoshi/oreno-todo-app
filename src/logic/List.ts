@@ -1,4 +1,5 @@
 import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
+import { TimeType } from "./Times";
 import { dt2date } from "../utils/Datetime";
 
 export enum StatusColor {
@@ -9,6 +10,10 @@ export enum StatusColor {
   MEETING = "red.100",
   MEETING_DONE = "pink.300",
 }
+
+export type DailyTodos = {
+  [date: string]: Partial<Todo>[];
+};
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
   if (getTodoType(todo) === TodoType.MTG) {
@@ -34,17 +39,13 @@ export const compareTodo = (todoA: Todo, todoB: Todo): number => {
   }
 };
 
-export const getTodoColor = (
-  todo: Todo,
-  date: string,
-  rendering_dt: string
-) => {
+export const getTodoColor = (todo: Todo, date: string, renderingDt: string) => {
   if (getTodoType(todo) === TodoType.MTG) {
     if (isDone(todo)) return StatusColor.MEETING_DONE;
     return StatusColor.MEETING;
   } else {
     if (isDone(todo)) return StatusColor.COMPLETED;
-    if (date < dt2date(rendering_dt)) return StatusColor.EXPIRED;
+    if (date < dt2date(renderingDt)) return StatusColor.EXPIRED;
     if (isRunning(todo)) return StatusColor.RUNNING;
     return StatusColor.NOT_COMPLETED;
   }
@@ -71,4 +72,20 @@ function mergeArrays(arrayA: Todo[], arrayB: Todo[]): Todo[] {
 
 export const upsertMeetings = (todos: Todo[], meetings: Todo[]): Todo[] => {
   return mergeArrays(todos, meetings);
+};
+
+export const calcDailyTodos = (
+  todos: Todo[],
+  renderingDays: string[]
+): DailyTodos => {
+  const dailyTodos: DailyTodos = {};
+  for (const todo of todos) {
+    for (const date of renderingDays) {
+      const filteredTimes = todo.times.filter(
+        (time) => dt2date(time.start) === date
+      );
+      (dailyTodos[date] ??= []).push({ ...todo, times: filteredTimes });
+    }
+  }
+  return dailyTodos;
 };

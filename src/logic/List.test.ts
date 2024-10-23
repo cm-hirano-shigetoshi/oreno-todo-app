@@ -1,5 +1,5 @@
 import { Todo } from "./Todo";
-import { StatusColor, filterTodo, getTodoColor } from "./List";
+import { StatusColor, filterTodo, getTodoColor, calcDailyTodos } from "./List";
 
 test("filterTodo", () => {
   /*
@@ -145,4 +145,81 @@ test("getTodoColor", () => {
   expect(
     getTodoColor(complete, "2024-10-15", "2024-10-16 00:00:00")
   ).toStrictEqual(StatusColor.COMPLETED);
+});
+
+test("calcDailyTodos", () => {
+  const todos = [
+    {
+      id: "2024-10-21 00:00:02",
+      order: " 5",
+      summary: "あれやる",
+      taskcode: "XXX",
+      estimate: "",
+      times: [
+        {
+          start: "2024-10-17 13:04:52",
+          end: "2024-10-17 13:49:57",
+        },
+        {
+          start: "2024-10-17 13:50:52",
+          end: "2024-10-17 13:52:57",
+        },
+        {
+          start: "2024-10-18 17:33:40",
+          end: "2024-10-18 17:56:24",
+        },
+      ],
+      memo: "",
+      created: "2024-10-16 09:00:02",
+      updated: "2024-10-18 17:56:24",
+      done: "2024-10-18 17:56:24",
+    },
+  ];
+  const expected = {
+    "2024-10-17": [
+      {
+        id: "2024-10-21 00:00:02",
+        order: " 5",
+        summary: "あれやる",
+        taskcode: "XXX",
+        estimate: "",
+        times: [
+          {
+            start: "2024-10-17 13:04:52",
+            end: "2024-10-17 13:49:57",
+          },
+          {
+            start: "2024-10-17 13:50:52",
+            end: "2024-10-17 13:52:57",
+          },
+        ],
+        memo: "",
+        created: "2024-10-16 09:00:02",
+        updated: "2024-10-18 17:56:24",
+        done: "2024-10-18 17:56:24",
+      },
+    ],
+    "2024-10-18": [
+      {
+        id: "2024-10-21 00:00:02",
+        order: " 5",
+        summary: "あれやる",
+        taskcode: "XXX",
+        estimate: "",
+        times: [
+          {
+            start: "2024-10-18 17:33:40",
+            end: "2024-10-18 17:56:24",
+          },
+        ],
+        memo: "",
+        created: "2024-10-16 09:00:02",
+        updated: "2024-10-18 17:56:24",
+        done: "2024-10-18 17:56:24",
+      },
+    ],
+  };
+  expect(calcDailyTodos(todos, ["2024-10-17", "2024-10-18"])).toStrictEqual(
+    expected
+  );
 });

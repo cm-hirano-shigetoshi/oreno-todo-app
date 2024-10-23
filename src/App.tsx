@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import {
-  ChakraProvider,
-  Stack,
-  HStack,
-  Heading,
-  Button,
-} from "@chakra-ui/react";
+import { ChakraProvider, Stack, HStack, Heading } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter } from "./utils/Datetime";
@@ -14,13 +8,18 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
-  Project,
   getTodoType,
   getMeetings,
   adjustEnd,
 } from "./logic/Todo";
 import { toggleTimer, stopTimer } from "./logic/Times";
-import { filterTodo, compareTodo, upsertMeetings } from "./logic/List";
+import {
+  DailyTodos,
+  filterTodo,
+  compareTodo,
+  upsertMeetings,
+  calcDailyTodos,
+} from "./logic/List";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -36,6 +35,7 @@ function App() {
   const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [dailyTodos, setDailyTodos] = useState<DailyTodos>({});
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
@@ -84,6 +84,10 @@ function App() {
     }
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
+
+  useEffect(() => {
+    setDailyTodos(() => calcDailyTodos(todos, renderingDays));
+  }, [todos]);
 
   const handleNewDayButtonClick = useCallback(async (date: string) => {
     const readProjectsFile = async () => {

@@ -8,6 +8,7 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
+  Project,
   getTodoType,
   getMeetings,
   adjustEnd,
@@ -27,13 +28,19 @@ import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 
-const getYearMonth = (date: string): string => {
-  return date.slice(0, 7);
+const getProject = (projects: { [date: string]: Project[] }, date: string) => {
+  const yyyymm = date.slice(0, 7);
+  if (yyyymm in projects) {
+    return projects[yyyymm];
+  } else {
+    return [];
+  }
 };
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
+  const [projects, setProjects] = useState<{ [date: string]: Project[] }>({});
   const [todos, setTodos] = useState<Todo[]>([]);
   const [dailyTodos, setDailyTodos] = useState<DailyTodos>({});
   const debouncedTodos = useDebounce(todos, 500);
@@ -67,8 +74,10 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await window.electronAPI.readFile("todo_list.json");
-      setTodos(JSON.parse(data));
+      const todoList = await window.electronAPI.readFile("todo_list.json");
+      setTodos(JSON.parse(todoList));
+      const projects = await window.electronAPI.readFile("project.json");
+      setProjects(JSON.parse(projects));
     };
     fetchData();
   }, []);
@@ -90,14 +99,11 @@ function App() {
   }, [todos]);
 
   const handleNewDayButtonClick = useCallback(async (date: string) => {
-    const readProjectsFile = async () => {
-      return await window.electronAPI.readFile("project.json");
-    };
-
     const events_str = await getCalendarEvents(date);
-    const projectFileContent = await readProjectsFile();
-    const projects = JSON.parse(projectFileContent)[getYearMonth(date)];
-    const meetings = getMeetings(JSON.parse(events_str), projects);
+    const meetings = getMeetings(
+      JSON.parse(events_str),
+      getProject(projects, date)
+    );
     setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
   }, []);
 
@@ -174,8 +180,11 @@ function App() {
                   handleClick={() => handleNewDayButtonClick(date)}
                 />
               </HStack>
-              <HStack style={{ width: "100%", height: 150 }}>
-                <AccumulatedTime hoge="" />
+              <HStack style={{ width: "100%", height: 80 }}>
+                <AccumulatedTime
+                  todos={dailyTodos[date]}
+                  projects={getProject(projects, date)}
+                />
               </HStack>
               <Stack marginBottom={10}>
                 {todos

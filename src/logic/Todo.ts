@@ -72,12 +72,20 @@ const getMeeting = (event: Partial<GoogleCalendarEvent>): Todo => {
   return newEvent;
 };
 
-const isWorkingLocation = (event: Partial<GoogleCalendarEvent>): boolean => {
-  return event.eventType === "workingLocation";
+const isMeetingEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
+  // 勤務場所は除外
+  if (event.eventType === "workingLocation") return false;
+  // 離席系は除外（休暇は工数につけるので除外しない）
+  if (event.summary.startsWith("[離席]")) return false;
+  if (event.summary.startsWith("[休憩]")) return false;
+  if (event.summary.startsWith("[休日]")) return false;
+  // 作業は除外
+  if (event.summary.startsWith("[作業]")) return false;
+  return true;
 };
 
 const filterEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
-  if (isWorkingLocation(event)) return false;
+  if (!isMeetingEvent(event)) return false;
   return true;
 };
 

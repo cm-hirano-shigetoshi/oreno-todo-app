@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChakraProvider, Stack, HStack, Heading } from "@chakra-ui/react";
+import {
+  ChakraProvider,
+  Stack,
+  HStack,
+  Heading,
+  Button,
+} from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter } from "./utils/Datetime";
@@ -20,6 +26,7 @@ import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
 import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
+import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 
 const getYearMonth = (date: string): string => {
   return date.slice(0, 7);
@@ -157,11 +164,14 @@ function App() {
         <HeaderLayout>
           {renderingDays.map((date) => (
             <>
-              <HStack>
+              <HStack marginBottom={5}>
                 <Heading as="h1">{date}</Heading>
                 <NewDayButton
                   handleClick={() => handleNewDayButtonClick(date)}
                 />
+              </HStack>
+              <HStack style={{ width: "100%", height: 150 }}>
+                <AccumulatedTime hoge="" />
               </HStack>
               <Stack marginBottom={10}>
                 {todos

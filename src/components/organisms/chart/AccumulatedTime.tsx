@@ -19,9 +19,13 @@ type Props = {
   projects: Project[];
 };
 
-const accumulateHours = (todos: Partial<Todo>[], taskcode: string): number => {
+export const getAllTaskcodes = (project: Project): string[] => {
+  return project.taskcodes.map((tc) => tc.taskcode);
+};
+
+const accumulateHours = (todos: Partial<Todo>[], project: Project): number => {
   const timeInSecond = todos
-    .filter((todo) => todo.taskcode === taskcode)
+    .filter((todo) => getAllTaskcodes(project).includes(todo.taskcode))
     .reduce(
       (acc1, todo) =>
         acc1 +
@@ -37,9 +41,8 @@ export const createGraphData = (
   todos: Partial<Todo>[],
   projects: Project[]
 ) => {
-  console.log(projects);
   const graphData = projects.map((project) => {
-    return { ...project, time: accumulateHours(todos, project.taskcode) };
+    return { ...project, time: accumulateHours(todos, project) };
   });
   return graphData;
 };
@@ -49,7 +52,7 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
   const graphData = createGraphData(todos, projects);
   const data = [{ name: "" }];
   for (const x of graphData) {
-    data[0] = { ...data[0], [x.taskcode]: x.time };
+    data[0] = { ...data[0], [x.projectcode]: x.time };
   }
 
   return (
@@ -64,7 +67,12 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
           <Tooltip />
           <Legend />
           {graphData.map((x) => (
-            <Bar dataKey={x.taskcode} stackId="a" fill={x.color} />
+            <Bar
+              key={x.projectcode}
+              dataKey={x.projectcode}
+              stackId="a"
+              fill={x.color}
+            />
           ))}
           <ReferenceLine x={8} stroke="red" strokeWidth={2} />
         </BarChart>

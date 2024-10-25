@@ -1,4 +1,10 @@
-import { calcDur, dt2date, addSeconds } from "./Datetime";
+import {
+  DayOfWeek,
+  calcDur,
+  dt2date,
+  addSeconds,
+  getDayOfWeek,
+} from "./Datetime";
 
 test("calcDur", () => {
   expect(calcDur("2024-04-01 10:00:00", "2024-04-01 11:00:00")).toStrictEqual(
@@ -29,4 +35,8 @@ test("addSeconds", () => {
   expect(addSeconds("2024-12-31 23:59:10", 60)).toStrictEqual(
     "2025-01-01 00:00:10"
   );
+});
+
+test("getDayOfWeek", () => {
+  expect(getDayOfWeek("2024-10-25")).toStrictEqual(DayOfWeek.Fri);
 });

@@ -2,7 +2,13 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ChakraProvider, Stack, HStack, Heading } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import { now, dt2date, dateIter } from "./utils/Datetime";
+import {
+  now,
+  dt2date,
+  dateIter,
+  getDayOfWeek,
+  isWeekDay,
+} from "./utils/Datetime";
 import { getCalendarEvents } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import {
@@ -183,60 +189,64 @@ function App() {
     <>
       <ChakraProvider theme={theme}>
         <HeaderLayout>
-          {renderingDays.map((date) => (
-            <>
-              <HStack marginBottom={5}>
-                <Heading as="h1">{date}</Heading>
-                <NewDayButton
-                  handleClick={() => handleNewDayButtonClick(date)}
-                />
-              </HStack>
-              <HStack style={{ width: "100%", height: 80 }}>
-                <AccumulatedTime
-                  todos={dailyTodos[date]}
-                  projects={getProject(projects, date)}
-                  timecard={getTimecard(timecard, date)}
-                />
-              </HStack>
-              <Stack marginBottom={10}>
-                {todos
-                  .filter((todo) => filterTodo(todo, date))
-                  .sort((a, b) => compareTodo(a, b))
-                  .map((todo: Todo) => {
-                    if (getTodoType(todo) === TodoType.MTG) {
-                      return (
-                        <MeetingItem
-                          key={todo.id}
-                          todo={todo}
-                          date={date}
-                          renderingDt={renderingDt}
-                          adjustUnit={ADJUST_UNIT}
-                          handleInputChange={handleInputChange}
-                          handleStartButtonClick={handleStartButtonClick}
-                          handleAdjustButtonClick={handleAdjustButtonClick}
-                          handleDoneButtonClick={handleDoneButtonClick}
-                          handleDeleteButtonClick={handleDeleteButtonClick}
-                        />
-                      );
-                    } else {
-                      return (
-                        <TodoItem
-                          key={todo.id}
-                          todo={todo}
-                          date={date}
-                          renderingDt={renderingDt}
-                          handleInputChange={handleInputChange}
-                          handleStartButtonClick={handleStartButtonClick}
-                          handleAdjustButtonClick={handleAdjustButtonClick}
-                          handleDoneButtonClick={handleDoneButtonClick}
-                          handleDeleteButtonClick={handleDeleteButtonClick}
-                        />
-                      );
-                    }
-                  })}
-              </Stack>
-            </>
-          ))}
+          {renderingDays
+            .filter((date) => isWeekDay(date))
+            .map((date) => (
+              <>
+                <HStack marginBottom={5}>
+                  <Heading as="h1">
+                    {date} ({getDayOfWeek(date)})
+                  </Heading>
+                  <NewDayButton
+                    handleClick={() => handleNewDayButtonClick(date)}
+                  />
+                </HStack>
+                <HStack style={{ width: "100%", height: 80 }}>
+                  <AccumulatedTime
+                    todos={dailyTodos[date]}
+                    projects={getProject(projects, date)}
+                    timecard={getTimecard(timecard, date)}
+                  />
+                </HStack>
+                <Stack marginBottom={10}>
+                  {todos
+                    .filter((todo) => filterTodo(todo, date))
+                    .sort((a, b) => compareTodo(a, b))
+                    .map((todo: Todo) => {
+                      if (getTodoType(todo) === TodoType.MTG) {
+                        return (
+                          <MeetingItem
+                            key={todo.id}
+                            todo={todo}
+                            date={date}
+                            renderingDt={renderingDt}
+                            adjustUnit={ADJUST_UNIT}
+                            handleInputChange={handleInputChange}
+                            handleStartButtonClick={handleStartButtonClick}
+                            handleAdjustButtonClick={handleAdjustButtonClick}
+                            handleDoneButtonClick={handleDoneButtonClick}
+                            handleDeleteButtonClick={handleDeleteButtonClick}
+                          />
+                        );
+                      } else {
+                        return (
+                          <TodoItem
+                            key={todo.id}
+                            todo={todo}
+                            date={date}
+                            renderingDt={renderingDt}
+                            handleInputChange={handleInputChange}
+                            handleStartButtonClick={handleStartButtonClick}
+                            handleAdjustButtonClick={handleAdjustButtonClick}
+                            handleDoneButtonClick={handleDoneButtonClick}
+                            handleDeleteButtonClick={handleDeleteButtonClick}
+                          />
+                        );
+                      }
+                    })}
+                </Stack>
+              </>
+            ))}
         </HeaderLayout>
       </ChakraProvider>
     </>

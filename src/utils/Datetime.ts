@@ -1,3 +1,13 @@
+export enum DayOfWeek {
+  Sun = "Sun",
+  Mon = "Mon",
+  Tue = "Tue",
+  Wed = "Wed",
+  Thu = "Thu",
+  Fri = "Fri",
+  Sat = "Sat",
+}
+
 function toDtString(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
@@ -31,6 +41,16 @@ export function addSeconds(dt: string, sec: number): string {
   );
   date.setSeconds(date.getSeconds() + sec);
   return date.toISOString().slice(0, 19).replace("T", " ");
+}
+
+export function getDayOfWeek(dt: string): DayOfWeek {
+  const date = new Date(dt);
+  const dayValues = Object.values(DayOfWeek);
+  return dayValues[date.getDay()];
+}
+
+export function isWeekDay(dt: string): boolean {
+  return ![DayOfWeek.Sat, DayOfWeek.Sun].includes(getDayOfWeek(dt));
 }
 
 export function* dateIter(

@@ -25,10 +25,9 @@ const accumulateHours = (todos: Partial<Todo>[], taskcode: string): number => {
     .reduce(
       (acc1, todo) =>
         acc1 +
-        todo.times.reduce(
-          (acc2, time) => acc2 + calcDur(time.start, time.end),
-          0
-        ),
+        todo.times
+          .filter((time) => time.end)
+          .reduce((acc2, time) => acc2 + calcDur(time.start, time.end), 0),
       0
     );
   return timeInSecond / 60 / 60;

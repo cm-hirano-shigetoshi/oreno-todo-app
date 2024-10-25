@@ -1,4 +1,4 @@
-import { getAllTaskcodes } from "./AccumulatedTime";
+import { getAllTaskcodes, getWorkingHours } from "./AccumulatedTime";
 
 test("getAllTaskcodes", () => {
   const projects = {
@@ -17,4 +17,28 @@ test("getAllTaskcodes", () => {
     ],
   };
   expect(getAllTaskcodes(projects)).toStrictEqual(["XXX01", "XXX02"]);
+});
+
+test("getWorkingHours", () => {
+  expect(getWorkingHours([])).toStrictEqual(8);
+  expect(
+    getWorkingHours([
+      {
+        type: "start",
+        time: "2024-10-25 09:30:00",
+      },
+    ])
+  ).toStrictEqual(8);
+  expect(
+    getWorkingHours([
+      {
+        type: "start",
+        time: "2024-10-25 09:30:00",
+      },
+      {
+        type: "end",
+        time: "2024-10-25 12:30:00",
+      },
+    ])
+  ).toStrictEqual(3);
 });

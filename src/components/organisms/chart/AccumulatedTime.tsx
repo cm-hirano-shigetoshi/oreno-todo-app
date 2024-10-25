@@ -12,11 +12,13 @@ import {
 } from "recharts";
 
 import { Todo, Project } from "../../../logic/Todo";
+import { Timecard } from "../../../logic/Timecard";
 import { calcDur } from "../../../utils/Datetime";
 
 type Props = {
   todos: Partial<Todo>[];
   projects: Project[];
+  timecard: Timecard[];
 };
 
 export const getAllTaskcodes = (project: Project): string[] => {
@@ -47,8 +49,25 @@ export const createGraphData = (
   return graphData;
 };
 
+export const getWorkingHours = (timecard: Timecard[]): number => {
+  if (timecard.length === 0 || timecard.length % 2 !== 0) {
+    return 8;
+  } else {
+    let seconds = 0;
+    let start = "";
+    for (const tc of timecard) {
+      if (tc.type === "start") {
+        start = tc.time;
+      } else {
+        seconds += calcDur(start, tc.time);
+      }
+    }
+    return seconds / 60 / 60;
+  }
+};
+
 export const AccumulatedTime: FC<Props> = memo((props) => {
-  const { todos, projects } = props;
+  const { todos, projects, timecard } = props;
   const graphData = createGraphData(todos, projects);
   const data = [{ name: "" }];
   for (const x of graphData) {
@@ -74,7 +93,11 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
               fill={x.color}
             />
           ))}
-          <ReferenceLine x={8} stroke="red" strokeWidth={2} />
+          <ReferenceLine
+            x={getWorkingHours(timecard)}
+            stroke="red"
+            strokeWidth={2}
+          />
         </BarChart>
       </ResponsiveContainer>
     </>

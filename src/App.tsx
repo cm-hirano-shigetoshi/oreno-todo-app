@@ -21,6 +21,7 @@ import {
   upsertMeetings,
   calcDailyTodos,
 } from "./logic/List";
+import { Timecard } from "./logic/Timecard";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -37,10 +38,18 @@ const getProject = (projects: { [date: string]: Project[] }, date: string) => {
   }
 };
 
+const getTimecard = (
+  timecard: { [date: string]: Timecard[] },
+  date: string
+): Timecard[] => {
+  return timecard[date] || [];
+};
+
 function App() {
   const SHOWING_DAY_LENGTH = 35;
   const ADJUST_UNIT = 5;
   const [projects, setProjects] = useState<{ [date: string]: Project[] }>({});
+  const [timecard, setTimecard] = useState<{ [date: string]: Timecard[] }>({});
   const [todos, setTodos] = useState<Todo[]>([]);
   const [dailyTodos, setDailyTodos] = useState<DailyTodos>({});
   const debouncedTodos = useDebounce(todos, 500);
@@ -78,6 +87,8 @@ function App() {
       setTodos(JSON.parse(todoList));
       const projects = await window.electronAPI.readFile("project.json");
       setProjects(JSON.parse(projects));
+      const timecard = await window.electronAPI.readFile("timecard.json");
+      setTimecard(JSON.parse(timecard));
     };
     fetchData();
   }, []);
@@ -184,6 +195,7 @@ function App() {
                 <AccumulatedTime
                   todos={dailyTodos[date]}
                   projects={getProject(projects, date)}
+                  timecard={getTimecard(timecard, date)}
                 />
               </HStack>
               <Stack marginBottom={10}>

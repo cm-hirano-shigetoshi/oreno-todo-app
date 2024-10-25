@@ -26,6 +26,7 @@ export type GoogleCalendarEvent = {
 export type Project = {
   projectcode: string;
   taskcodes: Taskcode[];
+  projectname?: string;
   color?: string;
   assign?: number;
 };

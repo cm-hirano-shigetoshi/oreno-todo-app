@@ -36,7 +36,7 @@ const accumulateHours = (todos: Partial<Todo>[], project: Project): number => {
           .reduce((acc2, time) => acc2 + calcDur(time.start, time.end), 0),
       0
     );
-  return timeInSecond / 60 / 60;
+  return Math.round((timeInSecond / 60 / 60) * 100) / 100;
 };
 
 export const createGraphData = (
@@ -62,7 +62,7 @@ export const getWorkingHours = (timecard: Timecard[]): number => {
         seconds += calcDur(start, tc.time);
       }
     }
-    return seconds / 60 / 60;
+    return Math.round((seconds / 60 / 60) * 100) / 100;
   }
 };
 
@@ -71,7 +71,7 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
   const graphData = createGraphData(todos, projects);
   const data = [{ name: "" }];
   for (const x of graphData) {
-    data[0] = { ...data[0], [x.projectcode]: x.time };
+    data[0] = { ...data[0], [x.projectname || x.projectcode]: x.time };
   }
 
   return (
@@ -88,7 +88,7 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
           {graphData.map((x) => (
             <Bar
               key={x.projectcode}
-              dataKey={x.projectcode}
+              dataKey={x.projectname || x.projectcode}
               stackId="a"
               fill={x.color}
             />

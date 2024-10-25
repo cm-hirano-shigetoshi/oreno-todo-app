@@ -46,6 +46,11 @@ const PORT = 3001; // 任意のポート番号
 
 appExpress.use(bodyParser.json());
 
+appExpress.post("/reload", (_, res) => {
+  mainWindow.reload();
+  res.status(200).send({ message: "リロードします。" });
+});
+
 appExpress.post("/addTask", (req, res) => {
   const { summary, taskcode, memo } = req.body;
   if (summary !== "") {

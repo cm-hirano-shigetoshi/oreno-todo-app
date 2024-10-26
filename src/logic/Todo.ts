@@ -41,18 +41,18 @@ export enum TodoType {
   MTG = 1,
 }
 
-export const getTodoType = (todo: Todo): TodoType => {
+export const getTodoType = (todo: Partial<Todo>): TodoType => {
   if (todo.id.startsWith("MTG")) return TodoType.MTG;
   return TodoType.Task;
 };
 
-export const isRunning = (todo: Todo) => {
+export const isRunning = (todo: Partial<Todo>) => {
   if (todo.times.length === 0) return false;
   if (todo.times[todo.times.length - 1].end === null) return true;
   return false;
 };
 
-export const isDone = (todo: Todo): boolean => {
+export const isDone = (todo: Partial<Todo>): boolean => {
   return todo.done !== "";
 };
 

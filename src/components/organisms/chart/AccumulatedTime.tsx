@@ -11,7 +11,13 @@ import {
   ReferenceLine,
 } from "recharts";
 
-import { Todo, Project } from "../../../logic/Todo";
+import {
+  Todo,
+  Project,
+  TodoType,
+  getTodoType,
+  isDone,
+} from "../../../logic/Todo";
 import { Timecard } from "../../../logic/Timecard";
 import { calcDur } from "../../../utils/Datetime";
 
@@ -27,6 +33,7 @@ export const getAllTaskcodes = (project: Project): string[] => {
 
 const accumulateHours = (todos: Partial<Todo>[], project: Project): number => {
   const timeInSecond = todos
+    .filter((todo) => getTodoType(todo) !== TodoType.MTG || isDone(todo))
     .filter((todo) => getAllTaskcodes(project).includes(todo.taskcode))
     .reduce(
       (acc1, todo) =>

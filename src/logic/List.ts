@@ -1,5 +1,4 @@
 import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
-import { TimeType } from "./Times";
 import { dt2date } from "../utils/Datetime";
 
 export enum StatusColor {

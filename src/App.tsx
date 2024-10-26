@@ -115,14 +115,17 @@ function App() {
     setDailyTodos(() => calcDailyTodos(todos, renderingDays));
   }, [todos]);
 
-  const handleNewDayButtonClick = useCallback(async (date: string) => {
-    const events_str = await getCalendarEvents(date);
-    const meetings = getMeetings(
-      JSON.parse(events_str),
-      getProject(projects, date)
-    );
-    setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
-  }, []);
+  const handleNewDayButtonClick = useCallback(
+    async (date: string) => {
+      const events_str = await getCalendarEvents(date);
+      const meetings = getMeetings(
+        JSON.parse(events_str),
+        getProject(projects, date)
+      );
+      setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
+    },
+    [projects]
+  );
 
   const handleInputChange = useCallback(
     (attrib: string, id: string, newText: string) => {

@@ -88,6 +88,7 @@ export const getWorkingHours = (timecard: Timecard[]): number => {
 };
 
 export const AccumulatedTime: FC<Props> = memo((props) => {
+  console.log("AccumulatedTime");
   const { todos, projects, timecard } = props;
   const graphData = createGraphData(todos, projects);
   const data = [{ name: "" }];

@@ -1,5 +1,7 @@
 import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
+import { TimeType } from "./Times";
 import { dt2date } from "../utils/Datetime";
+import { hashObject } from "../utils/Utils";
 
 export enum StatusColor {
   COMPLETED = "green.300",
@@ -10,8 +12,11 @@ export enum StatusColor {
   MEETING_DONE = "pink.300",
 }
 
-export type DailyTodos = {
-  [date: string]: Partial<Todo>[];
+export type DailyTodo = {
+  id: string;
+  taskcode: string;
+  times: TimeType[];
+  done: string;
 };
 
 export const filterTodo = (todo: Todo, date: string): boolean => {
@@ -73,18 +78,24 @@ export const upsertMeetings = (todos: Todo[], meetings: Todo[]): Todo[] => {
   return mergeArrays(todos, meetings);
 };
 
-export const calcDailyTodos = (
-  todos: Todo[],
-  renderingDays: string[]
-): DailyTodos => {
-  const dailyTodos: DailyTodos = {};
-  for (const todo of todos) {
-    for (const date of renderingDays) {
-      const filteredTimes = todo.times.filter(
-        (time) => dt2date(time.start) === date
-      );
-      (dailyTodos[date] ??= []).push({ ...todo, times: filteredTimes });
-    }
+const dailyTodoIds: { [id: string]: DailyTodo[] } = {};
+
+export const getTodoForDate = (todos: Todo[], date: string): DailyTodo[] => {
+  const dailyTodos = todos
+    .map((todo) => {
+      return {
+        id: todo.id,
+        taskcode: todo.taskcode,
+        times: todo.times.filter((time) => dt2date(time.start) === date),
+        done: todo.done,
+      };
+    })
+    .filter((dailyTodo) => dailyTodo.times.length > 0);
+  const id = hashObject(dailyTodos);
+  if (id in dailyTodoIds) {
+    return dailyTodoIds[id];
+  } else {
+    dailyTodoIds[id] = dailyTodos;
+    return dailyTodos;
   }
-  return dailyTodos;
 };

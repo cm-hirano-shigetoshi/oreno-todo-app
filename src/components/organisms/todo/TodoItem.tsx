@@ -20,6 +20,7 @@ type Props = {
 };
 
 export const TodoItem: FC<Props> = memo((props) => {
+  console.log("TodoItem");
   const {
     todo,
     date,

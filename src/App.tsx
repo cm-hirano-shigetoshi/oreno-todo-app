@@ -22,11 +22,10 @@ import {
 } from "./logic/Todo";
 import { toggleTimer, stopTimer } from "./logic/Times";
 import {
-  DailyTodos,
   filterTodo,
   compareTodo,
   upsertMeetings,
-  calcDailyTodos,
+  getTodoForDate,
 } from "./logic/List";
 import { Timecard } from "./logic/Timecard";
 
@@ -58,7 +57,6 @@ function App() {
   const [projects, setProjects] = useState<{ [date: string]: Project[] }>({});
   const [timecard, setTimecard] = useState<{ [date: string]: Timecard[] }>({});
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [dailyTodos, setDailyTodos] = useState<DailyTodos>({});
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
@@ -111,10 +109,6 @@ function App() {
     }
     prevTodosRef.current = debouncedTodos;
   }, [debouncedTodos]);
-
-  useEffect(() => {
-    setDailyTodos(() => calcDailyTodos(todos, renderingDays));
-  }, [todos]);
 
   const handleNewDayButtonClick = useCallback(
     async (date: string) => {
@@ -218,9 +212,15 @@ function App() {
                 </HStack>
                 <HStack style={{ width: "100%", height: 80 }}>
                   <AccumulatedTime
-                    todos={dailyTodos[date]}
-                    projects={getProject(projects, date)}
-                    timecard={getTimecard(timecard, date)}
+                    todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                    projects={useMemo(
+                      () => getProject(projects, date),
+                      [projects]
+                    )}
+                    timecard={useMemo(
+                      () => getTimecard(timecard, date),
+                      [timecard]
+                    )}
                   />
                 </HStack>
                 <Stack marginBottom={10}>

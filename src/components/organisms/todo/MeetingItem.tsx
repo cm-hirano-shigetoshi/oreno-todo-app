@@ -22,6 +22,7 @@ type Props = {
 };
 
 export const MeetingItem: FC<Props> = memo((props) => {
+  console.log("MeetingItem");
   const {
     todo,
     date,

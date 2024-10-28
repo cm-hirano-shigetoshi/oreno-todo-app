@@ -18,6 +18,7 @@ import {
   getTodoType,
   getMeetings,
   adjustEnd,
+  isRunning,
 } from "./logic/Todo";
 import { toggleTimer, stopTimer } from "./logic/Times";
 import {
@@ -139,10 +140,21 @@ function App() {
   );
 
   const handleStartButtonClick = useCallback((id: string) => {
+    const currentDt = now();
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id
-          ? { ...todo, times: toggleTimer(todo.times, now()), updated: now() }
+          ? {
+              ...todo,
+              times: toggleTimer(todo.times, currentDt),
+              updated: currentDt,
+            }
+          : isRunning(todo)
+          ? {
+              ...todo,
+              times: stopTimer(todo.times, currentDt),
+              updated: currentDt,
+            }
           : todo
       )
     );

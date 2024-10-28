@@ -70,7 +70,7 @@ export const assignTaskcode = (
 ): string => {
   const summary = event.summary;
   for (const project of taskcodes) {
-    for (const keyword of project.keywords) {
+    for (const keyword of project.keywords || []) {
       if (summary.includes(keyword)) {
         return project.taskcode;
       }

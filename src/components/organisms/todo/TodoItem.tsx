@@ -32,61 +32,49 @@ export const TodoItem: FC<Props> = memo((props) => {
   } = props;
   return (
     <>
-      <Stack
-        key={todo.id}
-        bgColor={getTodoColor(todo, date, renderingDt)}
-        marginY={1}
-        shadow="md"
-        spacing={1}
-      >
-        <HStack>
-          <StartButton handleClick={() => handleStartButtonClick(todo.id)} />
-          <Input
-            px={2}
-            w="4rem"
-            value={todo.taskcode}
-            onChange={(e) =>
-              handleInputChange("taskcode", todo.id, e.target.value)
-            }
-          />
-          <Input
-            px={2}
-            value={todo.summary}
-            onChange={(e) =>
-              handleInputChange("summary", todo.id, e.target.value)
-            }
-          />
-          <DoneButton
-            done={todo.done}
-            handleClick={() => handleDoneButtonClick(todo.id)}
-          />
-        </HStack>
-        <HStack>
-          <Input
-            px={2}
-            w="4rem"
-            value={todo.order}
-            onChange={(e) =>
-              handleInputChange("order", todo.id, e.target.value)
-            }
-          />
-          <Input
-            px={2}
-            w="4rem"
-            value={todo.estimate}
-            onChange={(e) =>
-              handleInputChange("estimate", todo.id, e.target.value)
-            }
-          />
-          <ElapsedTime times={todo.times} />
-          <Input
-            px={2}
-            value={todo.memo}
-            onChange={(e) => handleInputChange("memo", todo.id, e.target.value)}
-          />
-          <DeleteButton handleClick={() => handleDeleteButtonClick(todo.id)} />
-        </HStack>
-      </Stack>
+      <HStack bgColor={getTodoColor(todo, date, renderingDt)}>
+        <Input
+          px={2}
+          w="6rem"
+          value={todo.order}
+          onChange={(e) => handleInputChange("order", todo.id, e.target.value)}
+        />
+        <Input
+          px={2}
+          w="8rem"
+          value={todo.taskcode}
+          onChange={(e) =>
+            handleInputChange("taskcode", todo.id, e.target.value)
+          }
+        />
+        <Input
+          px={2}
+          value={todo.summary}
+          onChange={(e) =>
+            handleInputChange("summary", todo.id, e.target.value)
+          }
+        />
+        <Input
+          px={2}
+          w="4rem"
+          value={todo.estimate}
+          onChange={(e) =>
+            handleInputChange("estimate", todo.id, e.target.value)
+          }
+        />
+        <StartButton handleClick={() => handleStartButtonClick(todo.id)} />
+        <ElapsedTime times={todo.times} />
+        <Input
+          px={2}
+          value={todo.memo}
+          onChange={(e) => handleInputChange("memo", todo.id, e.target.value)}
+        />
+        <DoneButton
+          done={todo.done}
+          handleClick={() => handleDoneButtonClick(todo.id)}
+        />
+        <DeleteButton handleClick={() => handleDeleteButtonClick(todo.id)} />
+      </HStack>
     </>
   );
 });

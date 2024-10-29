@@ -87,6 +87,23 @@ function App() {
   }, []);
 
   useEffect(() => {
+    window.electronAPI.subscribeStopTodos(() => {
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => {
+          const currentDt = now();
+          return isRunning(todo)
+            ? {
+                ...todo,
+                times: stopTimer(todo.times, currentDt),
+                updated: currentDt,
+              }
+            : todo;
+        })
+      );
+    });
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       const todoList = await window.electronAPI.readFile("todo_list.json");
       setTodos(JSON.parse(todoList));

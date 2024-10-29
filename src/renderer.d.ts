@@ -2,6 +2,7 @@ export interface IElectronAPI {
   subscribeAddTask: (
     callback: (summary: string, taskcode: string, memo: string) => void
   ) => void;
+  subscribeStopTodos: (callback: () => void) => void;
   executeCommand: (command: string) => Promise<string>;
   getCalendarEvents: (date: string) => Promise<string>;
   readFile: (filename: string) => Promise<string>;

@@ -11,6 +11,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
       (_, summary: string, taskcode: string, memo: string) =>
         callback(summary, taskcode, memo)
     ),
+  subscribeStopTodos: (callback: () => void) =>
+    ipcRenderer.on("stop-todos", (_) => callback()),
   executeCommand: (command: string) =>
     ipcRenderer.invoke("execute-command", command),
   getCalendarEvents: (date: string) =>

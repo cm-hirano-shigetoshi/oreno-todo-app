@@ -61,6 +61,11 @@ appExpress.post("/addTask", (req, res) => {
   }
 });
 
+appExpress.post("/stopTodos", (_, res) => {
+  mainWindow.webContents.send("stop-todos");
+  res.status(200).send({ message: "進行中タスクを停止しました。" });
+});
+
 appExpress.listen(PORT, () => {
   console.log(`サーバーがポート${PORT}で起動しました`);
 });

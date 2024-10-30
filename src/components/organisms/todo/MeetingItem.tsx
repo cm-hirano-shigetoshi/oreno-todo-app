@@ -2,7 +2,7 @@ import { memo, FC } from "react";
 import { Input, HStack } from "@chakra-ui/react";
 
 import { getTodoColor } from "../../../logic/List";
-import { Todo } from "../../../logic/Todo";
+import { Todo, Project } from "../../../logic/Todo";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { AdjustButton } from "../../atoms/button/AdjustButton";
@@ -13,6 +13,7 @@ type Props = {
   date: string;
   renderingDt: string;
   adjustUnit: number;
+  project: Project;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
   handleStartButtonClick: (id: string) => void;
   handleAdjustButtonClick: (id: string, minutes: number) => void;
@@ -27,6 +28,7 @@ export const MeetingItem: FC<Props> = memo((props) => {
     date,
     renderingDt,
     adjustUnit,
+    project,
     handleInputChange,
     handleAdjustButtonClick,
     handleDoneButtonClick,
@@ -45,6 +47,7 @@ export const MeetingItem: FC<Props> = memo((props) => {
           px={2}
           w="8rem"
           value={todo.taskcode}
+          bgColor={project ? `${project.color}.500` : "gray"}
           onChange={(e) =>
             handleInputChange("taskcode", todo.id, e.target.value)
           }

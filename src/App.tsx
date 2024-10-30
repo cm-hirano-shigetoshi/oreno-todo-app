@@ -35,12 +35,32 @@ import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 
-const getProject = (projects: { [date: string]: Project[] }, date: string) => {
+const getProjects = (projects: { [date: string]: Project[] }, date: string) => {
   const yyyymm = date.slice(0, 7);
   if (yyyymm in projects) {
     return projects[yyyymm];
   } else {
     return [];
+  }
+};
+
+const getProjectByTaskcode = (
+  projects: Project[],
+  taskcode: string
+): Project => {
+  if (projects.length === 0) return null;
+  const projectCandidates = projects.filter(
+    (project) =>
+      project.taskcodes.filter((tc) => {
+        return tc.taskcode === taskcode;
+      }).length > 0
+  );
+  if (projectCandidates.length === 0) {
+    return null;
+  } else if (projectCandidates.length === 1) {
+    return projectCandidates[0];
+  } else {
+    throw new Error("複数プロジェクトに同一taskcodeが存在します");
   }
 };
 
@@ -132,7 +152,7 @@ function App() {
       const events_str = await getCalendarEvents(date);
       const meetings = getMeetings(
         JSON.parse(events_str),
-        getProject(projects, date)
+        getProjects(projects, date)
       );
       setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
     },
@@ -231,7 +251,7 @@ function App() {
                   <AccumulatedTime
                     todos={useMemo(() => getTodoForDate(todos, date), [todos])}
                     projects={useMemo(
-                      () => getProject(projects, date),
+                      () => getProjects(projects, date),
                       [projects]
                     )}
                     timecard={useMemo(
@@ -252,6 +272,10 @@ function App() {
                             todo={todo}
                             date={date}
                             renderingDt={renderingDt}
+                            project={getProjectByTaskcode(
+                              getProjects(projects, date),
+                              todo.taskcode
+                            )}
                             adjustUnit={ADJUST_UNIT}
                             handleInputChange={handleInputChange}
                             handleStartButtonClick={handleStartButtonClick}
@@ -267,6 +291,10 @@ function App() {
                             todo={todo}
                             date={date}
                             renderingDt={renderingDt}
+                            project={getProjectByTaskcode(
+                              getProjects(projects, date),
+                              todo.taskcode
+                            )}
                             handleInputChange={handleInputChange}
                             handleStartButtonClick={handleStartButtonClick}
                             handleAdjustButtonClick={handleAdjustButtonClick}

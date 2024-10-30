@@ -34,6 +34,7 @@ import { TodoItem } from "./components/organisms/todo/TodoItem";
 import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
+import { Adjuster } from "./components/organisms/controller/Adjuster";
 
 const getProjects = (projects: { [date: string]: Project[] }, date: string) => {
   const yyyymm = date.slice(0, 7);
@@ -247,8 +248,21 @@ function App() {
                     handleClick={() => handleNewDayButtonClick(date)}
                   />
                 </HStack>
-                <HStack style={{ width: "100%", height: 80 }}>
+                <HStack style={{ width: "100%", height: 80 }} marginBottom={3}>
                   <AccumulatedTime
+                    todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                    projects={useMemo(
+                      () => getProjects(projects, date),
+                      [projects]
+                    )}
+                    timecard={useMemo(
+                      () => getTimecard(timecard, date),
+                      [timecard]
+                    )}
+                  />
+                </HStack>
+                <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
+                  <Adjuster
                     todos={useMemo(() => getTodoForDate(todos, date), [todos])}
                     projects={useMemo(
                       () => getProjects(projects, date),

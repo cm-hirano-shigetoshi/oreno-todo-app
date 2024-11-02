@@ -222,6 +222,66 @@ function App() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   }, []);
 
+  const hasProjectGeneral = (todos: Todo[], id: string): boolean => {
+    for (const todo of todos) {
+      if (todo.id === id) return true;
+    }
+    return false;
+  };
+  const createProjectGeneral = (
+    todos: Todo[],
+    date: string,
+    projectcode: string,
+    currentDt: string
+  ) => {
+    const id = `PJT ${date} ${projectcode}`;
+    todos.push({
+      id: id,
+      order: "",
+      summary: id,
+      taskcode: projectcode,
+      estimate: "",
+      times: [],
+      memo: "",
+      created: currentDt,
+      updated: currentDt,
+      done: "",
+    });
+  };
+
+  const aaa = (
+    todos: Todo[],
+    date: string,
+    projectcode: string,
+    currentDt: string
+  ): Todo[] => {
+    const id = `PJT ${date} ${projectcode}`;
+    if (!hasProjectGeneral(todos, id))
+      createProjectGeneral(todos, date, projectcode, currentDt);
+    return todos.map((todo) =>
+      todo.id === id
+        ? {
+            ...todo,
+            times: toggleTimer(todo.times, currentDt),
+            updated: currentDt,
+          }
+        : isRunning(todo)
+        ? {
+            ...todo,
+            times: stopTimer(todo.times, currentDt),
+            updated: currentDt,
+          }
+        : todo
+    );
+  };
+
+  const handleAdjusterButtonClick = useCallback(
+    (date: string, projectcode: string) => {
+      setTodos((prevTodos) => aaa(prevTodos, date, projectcode, now()));
+    },
+    []
+  );
+
   const getShowingDays = (renderingDt: string, len: number): string[] => {
     return [...dateIter(dt2date(renderingDt), len, -1)];
   };
@@ -263,6 +323,7 @@ function App() {
                 </HStack>
                 <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
                   <Adjuster
+                    date={date}
                     todos={useMemo(() => getTodoForDate(todos, date), [todos])}
                     projects={useMemo(
                       () => getProjects(projects, date),
@@ -272,6 +333,7 @@ function App() {
                       () => getTimecard(timecard, date),
                       [timecard]
                     )}
+                    handleClick={handleAdjusterButtonClick}
                   />
                 </HStack>
                 <Stack marginBottom={10}>

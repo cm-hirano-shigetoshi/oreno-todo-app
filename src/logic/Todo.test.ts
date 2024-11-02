@@ -1,4 +1,152 @@
-import { getMeetings, assignTaskcode } from "./Todo";
+import {
+  TodoType,
+  createNewTask,
+  getTodoType,
+  isRunning,
+  isDone,
+  getMeetings,
+  concatTaskcodes,
+  guessTaskcode,
+} from "./Todo";
+
+test("createNewTask", () => {
+  expect(
+    createNewTask("summary", "taskcode", "hoge", "2024-01-01 00:00:00")
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 00:00:00",
+    done: "",
+  });
+});
+
+test("getTodoType", () => {
+  expect(
+    getTodoType({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
+      done: "",
+    })
+  ).toStrictEqual(TodoType.Task);
+  expect(
+    getTodoType({
+      id: "MTG 2024-10-21T11:00:00+09:00 2023-11-01T08:14:39.000Z",
+      order: "MTG 2024-10-21T11:00:00+09:00 2023-11-01T08:14:39.000Z",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [
+        {
+          start: "2024-10-21 11:00:00",
+          end: "2024-10-21 11:30:00",
+        },
+      ],
+      memo: "hoge",
+      created: "2024-10-21 11:00:00",
+      updated: "2024-10-25 14:28:42",
+      done: "2024-10-25 14:28:42",
+    })
+  ).toStrictEqual(TodoType.MTG);
+});
+
+test("isRunning", () => {
+  expect(
+    isRunning({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
+      done: "",
+    })
+  ).toStrictEqual(false);
+  expect(
+    isRunning({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [
+        {
+          start: "2024-10-21 11:00:00",
+          end: null,
+        },
+      ],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
+      done: "",
+    })
+  ).toStrictEqual(true);
+  expect(
+    isRunning({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [
+        {
+          start: "2024-10-21 11:00:00",
+          end: "2024-10-21 11:30:00",
+        },
+      ],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
+      done: "",
+    })
+  ).toStrictEqual(false);
+});
+
+test("isDone", () => {
+  expect(
+    isDone({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
+      done: "",
+    })
+  ).toStrictEqual(false);
+  expect(
+    isDone({
+      id: "2024-01-01 00:00:00",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:01",
+      done: "2024-01-01 00:00:01",
+    })
+  ).toStrictEqual(true);
+});
 
 test("getMeetings", () => {
   const event = {
@@ -51,8 +199,28 @@ test("getMeetings", () => {
   ]);
 });
 
-test("assignTaskcode", () => {
+test("concatTaskcodes", () => {
   const projects = [
+    {
+      projectcode: "XXX",
+      taskcodes: [
+        {
+          taskcode: "XXX",
+          keywords: ["XXX", "xxx"],
+        },
+      ],
+    },
+    {
+      projectcode: "XXXY",
+      taskcodes: [
+        {
+          taskcode: "XXXY",
+          keywords: ["XXXY", "xxxy"],
+        },
+      ],
+    },
+  ];
+  expect(concatTaskcodes(projects)).toStrictEqual([
     {
       taskcode: "XXX",
       keywords: ["XXX", "xxx"],
@@ -61,9 +229,31 @@ test("assignTaskcode", () => {
       taskcode: "XXXY",
       keywords: ["XXXY", "xxxy"],
     },
-  ];
+  ]);
+});
 
-  expect(assignTaskcode({ summary: "[XXX] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
-  expect(assignTaskcode({ summary: "[XXXY] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
-  expect(assignTaskcode({ summary: "[XXYY] 定例会議" }, projects)).toStrictEqual(""); // prettier-ignore
+test("guessTaskcode", () => {
+  const projects = [
+    {
+      projectcode: "XXX",
+      taskcodes: [
+        {
+          taskcode: "XXX",
+          keywords: ["XXX", "xxx"],
+        },
+      ],
+    },
+    {
+      projectcode: "XXXY",
+      taskcodes: [
+        {
+          taskcode: "XXXY",
+          keywords: ["XXXY", "xxxy"],
+        },
+      ],
+    },
+  ];
+  expect(guessTaskcode({ summary: "[XXX] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
+  expect(guessTaskcode({ summary: "[XXXY] 定例会議" }, projects)).toStrictEqual("XXX"); // prettier-ignore
+  expect(guessTaskcode({ summary: "[XXYY] 定例会議" }, projects)).toStrictEqual(""); // prettier-ignore
 });

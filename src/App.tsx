@@ -14,6 +14,7 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
+  createNewTask,
   getTodoType,
   getMeetings,
   adjustEnd,
@@ -53,23 +54,7 @@ function App() {
     window.electronAPI.subscribeAddTask(
       (summary: string, taskcode: string, memo: string) => {
         setTodos((prevTodos) => {
-          const current_dt = now();
-          const newTodos = [
-            ...prevTodos,
-            {
-              id: current_dt,
-              order: "",
-              summary: summary,
-              taskcode: taskcode,
-              estimate: "",
-              times: [],
-              memo: memo,
-              created: current_dt,
-              updated: current_dt,
-              done: "",
-            },
-          ];
-          return newTodos;
+          return [...prevTodos, createNewTask(summary, taskcode, memo, now())];
         });
       }
     );

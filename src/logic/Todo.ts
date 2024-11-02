@@ -29,12 +29,32 @@ export enum TodoType {
   MTG = 1,
 }
 
+export const createNewTask = (
+  summary: string,
+  taskcode: string,
+  memo: string,
+  currentDt: string
+): Todo => {
+  return {
+    id: currentDt,
+    order: "",
+    summary: summary,
+    taskcode: taskcode,
+    estimate: "",
+    times: [],
+    memo: memo,
+    created: currentDt,
+    updated: currentDt,
+    done: "",
+  };
+};
+
 export const getTodoType = (todo: Partial<Todo>): TodoType => {
   if (todo.id.startsWith("MTG")) return TodoType.MTG;
   return TodoType.Task;
 };
 
-export const isRunning = (todo: Partial<Todo>) => {
+export const isRunning = (todo: Partial<Todo>): boolean => {
   if (todo.times.length === 0) return false;
   if (todo.times[todo.times.length - 1].end === null) return true;
   return false;
@@ -52,30 +72,29 @@ const getEstimate = (start: string, end: string): number => {
   return Math.round(calcDur(getDt(start), getDt(end)) / 60);
 };
 
-export const assignTaskcode = (
+export const concatTaskcodes = (projects: Project[]): Taskcode[] => {
+  return projects.reduce((accu, project) => accu.concat(project.taskcodes), []);
+};
+
+export const guessTaskcode = (
   event: Partial<GoogleCalendarEvent>,
-  taskcodes: Taskcode[]
+  projects: Project[]
 ): string => {
-  const summary = event.summary;
-  for (const project of taskcodes) {
-    for (const keyword of project.keywords || []) {
-      if (summary.includes(keyword)) {
-        return project.taskcode;
+  for (const taskcode of concatTaskcodes(projects)) {
+    for (const keyword of taskcode.keywords || []) {
+      if (event.summary.includes(keyword)) {
+        return taskcode.taskcode;
       }
     }
   }
   return "";
 };
 
-const getAllTaskcodes = (projects: Project[]): Taskcode[] => {
-  return projects.reduce((all, project) => all.concat(project.taskcodes), []);
-};
-
 const getMeeting = (
   event: Partial<GoogleCalendarEvent>,
   projects: Project[]
 ): Todo => {
-  const taskcode = assignTaskcode(event, getAllTaskcodes(projects));
+  const taskcode = guessTaskcode(event, projects);
   const newEvent: Todo = {
     id: `MTG ${event.start.dateTime} ${event.created}`,
     order: `MTG ${event.start.dateTime} ${event.created}`,

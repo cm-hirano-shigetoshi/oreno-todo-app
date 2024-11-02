@@ -82,11 +82,16 @@ const dailyTodoIds: { [id: string]: DailyTodo[] } = {};
 
 export const getTodoForDate = (todos: Todo[], date: string): DailyTodo[] => {
   const dailyTodos = todos
+    .filter((todo) =>
+      todo.id.startsWith("PJT") ? todo.id.slice(4, 14) === date : true
+    )
     .map((todo) => {
       return {
         id: todo.id,
         taskcode: todo.taskcode,
-        times: todo.times.filter((time) => dt2date(time.start) === date),
+        times: todo.id.startsWith("PJT")
+          ? todo.times
+          : todo.times.filter((time) => dt2date(time.start) === date),
         done: todo.done,
       };
     })

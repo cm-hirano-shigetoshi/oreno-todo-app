@@ -329,10 +329,6 @@ function App() {
                       () => getProjects(projects, date),
                       [projects]
                     )}
-                    timecard={useMemo(
-                      () => getTimecard(timecard, date),
-                      [timecard]
-                    )}
                     handleClick={handleAdjusterButtonClick}
                   />
                 </HStack>

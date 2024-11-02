@@ -26,7 +26,7 @@ export const getProjectsByDate = (
 export const getProjectByTaskcode = (
   projects: Project[],
   taskcode: string
-): Project => {
+): Project | undefined => {
   if (projects.length === 0) return null;
   const projectCandidates = projects.filter(
     (project) =>
@@ -35,7 +35,7 @@ export const getProjectByTaskcode = (
       }).length > 0
   );
   if (projectCandidates.length === 0) {
-    return null;
+    return undefined;
   } else if (projectCandidates.length === 1) {
     return projectCandidates[0];
   } else {

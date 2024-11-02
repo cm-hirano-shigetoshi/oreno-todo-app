@@ -11,14 +11,9 @@ import {
   ReferenceLine,
 } from "recharts";
 
-import {
-  Todo,
-  Project,
-  TodoType,
-  getTodoType,
-  isDone,
-} from "../../../logic/Todo";
+import { Todo, TodoType, getTodoType, isDone } from "../../../logic/Todo";
 import { Timecard } from "../../../logic/Timecard";
+import { Project } from "../../../logic/Project";
 import { calcDur, now } from "../../../utils/Datetime";
 
 type Props = {

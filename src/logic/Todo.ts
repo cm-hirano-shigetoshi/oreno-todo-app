@@ -1,4 +1,5 @@
 import { TimeType } from "../logic/Times";
+import { Project, Taskcode } from "../logic/Project";
 import { calcDur, addSeconds } from "../utils/Datetime";
 
 export type Todo = {
@@ -21,19 +22,6 @@ export type GoogleCalendarEvent = {
   created: string;
   updated: string;
   eventType?: string;
-};
-
-export type Project = {
-  projectcode: string;
-  taskcodes: Taskcode[];
-  projectname?: string;
-  color?: string;
-  assign?: number;
-};
-
-export type Taskcode = {
-  taskcode: string;
-  keywords: string[];
 };
 
 export enum TodoType {

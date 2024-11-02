@@ -14,7 +14,6 @@ import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
   TodoType,
-  Project,
   getTodoType,
   getMeetings,
   adjustEnd,
@@ -27,7 +26,12 @@ import {
   upsertMeetings,
   getTodoForDate,
 } from "./logic/List";
-import { Timecard } from "./logic/Timecard";
+import { Timecard, getTimecardByDate } from "./logic/Timecard";
+import {
+  Project,
+  getProjectsByDate,
+  getProjectByTaskcode,
+} from "./logic/Project";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { TodoItem } from "./components/organisms/todo/TodoItem";
@@ -35,42 +39,6 @@ import { MeetingItem } from "./components/organisms/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 import { Adjuster } from "./components/organisms/controller/Adjuster";
-
-const getProjects = (projects: { [date: string]: Project[] }, date: string) => {
-  const yyyymm = date.slice(0, 7);
-  if (yyyymm in projects) {
-    return projects[yyyymm];
-  } else {
-    return [];
-  }
-};
-
-const getProjectByTaskcode = (
-  projects: Project[],
-  taskcode: string
-): Project => {
-  if (projects.length === 0) return null;
-  const projectCandidates = projects.filter(
-    (project) =>
-      project.taskcodes.filter((tc) => {
-        return tc.taskcode === taskcode;
-      }).length > 0
-  );
-  if (projectCandidates.length === 0) {
-    return null;
-  } else if (projectCandidates.length === 1) {
-    return projectCandidates[0];
-  } else {
-    throw new Error("複数プロジェクトに同一taskcodeが存在します");
-  }
-};
-
-const getTimecard = (
-  timecard: { [date: string]: Timecard[] },
-  date: string
-): Timecard[] => {
-  return timecard[date] || [];
-};
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;
@@ -153,7 +121,7 @@ function App() {
       const events_str = await getCalendarEvents(date);
       const meetings = getMeetings(
         JSON.parse(events_str),
-        getProjects(projects, date)
+        getProjectsByDate(projects, date)
       );
       setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
     },
@@ -312,11 +280,11 @@ function App() {
                   <AccumulatedTime
                     todos={useMemo(() => getTodoForDate(todos, date), [todos])}
                     projects={useMemo(
-                      () => getProjects(projects, date),
+                      () => getProjectsByDate(projects, date),
                       [projects]
                     )}
                     timecard={useMemo(
-                      () => getTimecard(timecard, date),
+                      () => getTimecardByDate(timecard, date),
                       [timecard]
                     )}
                   />
@@ -326,7 +294,7 @@ function App() {
                     date={date}
                     todos={useMemo(() => getTodoForDate(todos, date), [todos])}
                     projects={useMemo(
-                      () => getProjects(projects, date),
+                      () => getProjectsByDate(projects, date),
                       [projects]
                     )}
                     handleClick={handleAdjusterButtonClick}
@@ -345,7 +313,7 @@ function App() {
                             date={date}
                             renderingDt={renderingDt}
                             project={getProjectByTaskcode(
-                              getProjects(projects, date),
+                              getProjectsByDate(projects, date),
                               todo.taskcode
                             )}
                             adjustUnit={ADJUST_UNIT}
@@ -364,7 +332,7 @@ function App() {
                             date={date}
                             renderingDt={renderingDt}
                             project={getProjectByTaskcode(
-                              getProjects(projects, date),
+                              getProjectsByDate(projects, date),
                               todo.taskcode
                             )}
                             handleInputChange={handleInputChange}

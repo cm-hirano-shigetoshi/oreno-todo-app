@@ -1,5 +1,5 @@
 import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
-import { TimeType } from "./Time";
+import { Time } from "./Time";
 import { dt2date } from "../utils/Datetime";
 import { hashObject } from "../utils/Utils";
 
@@ -15,7 +15,7 @@ export enum StatusColor {
 export type DailyTodo = {
   id: string;
   taskcode: string;
-  times: TimeType[];
+  times: Time[];
   done: string;
 };
 

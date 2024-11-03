@@ -1,4 +1,4 @@
-import { TimeType } from "../logic/Time";
+import { Time } from "../logic/Time";
 import { Project, Taskcode } from "../logic/Project";
 import { calcDur } from "../utils/Datetime";
 
@@ -8,7 +8,7 @@ export type Todo = {
   summary: string;
   taskcode: string;
   estimate: string;
-  times: TimeType[];
+  times: Time[];
   memo: string;
   created: string;
   updated: string;

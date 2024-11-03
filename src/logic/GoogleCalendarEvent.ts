@@ -1,6 +1,7 @@
 import { Todo } from "../logic/Todo";
 import { Project, Taskcode } from "../logic/Project";
 import { calcDur } from "../utils/Datetime";
+import { getCalendarEvents } from "../utils/Command";
 
 export type GoogleCalendarEvent = {
   start: { dateTime: string; timeZone: string };
@@ -71,7 +72,15 @@ const filterEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
   return true;
 };
 
-export const getMeetings = (
+export const getMeetings = async (
+  date: string,
+  projects: Project[]
+): Promise<Todo[]> => {
+  const events_str = await getCalendarEvents(date);
+  return getMeetingsWithTaskcode(JSON.parse(events_str), projects);
+};
+
+export const getMeetingsWithTaskcode = (
   events: Partial<GoogleCalendarEvent>[],
   projects: Project[]
 ): Todo[] => {

@@ -9,7 +9,6 @@ import {
   getDayOfWeek,
   isWeekDay,
 } from "./utils/Datetime";
-import { getCalendarEvents } from "./utils/Command";
 import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
@@ -20,12 +19,7 @@ import {
 } from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
 import { toggleTimer, stopTimer, adjustEnd } from "./logic/Time";
-import {
-  filterTodo,
-  compareTodo,
-  upsertMeetings,
-  getTodoForDate,
-} from "./logic/List";
+import { filterTodo, compareTodo, getTodoForDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
 import {
   Project,
@@ -36,7 +30,10 @@ import {
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 import { Adjuster } from "./components/organisms/controller/Adjuster";
-import { stopAllTodos } from "./components/organisms/todolist/TodoList";
+import {
+  stopAllTodos,
+  upsertMeetings,
+} from "./components/organisms/todolist/TodoList";
 import { TodoItem } from "./components/molecules/todo/TodoItem";
 import { MeetingItem } from "./components/molecules/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
@@ -92,9 +89,8 @@ function App() {
 
   const handleNewDayButtonClick = useCallback(
     async (date: string) => {
-      const events_str = await getCalendarEvents(date);
-      const meetings = getMeetings(
-        JSON.parse(events_str),
+      const meetings = await getMeetings(
+        date,
         getProjectsByDate(projects, date)
       );
       setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));

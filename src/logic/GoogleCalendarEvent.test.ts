@@ -1,5 +1,5 @@
 import {
-  getMeetings,
+  getMeetingsWithTaskcode,
   concatTaskcodes,
   guessTaskcode,
 } from "./GoogleCalendarEvent";
@@ -63,7 +63,7 @@ test("guessTaskcode", () => {
   expect(guessTaskcode({ summary: "[XXYY] 定例会議" }, projects)).toStrictEqual(""); // prettier-ignore
 });
 
-test("getMeetings", () => {
+test("getMeetingsWithTaskcode", () => {
   const event = {
     kind: "calendar#event",
     etag: '"3457085795718010"',
@@ -98,7 +98,7 @@ test("getMeetings", () => {
     },
     eventType: "default",
   };
-  expect(getMeetings([event], [])).toStrictEqual([
+  expect(getMeetingsWithTaskcode([event], [])).toStrictEqual([
     {
       id: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",
       order: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",

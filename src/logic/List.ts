@@ -55,29 +55,6 @@ export const getTodoColor = (todo: Todo, date: string, renderingDt: string) => {
   }
 };
 
-function mergeArrays(arrayA: Todo[], arrayB: Todo[]): Todo[] {
-  const result: Todo[] = [...arrayA];
-
-  arrayB.forEach((TodoB) => {
-    const indexInA = result.findIndex((TodoA) => TodoA.id === TodoB.id);
-
-    if (indexInA === -1) {
-      result.push(TodoB);
-    } else {
-      if (TodoB.updated >= result[indexInA].updated) {
-        // Aが手動で書き換えられていた場合のみAを残す
-        result[indexInA] = TodoB;
-      }
-    }
-  });
-
-  return result;
-}
-
-export const upsertMeetings = (todos: Todo[], meetings: Todo[]): Todo[] => {
-  return mergeArrays(todos, meetings);
-};
-
 const dailyTodoIds: { [id: string]: DailyTodo[] } = {};
 
 export const getTodoForDate = (todos: Todo[], date: string): DailyTodo[] => {

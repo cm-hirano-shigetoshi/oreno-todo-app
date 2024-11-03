@@ -16,9 +16,9 @@ import {
   TodoType,
   createNewTask,
   getTodoType,
-  getMeetings,
   isRunning,
 } from "./logic/Todo";
+import { getMeetings } from "./logic/GoogleCalendarEvent";
 import { toggleTimer, stopTimer, adjustEnd } from "./logic/Time";
 import {
   filterTodo,

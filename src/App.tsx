@@ -34,11 +34,11 @@ import {
 } from "./logic/Project";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
-import { TodoItem } from "./components/organisms/todo/TodoItem";
-import { MeetingItem } from "./components/organisms/todo/MeetingItem";
-import { NewDayButton } from "./components/atoms/button/NewDayButton";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 import { Adjuster } from "./components/organisms/controller/Adjuster";
+import { TodoItem } from "./components/molecules/todo/TodoItem";
+import { MeetingItem } from "./components/molecules/todo/MeetingItem";
+import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;

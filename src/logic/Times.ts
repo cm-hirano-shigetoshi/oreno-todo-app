@@ -1,4 +1,4 @@
-import { calcDur } from "../utils/Datetime";
+import { calcDur, addSeconds } from "../utils/Datetime";
 
 const HESITATION_SECONDS = 10;
 
@@ -38,3 +38,14 @@ export function calcElapsedTime(times: TimeType[]): number {
     .reduce((acc, time) => acc + calcDur(time["start"], time["end"]), 0);
   return Math.round(durationSecond / 60);
 }
+
+export const adjustEnd = (times: TimeType[], minutes: number): TimeType[] => {
+  if (times.length === 0) return times;
+  if (times[times.length - 1].end === null) return times;
+  const newTimes = [...times];
+  newTimes[newTimes.length - 1].end = addSeconds(
+    newTimes[newTimes.length - 1].end,
+    minutes * 60
+  );
+  return newTimes;
+};

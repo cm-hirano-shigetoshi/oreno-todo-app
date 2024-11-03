@@ -1,6 +1,6 @@
 import { TimeType } from "../logic/Times";
 import { Project, Taskcode } from "../logic/Project";
-import { calcDur, addSeconds } from "../utils/Datetime";
+import { calcDur } from "../utils/Datetime";
 
 export type Todo = {
   id: string;
@@ -139,15 +139,4 @@ export const getMeetings = (
   return events
     .filter((event) => filterEvent(event))
     .map((event) => getMeeting(event, projects));
-};
-
-export const adjustEnd = (times: TimeType[], minutes: number): TimeType[] => {
-  if (times.length === 0) return times;
-  if (times[times.length - 1].end === null) return times;
-  const newTimes = [...times];
-  newTimes[newTimes.length - 1].end = addSeconds(
-    newTimes[newTimes.length - 1].end,
-    minutes * 60
-  );
-  return newTimes;
 };

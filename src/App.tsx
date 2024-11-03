@@ -17,10 +17,9 @@ import {
   createNewTask,
   getTodoType,
   getMeetings,
-  adjustEnd,
   isRunning,
 } from "./logic/Todo";
-import { toggleTimer, stopTimer } from "./logic/Times";
+import { toggleTimer, stopTimer, adjustEnd } from "./logic/Times";
 import {
   filterTodo,
   compareTodo,

@@ -36,6 +36,7 @@ import {
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 import { Adjuster } from "./components/organisms/controller/Adjuster";
+import { stopAllTodos } from "./components/organisms/todolist/TodoList";
 import { TodoItem } from "./components/molecules/todo/TodoItem";
 import { MeetingItem } from "./components/molecules/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
@@ -61,18 +62,7 @@ function App() {
 
   useEffect(() => {
     window.electronAPI.subscribeStopTodos(() => {
-      setTodos((prevTodos) =>
-        prevTodos.map((todo) => {
-          const currentDt = now();
-          return isRunning(todo)
-            ? {
-                ...todo,
-                times: stopTimer(todo.times, currentDt),
-                updated: currentDt,
-              }
-            : todo;
-        })
-      );
+      setTodos((prevTodos) => stopAllTodos(prevTodos, now()));
     });
   }, []);
 

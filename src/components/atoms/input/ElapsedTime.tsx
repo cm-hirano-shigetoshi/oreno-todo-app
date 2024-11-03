@@ -1,7 +1,7 @@
 import { memo, FC } from "react";
 import { Badge } from "@chakra-ui/react";
 
-import { TimeType, calcElapsedTime } from "../../../logic/Times";
+import { TimeType, calcElapsedTime } from "../../../logic/Time";
 
 type Props = {
   times: TimeType[];

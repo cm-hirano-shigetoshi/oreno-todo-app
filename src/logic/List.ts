@@ -1,5 +1,5 @@
 import { Todo, TodoType, getTodoType, isDone, isRunning } from "./Todo";
-import { TimeType } from "./Times";
+import { TimeType } from "./Time";
 import { dt2date } from "../utils/Datetime";
 import { hashObject } from "../utils/Utils";
 

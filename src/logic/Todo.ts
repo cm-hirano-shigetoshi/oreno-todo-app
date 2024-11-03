@@ -1,4 +1,4 @@
-import { TimeType } from "../logic/Times";
+import { TimeType } from "../logic/Time";
 import { Project, Taskcode } from "../logic/Project";
 import { calcDur } from "../utils/Datetime";
 

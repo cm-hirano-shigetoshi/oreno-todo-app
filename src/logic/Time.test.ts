@@ -1,4 +1,4 @@
-import { toggleTimer } from "./Times";
+import { toggleTimer } from "./Time";
 
 test("recordTime", () => {
   expect(toggleTimer([], "2024-04-01 11:00:00")).toStrictEqual([

@@ -19,7 +19,7 @@ import {
   getMeetings,
   isRunning,
 } from "./logic/Todo";
-import { toggleTimer, stopTimer, adjustEnd } from "./logic/Times";
+import { toggleTimer, stopTimer, adjustEnd } from "./logic/Time";
 import {
   filterTodo,
   compareTodo,

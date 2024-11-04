@@ -2,7 +2,8 @@ import { memo, FC } from "react";
 import { Input, HStack } from "@chakra-ui/react";
 
 import { getTodoColor } from "../../../logic/List";
-import { Todo, Project } from "../../../logic/Todo";
+import { Todo } from "../../../logic/Todo";
+import { Project } from "../../../logic/Project";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StartButton } from "../../atoms/button/StartButton";
 import { DoneButton } from "../../atoms/button/DoneButton";

@@ -37,7 +37,7 @@ import {
   stopAllTodos,
   upsertMeetings,
 } from "./components/organisms/todolist/TodoList";
-import { TodoItem } from "./components/molecules/todo/TodoItem";
+import { TaskItem } from "./components/molecules/todo/TaskItem";
 import { MeetingItem } from "./components/molecules/todo/MeetingItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
@@ -278,7 +278,7 @@ function App() {
                         );
                       } else {
                         return (
-                          <TodoItem
+                          <TaskItem
                             key={todo.id}
                             todo={todo}
                             date={date}

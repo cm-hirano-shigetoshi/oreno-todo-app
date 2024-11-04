@@ -21,8 +21,8 @@ type Props = {
   handleDoneButtonClick: (id: string) => void;
 };
 
-export const TodoItem: FC<Props> = memo((props) => {
-  console.log("TodoItem");
+export const TaskItem: FC<Props> = memo((props) => {
+  console.log("TaskItem");
   const {
     todo,
     date,

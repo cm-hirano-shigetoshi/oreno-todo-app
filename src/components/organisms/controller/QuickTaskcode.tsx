@@ -34,13 +34,15 @@ type Props = {
   todos: Partial<Todo>[];
   projects: Project[];
   handleClick: (date: string, projectcode: string) => void;
+  handleAdjust: (id: string, minutes: number) => void;
 };
 
-export const Adjuster: FC<Props> = memo((props) => {
-  const { date, todos, projects, handleClick } = props;
+export const QuickTaskcode: FC<Props> = memo((props) => {
+  const { date, todos, projects, handleClick, handleAdjust } = props;
   return (
-    <>
+    <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
       {projects.map((project) => {
+        const id = `PJT ${date} ${project.projectcode}`;
         return (
           <Stack borderWidth={2} borderColor={project.color}>
             <Button
@@ -50,12 +52,12 @@ export const Adjuster: FC<Props> = memo((props) => {
               {project.projectname || project.projectcode}
             </Button>
             <HStack>
-              <Button>←</Button>
-              <Button>→</Button>
+              <Button onClick={() => handleAdjust(id, -5)}>←</Button>
+              <Button onClick={() => handleAdjust(id, 5)}>→</Button>
             </HStack>
           </Stack>
         );
       })}
-    </>
+    </HStack>
   );
 });

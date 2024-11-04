@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChakraProvider, Stack, HStack } from "@chakra-ui/react";
+import { ChakraProvider, Stack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter, isWeekDay } from "./utils/Datetime";
@@ -25,7 +25,7 @@ import {
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { DateTitle } from "./components/organisms/date/Date";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
-import { Adjuster } from "./components/organisms/controller/Adjuster";
+import { QuickTaskcode } from "./components/organisms/controller/QuickTaskcode";
 import {
   stopAllTodos,
   upsertMeetings,
@@ -184,7 +184,7 @@ function App() {
     );
   };
 
-  const handleAdjusterButtonClick = useCallback(
+  const handleQuickTaskcodeButtonClick = useCallback(
     (date: string, projectcode: string) => {
       setTodos((prevTodos) => aaa(prevTodos, date, projectcode, now()));
     },
@@ -221,17 +221,16 @@ function App() {
                     [timecard]
                   )}
                 />
-                <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
-                  <Adjuster
-                    date={date}
-                    todos={useMemo(() => getTodoForDate(todos, date), [todos])}
-                    projects={useMemo(
-                      () => getProjectsByDate(projects, date),
-                      [projects]
-                    )}
-                    handleClick={handleAdjusterButtonClick}
-                  />
-                </HStack>
+                <QuickTaskcode
+                  date={date}
+                  todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                  projects={useMemo(
+                    () => getProjectsByDate(projects, date),
+                    [projects]
+                  )}
+                  handleClick={handleQuickTaskcodeButtonClick}
+                  handleAdjust={handleAdjustButtonClick}
+                />
                 <Stack marginBottom={10}>
                   {todos
                     .filter((todo) => filterTodo(todo, date))

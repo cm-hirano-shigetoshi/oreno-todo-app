@@ -150,7 +150,7 @@ function App() {
     todos: Todo[],
     date: string,
     projectcode: string,
-    currentDt: string
+    dt: string
   ) => {
     const id = `PJT ${date} ${projectcode}`;
     todos.push({
@@ -161,8 +161,8 @@ function App() {
       estimate: "",
       times: [],
       memo: "",
-      created: currentDt,
-      updated: currentDt,
+      created: dt,
+      updated: dt,
       done: "",
     });
   };
@@ -171,23 +171,23 @@ function App() {
     todos: Todo[],
     date: string,
     projectcode: string,
-    currentDt: string
+    dt: string
   ): Todo[] => {
     const id = `PJT ${date} ${projectcode}`;
     if (!hasProjectGeneral(todos, id))
-      createProjectGeneral(todos, date, projectcode, currentDt);
+      createProjectGeneral(todos, date, projectcode, dt);
     return todos.map((todo) =>
       todo.id === id
         ? {
             ...todo,
-            times: toggleTimer(todo.times, currentDt),
-            updated: currentDt,
+            times: toggleTimer(todo.times, dt),
+            updated: dt,
           }
         : isRunning(todo)
         ? {
             ...todo,
-            times: stopTimer(todo.times, currentDt),
-            updated: currentDt,
+            times: stopTimer(todo.times, dt),
+            updated: dt,
           }
         : todo
     );

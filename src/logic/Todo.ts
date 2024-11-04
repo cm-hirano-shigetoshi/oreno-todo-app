@@ -22,18 +22,18 @@ export const createNewTask = (
   summary: string,
   taskcode: string,
   memo: string,
-  currentDt: string
+  dt: string
 ): Todo => {
   return {
-    id: currentDt,
+    id: dt,
     order: "",
     summary: summary,
     taskcode: taskcode,
     estimate: "",
     times: [],
     memo: memo,
-    created: currentDt,
-    updated: currentDt,
+    created: dt,
+    updated: dt,
     done: "",
   };
 };

@@ -1,14 +1,8 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ChakraProvider, Stack, HStack, Heading } from "@chakra-ui/react";
+import { ChakraProvider, Stack, HStack } from "@chakra-ui/react";
 
 import theme from "./theme/theme";
-import {
-  now,
-  dt2date,
-  dateIter,
-  getDayOfWeek,
-  isWeekDay,
-} from "./utils/Datetime";
+import { now, dt2date, dateIter, isWeekDay } from "./utils/Datetime";
 import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
@@ -29,6 +23,7 @@ import {
 } from "./logic/Project";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
+import { DateTitle } from "./components/organisms/date/Date";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
 import { Adjuster } from "./components/organisms/controller/Adjuster";
 import {
@@ -36,7 +31,6 @@ import {
   upsertMeetings,
 } from "./components/organisms/todolist/TodoList";
 import { TodoItem } from "./components/molecules/todo/TodoItem";
-import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;
@@ -214,28 +208,19 @@ function App() {
           {renderingDays
             .filter((date) => isWeekDay(date))
             .map((date) => (
-              <>
-                <HStack marginBottom={5}>
-                  <Heading as="h1">
-                    {date} ({getDayOfWeek(date)})
-                  </Heading>
-                  <NewDayButton
-                    handleClick={() => handleNewDayButtonClick(date)}
-                  />
-                </HStack>
-                <HStack style={{ width: "100%", height: 80 }} marginBottom={3}>
-                  <AccumulatedTime
-                    todos={useMemo(() => getTodoForDate(todos, date), [todos])}
-                    projects={useMemo(
-                      () => getProjectsByDate(projects, date),
-                      [projects]
-                    )}
-                    timecard={useMemo(
-                      () => getTimecardByDate(timecard, date),
-                      [timecard]
-                    )}
-                  />
-                </HStack>
+              <Stack>
+                <DateTitle date={date} handleClick={handleNewDayButtonClick} />
+                <AccumulatedTime
+                  todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                  projects={useMemo(
+                    () => getProjectsByDate(projects, date),
+                    [projects]
+                  )}
+                  timecard={useMemo(
+                    () => getTimecardByDate(timecard, date),
+                    [timecard]
+                  )}
+                />
                 <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
                   <Adjuster
                     date={date}
@@ -272,7 +257,7 @@ function App() {
                       );
                     })}
                 </Stack>
-              </>
+              </Stack>
             ))}
         </HeaderLayout>
       </ChakraProvider>

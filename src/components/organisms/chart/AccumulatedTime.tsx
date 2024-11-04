@@ -1,4 +1,5 @@
 import { memo, FC } from "react";
+import { HStack } from "@chakra-ui/react";
 
 import {
   BarChart,
@@ -15,12 +16,6 @@ import { Todo, TodoType, getTodoType, isDone } from "../../../logic/Todo";
 import { Timecard } from "../../../logic/Timecard";
 import { Project } from "../../../logic/Project";
 import { calcDur, now } from "../../../utils/Datetime";
-
-type Props = {
-  todos: Partial<Todo>[];
-  projects: Project[];
-  timecard: Timecard[];
-};
 
 export const getAllTaskcodes = (project: Project): string[] => {
   return project.taskcodes.map((tc) => tc.taskcode);
@@ -82,6 +77,12 @@ export const getWorkingHours = (timecard: Timecard[]): number => {
   }
 };
 
+type Props = {
+  todos: Partial<Todo>[];
+  projects: Project[];
+  timecard: Timecard[];
+};
+
 export const AccumulatedTime: FC<Props> = memo((props) => {
   console.log("AccumulatedTime");
   const { todos, projects, timecard } = props;
@@ -92,7 +93,7 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
   }
 
   return (
-    <>
+    <HStack style={{ width: "100%", height: 80 }} marginBottom={3}>
       <ResponsiveContainer>
         <BarChart layout="vertical" data={data}>
           <XAxis
@@ -117,6 +118,6 @@ export const AccumulatedTime: FC<Props> = memo((props) => {
           />
         </BarChart>
       </ResponsiveContainer>
-    </>
+    </HStack>
   );
 });

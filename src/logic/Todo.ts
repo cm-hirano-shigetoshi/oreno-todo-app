@@ -16,6 +16,7 @@ export type Todo = {
 export enum TodoType {
   Task = 0,
   MTG = 1,
+  ProjectGeneral = 2,
 }
 
 export const createNewTask = (
@@ -40,6 +41,7 @@ export const createNewTask = (
 
 export const getTodoType = (todo: Partial<Todo>): TodoType => {
   if (todo.id.startsWith("MTG")) return TodoType.MTG;
+  if (todo.id.startsWith("PJT")) return TodoType.ProjectGeneral;
   return TodoType.Task;
 };
 

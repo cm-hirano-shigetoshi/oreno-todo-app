@@ -17,14 +17,12 @@ import { Timecard, getWorkingHours } from "../../../logic/Timecard";
 import { Project } from "../../../logic/Project";
 import { calcDur, now } from "../../../utils/Datetime";
 
-export const getAllTaskcodes = (project: Project): string[] => {
-  return project.taskcodes.map((tc) => tc.taskcode);
-};
-
 const accumulateHours = (todos: Partial<Todo>[], project: Project): number => {
   const timeInSecond = todos
     .filter((todo) => getTodoType(todo) !== TodoType.MTG || isDone(todo))
-    .filter((todo) => getAllTaskcodes(project).includes(todo.taskcode))
+    .filter((todo) =>
+      project.taskcodes.map((tc) => tc.taskcode).includes(todo.taskcode)
+    )
     .reduce(
       (acc1, todo) =>
         acc1 +

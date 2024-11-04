@@ -12,42 +12,13 @@ import {
   ReferenceLine,
 } from "recharts";
 
-import { Todo, TodoType, getTodoType, isDone } from "../../../logic/Todo";
+import { DailyTodo } from "../../../logic/List";
 import { Timecard, getWorkingHours } from "../../../logic/Timecard";
 import { Project } from "../../../logic/Project";
-import { calcDur, now } from "../../../utils/Datetime";
-
-const accumulateHours = (todos: Partial<Todo>[], project: Project): number => {
-  const timeInSecond = todos
-    .filter((todo) => getTodoType(todo) !== TodoType.MTG || isDone(todo))
-    .filter((todo) =>
-      project.taskcodes.map((tc) => tc.taskcode).includes(todo.taskcode)
-    )
-    .reduce(
-      (acc1, todo) =>
-        acc1 +
-        todo.times.reduce(
-          (acc2, time) =>
-            acc2 + calcDur(time.start, time.end !== null ? time.end : now()),
-          0
-        ),
-      0
-    );
-  return Math.round((timeInSecond / 60 / 60) * 100) / 100;
-};
-
-export const createGraphData = (
-  todos: Partial<Todo>[],
-  projects: Project[]
-) => {
-  const graphData = projects.map((project) => {
-    return { ...project, time: accumulateHours(todos, project) };
-  });
-  return graphData;
-};
+import { createGraphData } from "../../../logic/AccumulatedTime";
 
 type Props = {
-  todos: Partial<Todo>[];
+  todos: DailyTodo[];
   projects: Project[];
   timecard: Timecard[];
 };

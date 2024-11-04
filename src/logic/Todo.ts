@@ -1,4 +1,4 @@
-import { Time } from "../logic/Time";
+import { Time, toggleTimer, stopTimer, adjustEnd } from "../logic/Time";
 
 export type Todo = {
   id: string;
@@ -51,4 +51,29 @@ export const isRunning = (todo: Partial<Todo>): boolean => {
 
 export const isDone = (todo: Partial<Todo>): boolean => {
   return todo.done !== "";
+};
+
+export const toggleRunning = (todo: Todo, dt: string): Todo => {
+  return {
+    ...todo,
+    times: toggleTimer(todo.times, dt),
+    updated: dt,
+  };
+};
+
+export const adjustEndTime = (
+  todo: Todo,
+  minutes: number,
+  dt: string
+): Todo => {
+  return { ...todo, times: adjustEnd(todo.times, minutes), updated: dt };
+};
+
+export const complete = (todo: Todo, dt: string): Todo => {
+  return {
+    ...todo,
+    done: todo.done === "" ? dt : "",
+    times: stopTimer(todo.times, dt),
+    updated: dt,
+  };
 };

@@ -16,9 +16,12 @@ import {
   createNewTask,
   getTodoType,
   isRunning,
+  toggleRunning,
+  adjustEndTime,
+  complete,
 } from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
-import { toggleTimer, stopTimer, adjustEnd } from "./logic/Time";
+import { toggleTimer, stopTimer } from "./logic/Time";
 import { filterTodo, compareTodo, getTodoForDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
 import {
@@ -111,48 +114,25 @@ function App() {
 
   const handleStartButtonClick = useCallback((id: string) => {
     const currentDt = now();
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id
-          ? {
-              ...todo,
-              times: toggleTimer(todo.times, currentDt),
-              updated: currentDt,
-            }
-          : isRunning(todo)
-          ? {
-              ...todo,
-              times: stopTimer(todo.times, currentDt),
-              updated: currentDt,
-            }
-          : todo
-      )
-    );
+    setTodos((prevTodos) => {
+      stopAllTodos(todos, currentDt);
+      return prevTodos.map((todo) =>
+        todo.id === id ? toggleRunning(todo, currentDt) : todo
+      );
+    });
   }, []);
 
   const handleAdjustButtonClick = useCallback((id: string, minutes: number) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id
-          ? { ...todo, times: adjustEnd(todo.times, minutes), updated: now() }
-          : todo
+        todo.id === id ? adjustEndTime(todo, minutes, now()) : todo
       )
     );
   }, []);
 
   const handleDoneButtonClick = useCallback((id: string) => {
-    const current_dt = now();
     setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id
-          ? {
-              ...todo,
-              done: todo.done === "" ? current_dt : "",
-              times: stopTimer(todo.times, current_dt),
-              updated: now(),
-            }
-          : todo
-      )
+      prevTodos.map((todo) => (todo.id === id ? complete(todo, now()) : todo))
     );
   }, []);
 

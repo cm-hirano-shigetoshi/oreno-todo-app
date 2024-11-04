@@ -4,6 +4,9 @@ import {
   getTodoType,
   isRunning,
   isDone,
+  toggleRunning,
+  adjustEndTime,
+  complete,
 } from "./Todo";
 
 test("createNewTask", () => {
@@ -143,4 +146,154 @@ test("isDone", () => {
       done: "2024-01-01 00:00:01",
     })
   ).toStrictEqual(true);
+});
+
+test("toggleRunning", () => {
+  expect(
+    toggleRunning(
+      {
+        id: "2024-01-01 00:00:00",
+        order: "",
+        summary: "summary",
+        taskcode: "taskcode",
+        estimate: "",
+        times: [],
+        memo: "hoge",
+        created: "2024-01-01 00:00:00",
+        updated: "2024-01-01 00:00:00",
+        done: "",
+      },
+      "2024-01-01 01:00:00"
+    )
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [{ start: "2024-01-01 01:00:00", end: null }],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 01:00:00",
+    done: "",
+  });
+  expect(
+    toggleRunning(
+      {
+        id: "2024-01-01 00:00:00",
+        order: "",
+        summary: "summary",
+        taskcode: "taskcode",
+        estimate: "",
+        times: [{ start: "2024-01-01 01:00:00", end: null }],
+        memo: "hoge",
+        created: "2024-01-01 00:00:00",
+        updated: "2024-01-01 01:00:00",
+        done: "",
+      },
+      "2024-01-01 02:00:00"
+    )
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:00:00" }],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 02:00:00",
+    done: "",
+  });
+});
+
+test("adjustEndTime", () => {
+  expect(
+    adjustEndTime(
+      {
+        id: "2024-01-01 00:00:00",
+        order: "",
+        summary: "summary",
+        taskcode: "taskcode",
+        estimate: "",
+        times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:00:00" }],
+        memo: "hoge",
+        created: "2024-01-01 00:00:00",
+        updated: "2024-01-01 02:00:00",
+        done: "",
+      },
+      5,
+      "2024-01-01 03:00:00"
+    )
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:05:00" }],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 03:00:00",
+    done: "",
+  });
+});
+
+test("complete", () => {
+  expect(
+    complete(
+      {
+        id: "2024-01-01 00:00:00",
+        order: "",
+        summary: "summary",
+        taskcode: "taskcode",
+        estimate: "",
+        times: [{ start: "2024-01-01 01:00:00", end: null }],
+        memo: "hoge",
+        created: "2024-01-01 00:00:00",
+        updated: "2024-01-01 01:00:00",
+        done: "",
+      },
+      "2024-01-01 02:00:00"
+    )
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:00:00" }],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 02:00:00",
+    done: "2024-01-01 02:00:00",
+  });
+  expect(
+    complete(
+      {
+        id: "2024-01-01 00:00:00",
+        order: "",
+        summary: "summary",
+        taskcode: "taskcode",
+        estimate: "",
+        times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:00:00" }],
+        memo: "hoge",
+        created: "2024-01-01 00:00:00",
+        updated: "2024-01-01 02:00:00",
+        done: "2024-01-01 02:00:00",
+      },
+      "2024-01-01 03:00:00"
+    )
+  ).toStrictEqual({
+    id: "2024-01-01 00:00:00",
+    order: "",
+    summary: "summary",
+    taskcode: "taskcode",
+    estimate: "",
+    times: [{ start: "2024-01-01 01:00:00", end: "2024-01-01 02:00:00" }],
+    memo: "hoge",
+    created: "2024-01-01 00:00:00",
+    updated: "2024-01-01 03:00:00",
+    done: "",
+  });
 });

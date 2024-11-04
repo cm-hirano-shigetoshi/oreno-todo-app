@@ -112,7 +112,7 @@ function App() {
     []
   );
 
-  const handleStartButtonClick = useCallback((id: string) => {
+  const handleStampingButtonClick = useCallback((id: string) => {
     const currentDt = now();
     setTodos((prevTodos) => {
       stopAllTodos(todos, currentDt);
@@ -268,7 +268,9 @@ function App() {
                             )}
                             adjustUnit={ADJUST_UNIT}
                             handleInputChange={handleInputChange}
-                            handleStartButtonClick={handleStartButtonClick}
+                            handleStampingButtonClick={
+                              handleStampingButtonClick
+                            }
                             handleAdjustButtonClick={handleAdjustButtonClick}
                             handleDoneButtonClick={handleDoneButtonClick}
                             handleDeleteButtonClick={handleDeleteButtonClick}
@@ -286,7 +288,9 @@ function App() {
                               todo.taskcode
                             )}
                             handleInputChange={handleInputChange}
-                            handleStartButtonClick={handleStartButtonClick}
+                            handleStampingButtonClick={
+                              handleStampingButtonClick
+                            }
                             handleAdjustButtonClick={handleAdjustButtonClick}
                             handleDoneButtonClick={handleDoneButtonClick}
                             handleDeleteButtonClick={handleDeleteButtonClick}

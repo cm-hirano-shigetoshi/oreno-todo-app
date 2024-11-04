@@ -5,7 +5,7 @@ import { getTodoColor } from "../../../logic/List";
 import { Todo } from "../../../logic/Todo";
 import { Project } from "../../../logic/Project";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
-import { StartButton } from "../../atoms/button/StartButton";
+import { StampingButton } from "../../atoms/button/StampingButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { DeleteButton } from "../../atoms/button/DeleteButton";
 
@@ -15,7 +15,7 @@ type Props = {
   renderingDt: string;
   project: Project;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
-  handleStartButtonClick: (id: string) => void;
+  handleStampingButtonClick: (id: string) => void;
   handleAdjustButtonClick: (id: string, seconds: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
@@ -29,7 +29,7 @@ export const TodoItem: FC<Props> = memo((props) => {
     renderingDt,
     project,
     handleInputChange,
-    handleStartButtonClick,
+    handleStampingButtonClick,
     handleDoneButtonClick,
     handleDeleteButtonClick,
   } = props;
@@ -66,7 +66,9 @@ export const TodoItem: FC<Props> = memo((props) => {
             handleInputChange("estimate", todo.id, e.target.value)
           }
         />
-        <StartButton handleClick={() => handleStartButtonClick(todo.id)} />
+        <StampingButton
+          handleClick={() => handleStampingButtonClick(todo.id)}
+        />
         <ElapsedTime times={todo.times} />
         <Input
           px={2}

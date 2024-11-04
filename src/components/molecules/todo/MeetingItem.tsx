@@ -16,7 +16,7 @@ type Props = {
   adjustUnit: number;
   project: Project;
   handleInputChange: (attrib: string, id: string, newText: string) => void;
-  handleStartButtonClick: (id: string) => void;
+  handleStampingButtonClick: (id: string) => void;
   handleAdjustButtonClick: (id: string, minutes: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;

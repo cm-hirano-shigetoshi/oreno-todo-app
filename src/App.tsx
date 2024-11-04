@@ -12,9 +12,7 @@ import {
 import { useDebounce } from "./utils/Hooks";
 import {
   Todo,
-  TodoType,
   createNewTask,
-  getTodoType,
   isRunning,
   toggleRunning,
   adjustEndTime,
@@ -37,8 +35,7 @@ import {
   stopAllTodos,
   upsertMeetings,
 } from "./components/organisms/todolist/TodoList";
-import { TaskItem } from "./components/molecules/todo/TaskItem";
-import { MeetingItem } from "./components/molecules/todo/MeetingItem";
+import { TodoItem } from "./components/molecules/todo/TodoItem";
 import { NewDayButton } from "./components/atoms/button/NewDayButton";
 
 function App() {
@@ -255,48 +252,24 @@ function App() {
                     .filter((todo) => filterTodo(todo, date))
                     .sort((a, b) => compareTodo(a, b))
                     .map((todo: Todo) => {
-                      if (getTodoType(todo) === TodoType.MTG) {
-                        return (
-                          <MeetingItem
-                            key={todo.id}
-                            todo={todo}
-                            date={date}
-                            renderingDt={renderingDt}
-                            project={getProjectByTaskcode(
-                              getProjectsByDate(projects, date),
-                              todo.taskcode
-                            )}
-                            adjustUnit={ADJUST_UNIT}
-                            handleInputChange={handleInputChange}
-                            handleStampingButtonClick={
-                              handleStampingButtonClick
-                            }
-                            handleAdjustButtonClick={handleAdjustButtonClick}
-                            handleDoneButtonClick={handleDoneButtonClick}
-                            handleDeleteButtonClick={handleDeleteButtonClick}
-                          />
-                        );
-                      } else {
-                        return (
-                          <TaskItem
-                            key={todo.id}
-                            todo={todo}
-                            date={date}
-                            renderingDt={renderingDt}
-                            project={getProjectByTaskcode(
-                              getProjectsByDate(projects, date),
-                              todo.taskcode
-                            )}
-                            handleInputChange={handleInputChange}
-                            handleStampingButtonClick={
-                              handleStampingButtonClick
-                            }
-                            handleAdjustButtonClick={handleAdjustButtonClick}
-                            handleDoneButtonClick={handleDoneButtonClick}
-                            handleDeleteButtonClick={handleDeleteButtonClick}
-                          />
-                        );
-                      }
+                      return (
+                        <TodoItem
+                          key={todo.id}
+                          todo={todo}
+                          date={date}
+                          renderingDt={renderingDt}
+                          project={getProjectByTaskcode(
+                            getProjectsByDate(projects, date),
+                            todo.taskcode
+                          )}
+                          adjustUnit={ADJUST_UNIT}
+                          handleInputChange={handleInputChange}
+                          handleStampingButtonClick={handleStampingButtonClick}
+                          handleAdjustButtonClick={handleAdjustButtonClick}
+                          handleDoneButtonClick={handleDoneButtonClick}
+                          handleDeleteButtonClick={handleDeleteButtonClick}
+                        />
+                      );
                     })}
                 </Stack>
               </>

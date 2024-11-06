@@ -8,7 +8,8 @@ export type Project = {
 
 export type Taskcode = {
   taskcode: string;
-  keywords: string[];
+  name?: string;
+  keywords?: string[];
 };
 
 export const getProjectsByDate = (
@@ -40,5 +41,17 @@ export const getProjectByTaskcode = (
     return projectCandidates[0];
   } else {
     throw new Error("複数プロジェクトに同一taskcodeが存在します");
+  }
+};
+
+export const getQuickTaskcodesByDate = (
+  taskcodes: { [date: string]: Taskcode[] },
+  date: string
+): Taskcode[] => {
+  const yyyymm = date.slice(0, 7);
+  if (yyyymm in taskcodes) {
+    return taskcodes[yyyymm];
+  } else {
+    return [];
   }
 };

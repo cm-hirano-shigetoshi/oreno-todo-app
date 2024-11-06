@@ -10,8 +10,10 @@ import { filterTodo, compareTodo, getTodoByDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
 import {
   Project,
+  Taskcode,
   getProjectsByDate,
   getProjectByTaskcode,
+  getQuickTaskcodesByDate,
 } from "./logic/Project";
 
 import { HeaderLayout } from "./components/templates/HeaderLayout";
@@ -34,6 +36,9 @@ function App() {
   const [projects, setProjects] = useState<{ [date: string]: Project[] }>({});
   const [timecard, setTimecard] = useState<{ [date: string]: Timecard[] }>({});
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [quickTaskcodes, setQuickTaskcodes] = useState<{
+    [date: string]: Taskcode[];
+  }>({});
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
@@ -61,6 +66,10 @@ function App() {
       setProjects(JSON.parse(projects));
       const timecard = await window.electronAPI.readFile("timecard.json");
       setTimecard(JSON.parse(timecard));
+      const quickTaskcodes = await window.electronAPI.readFile(
+        "quick_taskcode.json"
+      );
+      setQuickTaskcodes(JSON.parse(quickTaskcodes));
     };
     fetchData();
   }, []);
@@ -160,9 +169,9 @@ function App() {
                 <QuickTaskcode
                   date={date}
                   todos={useMemo(() => getTodoByDate(todos, date), [todos])}
-                  projects={useMemo(
-                    () => getProjectsByDate(projects, date),
-                    [projects]
+                  taskcodes={useMemo(
+                    () => getQuickTaskcodesByDate(quickTaskcodes, date),
+                    [quickTaskcodes]
                   )}
                   handleClick={handleQuickTaskcodeButtonClick}
                   handleAdjust={handleAdjustButtonClick}

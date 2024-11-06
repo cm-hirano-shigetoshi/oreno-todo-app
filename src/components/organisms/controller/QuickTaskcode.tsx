@@ -2,7 +2,7 @@ import { memo, FC } from "react";
 import { Stack, HStack, Button, Badge } from "@chakra-ui/react";
 
 import { Todo, isRunning, adjustEndTime } from "../../../logic/Todo";
-import { Project } from "../../../logic/Project";
+import { Taskcode } from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
 import { calcElapsedTime, toggleTimer, stopTimer } from "../../../logic/Time";
 
@@ -78,15 +78,8 @@ const getQuickTaskcodeTodoById = (
   return null;
 };
 
-const getColor = (
-  todos: Partial<Todo>[],
-  projectcode: string,
-  date: string
-): StatusColor => {
-  const projectGeneral = getQuickTaskcodeTodoById(
-    todos,
-    `PJT ${date} ${projectcode}`
-  );
+const getColor = (todos: Partial<Todo>[], id: string): StatusColor => {
+  const projectGeneral = getQuickTaskcodeTodoById(todos, id);
   return projectGeneral && isRunning(projectGeneral)
     ? StatusColor.RUNNING
     : StatusColor.NOT_COMPLETED;
@@ -102,24 +95,24 @@ const calcElapsedTimeById = (todos: Partial<Todo>[], id: string) => {
 type Props = {
   date: string;
   todos: Partial<Todo>[];
-  projects: Project[];
+  taskcodes: Taskcode[];
   handleClick: (id: string) => void;
   handleAdjust: (id: string, minutes: number) => void;
 };
 
 export const QuickTaskcode: FC<Props> = memo((props) => {
-  const { date, todos, projects, handleClick, handleAdjust } = props;
+  const { date, todos, taskcodes, handleClick, handleAdjust } = props;
   return (
     <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
-      {projects.map((project) => {
-        const id = `PJT ${date} ${project.projectcode}`;
+      {taskcodes.map((taskcode) => {
+        const id = `PJT ${date} ${taskcode.taskcode}`;
         return (
-          <Stack borderWidth={2} borderColor={project.color}>
+          <Stack borderWidth={2}>
             <Button
-              bgColor={getColor(todos, project.projectcode, date)}
+              bgColor={getColor(todos, id)}
               onClick={() => handleClick(id)}
             >
-              {project.projectname || project.projectcode}
+              {taskcode.name || taskcode.taskcode}
             </Button>
             <Badge w="2rem">{calcElapsedTimeById(todos, id)}</Badge>;
             <HStack>

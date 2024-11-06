@@ -29,7 +29,7 @@ export const stopTimer = (
 
 export const toggleTimer = (times: Time[], dt: string): Time[] => {
   if (times.length > 0 && times[times.length - 1].end === null) {
-    times = stopTimer(times, dt, false);
+    times = stopTimer(times, dt, true);
   } else {
     times = startTimer(times, dt);
   }

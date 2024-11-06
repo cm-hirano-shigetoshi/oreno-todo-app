@@ -54,7 +54,7 @@ export const toggleQuickTaskcodeRunning = (
       : isRunning(todo)
       ? {
           ...todo,
-          times: stopTimer(todo.times, dt, false),
+          times: stopTimer(todo.times, dt, true),
           updated: dt,
         }
       : todo

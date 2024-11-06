@@ -88,7 +88,7 @@ export const complete = (todo: Todo, dt: string): Todo => {
   return {
     ...todo,
     done: todo.done === "" ? dt : "",
-    times: stopTimer(todo.times, dt, false),
+    times: stopTimer(todo.times, dt, true),
     updated: dt,
   };
 };

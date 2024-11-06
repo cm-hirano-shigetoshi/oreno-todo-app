@@ -7,11 +7,11 @@ export type GraphData = Project & {
   time: number;
 };
 
-export const accumulateHours = (
+export const accumulateSeconds = (
   todos: DailyTodo[],
   project: Project
 ): number => {
-  const timeInSecond = todos
+  return todos
     .filter((todo) => getTodoType(todo) !== TodoType.MTG || isDone(todo))
     .filter((todo) =>
       project.taskcodes.map((tc) => tc.taskcode).includes(todo.taskcode)
@@ -26,7 +26,10 @@ export const accumulateHours = (
         ),
       0
     );
-  return Math.round((timeInSecond / 60 / 60) * 100) / 100;
+};
+
+const accumulateHours = (todos: DailyTodo[], project: Project): number => {
+  return Math.round((accumulateSeconds(todos, project) / 60 / 60) * 100) / 100;
 };
 
 export const createGraphData = (

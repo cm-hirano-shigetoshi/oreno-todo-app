@@ -57,7 +57,10 @@ export const getTodoColor = (todo: Todo, date: string, renderingDt: string) => {
 
 const dailyTodoIds: { [id: string]: DailyTodo[] } = {};
 
-export const getTodoForDate = (todos: Todo[], date: string): DailyTodo[] => {
+export const getTodoByDate = (
+  todos: Partial<Todo>[],
+  date: string
+): DailyTodo[] => {
   const dailyTodos = todos
     .filter((todo) =>
       todo.id.startsWith("PJT") ? todo.id.slice(4, 14) === date : true

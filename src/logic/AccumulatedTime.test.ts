@@ -1,6 +1,6 @@
 import { Todo } from "./Todo";
 import { Project } from "./Project";
-import { createGraphData, accumulateHours } from "./AccumulatedTime";
+import { createGraphData, accumulateSeconds } from "./AccumulatedTime";
 
 test("createGraphData", () => {
   const todos: Todo[] = [
@@ -46,7 +46,7 @@ test("createGraphData", () => {
   ]);
 });
 
-test("accumulateHours", () => {
+test("accumulateSeconds", () => {
   const todos: Todo[] = [
     {
       id: "2024-01-01 00:00:00",
@@ -72,5 +72,5 @@ test("accumulateHours", () => {
       },
     ],
   };
-  expect(accumulateHours(todos, project)).toStrictEqual(1);
+  expect(accumulateSeconds(todos, project)).toStrictEqual(3600);
 });

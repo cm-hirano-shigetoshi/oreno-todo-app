@@ -14,7 +14,7 @@ import {
 } from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
 import { toggleTimer, stopTimer } from "./logic/Time";
-import { filterTodo, compareTodo, getTodoForDate } from "./logic/List";
+import { filterTodo, compareTodo, getTodoByDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
 import {
   Project,
@@ -211,7 +211,7 @@ function App() {
               <Stack>
                 <DateTitle date={date} handleClick={handleNewDayButtonClick} />
                 <AccumulatedTime
-                  todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                  todos={useMemo(() => getTodoByDate(todos, date), [todos])}
                   projects={useMemo(
                     () => getProjectsByDate(projects, date),
                     [projects]
@@ -223,7 +223,7 @@ function App() {
                 />
                 <QuickTaskcode
                   date={date}
-                  todos={useMemo(() => getTodoForDate(todos, date), [todos])}
+                  todos={useMemo(() => getTodoByDate(todos, date), [todos])}
                   projects={useMemo(
                     () => getProjectsByDate(projects, date),
                     [projects]

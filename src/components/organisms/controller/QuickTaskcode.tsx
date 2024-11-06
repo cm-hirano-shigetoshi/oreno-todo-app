@@ -1,9 +1,10 @@
 import { memo, FC } from "react";
-import { Stack, HStack, Button } from "@chakra-ui/react";
+import { Stack, HStack, Button, Badge } from "@chakra-ui/react";
 
 import { Todo, isRunning } from "../../../logic/Todo";
 import { Project } from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
+import { calcElapsedTime } from "../../../logic/Time";
 
 const getProjectGeneralById = (
   todos: Partial<Todo>[],
@@ -29,6 +30,13 @@ const getColor = (
     : StatusColor.NOT_COMPLETED;
 };
 
+const calcElapsedTimeById = (todos: Partial<Todo>[], id: string) => {
+  const targetIndex = todos.findIndex((todo) => todo.id === id);
+  if (targetIndex === -1) return 0;
+  const targetTodo = todos[targetIndex];
+  return calcElapsedTime(targetTodo.times ?? []);
+};
+
 type Props = {
   date: string;
   todos: Partial<Todo>[];
@@ -51,6 +59,7 @@ export const QuickTaskcode: FC<Props> = memo((props) => {
             >
               {project.projectname || project.projectcode}
             </Button>
+            <Badge w="2rem">{calcElapsedTimeById(todos, id)}</Badge>;
             <HStack>
               <Button onClick={() => handleAdjust(id, -5)}>←</Button>
               <Button onClick={() => handleAdjust(id, 5)}>→</Button>

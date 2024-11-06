@@ -1,5 +1,5 @@
 import { Todo } from "./Todo";
-import { StatusColor, filterTodo, getTodoColor, getTodoForDate } from "./List";
+import { StatusColor, filterTodo, getTodoColor, getTodoByDate } from "./List";
 
 test("filterTodo", () => {
   /*
@@ -147,7 +147,7 @@ test("getTodoColor", () => {
   ).toStrictEqual(StatusColor.COMPLETED);
 });
 
-test("getTodoForDate", () => {
+test("getTodoByDate", () => {
   const todos = [
     {
       id: "2024-10-21 00:00:02",
@@ -192,5 +192,5 @@ test("getTodoForDate", () => {
       done: "2024-10-18 17:56:24",
     },
   ];
-  expect(getTodoForDate(todos, "2024-10-17")).toStrictEqual(expected);
+  expect(getTodoByDate(todos, "2024-10-17")).toStrictEqual(expected);
 });

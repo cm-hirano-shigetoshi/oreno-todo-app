@@ -11,10 +11,14 @@ export const startTimer = (times: Time[], dt: string): Time[] => {
   return times;
 };
 
-export const stopTimer = (times: Time[], dt: string): Time[] => {
+export const stopTimer = (
+  times: Time[],
+  dt: string,
+  hesitate: boolean = false
+): Time[] => {
   if (times.length > 0 && times[times.length - 1].end === null) {
     const start = times[times.length - 1].start;
-    if (calcDur(start, dt) > HESITATION_SECONDS) {
+    if (!hesitate || calcDur(start, dt) > HESITATION_SECONDS) {
       times[times.length - 1].end = dt;
     } else {
       times.pop();
@@ -25,7 +29,7 @@ export const stopTimer = (times: Time[], dt: string): Time[] => {
 
 export const toggleTimer = (times: Time[], dt: string): Time[] => {
   if (times.length > 0 && times[times.length - 1].end === null) {
-    times = stopTimer(times, dt);
+    times = stopTimer(times, dt, false);
   } else {
     times = startTimer(times, dt);
   }
@@ -42,10 +46,10 @@ export const calcElapsedTime = (times: Time[]): number => {
 export const adjustEnd = (times: Time[], minutes: number): Time[] => {
   if (times.length === 0) return times;
   if (times[times.length - 1].end === null) return times;
-  const newTimes = [...times];
+  const newTimes = JSON.parse(JSON.stringify(times));
   newTimes[newTimes.length - 1].end = addSeconds(
     newTimes[newTimes.length - 1].end,
     minutes * 60
   );
-  return newTimes;
+  return calcElapsedTime(newTimes) >= 0 ? newTimes : times;
 };

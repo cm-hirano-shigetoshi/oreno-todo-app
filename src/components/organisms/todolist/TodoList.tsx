@@ -6,7 +6,7 @@ export const stopAllTodos = (todos: Todo[], dt: string): Todo[] => {
     isRunning(todo)
       ? {
           ...todo,
-          times: stopTimer(todo.times, dt),
+          times: stopTimer(todo.times, dt, true),
           updated: dt,
         }
       : todo

@@ -1,4 +1,10 @@
-import { Time, toggleTimer, stopTimer, adjustEnd } from "../logic/Time";
+import {
+  Time,
+  toggleTimer,
+  startTimer,
+  stopTimer,
+  adjustEnd,
+} from "../logic/Time";
 
 export type Todo = {
   id: string;
@@ -68,14 +74,21 @@ export const adjustEndTime = (
   minutes: number,
   dt: string
 ): Todo => {
-  return { ...todo, times: adjustEnd(todo.times, minutes), updated: dt };
+  if (todo.times.length === 0) {
+    startTimer(todo.times, dt);
+    stopTimer(todo.times, dt);
+  }
+  const newTimes = adjustEnd(todo.times, minutes);
+  return JSON.stringify(newTimes) !== JSON.stringify(todo.times)
+    ? { ...todo, times: newTimes, updated: dt }
+    : todo;
 };
 
 export const complete = (todo: Todo, dt: string): Todo => {
   return {
     ...todo,
     done: todo.done === "" ? dt : "",
-    times: stopTimer(todo.times, dt),
+    times: stopTimer(todo.times, dt, false),
     updated: dt,
   };
 };

@@ -4,16 +4,8 @@ import { ChakraProvider, Stack } from "@chakra-ui/react";
 import theme from "./theme/theme";
 import { now, dt2date, dateIter, isWeekDay } from "./utils/Datetime";
 import { useDebounce } from "./utils/Hooks";
-import {
-  Todo,
-  createNewTask,
-  isRunning,
-  toggleRunning,
-  adjustEndTime,
-  complete,
-} from "./logic/Todo";
+import { Todo, createNewTask, toggleRunning, complete } from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
-import { toggleTimer, stopTimer } from "./logic/Time";
 import { filterTodo, compareTodo, getTodoByDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
 import {
@@ -25,7 +17,11 @@ import {
 import { HeaderLayout } from "./components/templates/HeaderLayout";
 import { DateTitle } from "./components/organisms/date/Date";
 import { AccumulatedTime } from "./components/organisms/chart/AccumulatedTime";
-import { QuickTaskcode } from "./components/organisms/controller/QuickTaskcode";
+import {
+  QuickTaskcode,
+  toggleQuickTaskcodeRunning,
+  adjustQuickTaskcode,
+} from "./components/organisms/controller/QuickTaskcode";
 import {
   stopAllTodos,
   upsertMeetings,
@@ -113,14 +109,6 @@ function App() {
     });
   }, []);
 
-  const handleAdjustButtonClick = useCallback((id: string, minutes: number) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? adjustEndTime(todo, minutes, now()) : todo
-      )
-    );
-  }, []);
-
   const handleDoneButtonClick = useCallback((id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) => (todo.id === id ? complete(todo, now()) : todo))
@@ -131,65 +119,13 @@ function App() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   }, []);
 
-  const hasProjectGeneral = (todos: Todo[], id: string): boolean => {
-    for (const todo of todos) {
-      if (todo.id === id) return true;
-    }
-    return false;
-  };
-  const createProjectGeneral = (
-    todos: Todo[],
-    date: string,
-    projectcode: string,
-    dt: string
-  ) => {
-    const id = `PJT ${date} ${projectcode}`;
-    todos.push({
-      id: id,
-      order: "",
-      summary: id,
-      taskcode: projectcode,
-      estimate: "",
-      times: [],
-      memo: "",
-      created: dt,
-      updated: dt,
-      done: "",
-    });
-  };
+  const handleQuickTaskcodeButtonClick = useCallback((id: string) => {
+    setTodos((prevTodos) => toggleQuickTaskcodeRunning(prevTodos, id, now()));
+  }, []);
 
-  const aaa = (
-    todos: Todo[],
-    date: string,
-    projectcode: string,
-    dt: string
-  ): Todo[] => {
-    const id = `PJT ${date} ${projectcode}`;
-    if (!hasProjectGeneral(todos, id))
-      createProjectGeneral(todos, date, projectcode, dt);
-    return todos.map((todo) =>
-      todo.id === id
-        ? {
-            ...todo,
-            times: toggleTimer(todo.times, dt),
-            updated: dt,
-          }
-        : isRunning(todo)
-        ? {
-            ...todo,
-            times: stopTimer(todo.times, dt),
-            updated: dt,
-          }
-        : todo
-    );
-  };
-
-  const handleQuickTaskcodeButtonClick = useCallback(
-    (date: string, projectcode: string) => {
-      setTodos((prevTodos) => aaa(prevTodos, date, projectcode, now()));
-    },
-    []
-  );
+  const handleAdjustButtonClick = useCallback((id: string, minutes: number) => {
+    setTodos((prevTodos) => adjustQuickTaskcode(prevTodos, id, minutes, now()));
+  }, []);
 
   const getShowingDays = (renderingDt: string, len: number): string[] => {
     return [...dateIter(dt2date(renderingDt), len, -1)];

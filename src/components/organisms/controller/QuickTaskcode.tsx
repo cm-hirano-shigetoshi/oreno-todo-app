@@ -1,12 +1,74 @@
 import { memo, FC } from "react";
 import { Stack, HStack, Button, Badge } from "@chakra-ui/react";
 
-import { Todo, isRunning } from "../../../logic/Todo";
+import { Todo, isRunning, adjustEndTime } from "../../../logic/Todo";
 import { Project } from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
-import { calcElapsedTime } from "../../../logic/Time";
+import { calcElapsedTime, toggleTimer, stopTimer } from "../../../logic/Time";
 
-const getProjectGeneralById = (
+export const getTaskcodeFromId = (id: string): string => {
+  return id.slice(15);
+};
+
+const hasQuickTaskcodeTodo = (todos: Todo[], id: string): boolean => {
+  for (const todo of todos) {
+    if (todo.id === id) return true;
+  }
+  return false;
+};
+
+const createQuickTaskcodeTodo = (todos: Todo[], id: string, dt: string) => {
+  const projectcode = getTaskcodeFromId(id);
+  todos.push({
+    id: id,
+    order: "",
+    summary: id,
+    taskcode: projectcode,
+    estimate: "",
+    times: [],
+    memo: "",
+    created: dt,
+    updated: dt,
+    done: "",
+  });
+};
+
+export const toggleQuickTaskcodeRunning = (
+  todos: Todo[],
+  id: string,
+  dt: string
+): Todo[] => {
+  if (!hasQuickTaskcodeTodo(todos, id)) createQuickTaskcodeTodo(todos, id, dt);
+  return todos.map((todo) =>
+    todo.id === id
+      ? {
+          ...todo,
+          times: toggleTimer(todo.times, dt),
+          updated: dt,
+        }
+      : isRunning(todo)
+      ? {
+          ...todo,
+          times: stopTimer(todo.times, dt, false),
+          updated: dt,
+        }
+      : todo
+  );
+};
+
+export const adjustQuickTaskcode = (
+  todos: Todo[],
+  id: string,
+  minutes: number,
+  dt: string
+): Todo[] => {
+  if (!hasQuickTaskcodeTodo(todos, id)) createQuickTaskcodeTodo(todos, id, dt);
+  return todos.map((todo) => {
+    return todo.id === id ? adjustEndTime(todo, minutes, dt) : todo;
+  });
+};
+
+const getQuickTaskcodeTodoById = (
   todos: Partial<Todo>[],
   id: string
 ): Partial<Todo> => {
@@ -21,7 +83,7 @@ const getColor = (
   projectcode: string,
   date: string
 ): StatusColor => {
-  const projectGeneral = getProjectGeneralById(
+  const projectGeneral = getQuickTaskcodeTodoById(
     todos,
     `PJT ${date} ${projectcode}`
   );
@@ -41,7 +103,7 @@ type Props = {
   date: string;
   todos: Partial<Todo>[];
   projects: Project[];
-  handleClick: (date: string, projectcode: string) => void;
+  handleClick: (id: string) => void;
   handleAdjust: (id: string, minutes: number) => void;
 };
 
@@ -55,7 +117,7 @@ export const QuickTaskcode: FC<Props> = memo((props) => {
           <Stack borderWidth={2} borderColor={project.color}>
             <Button
               bgColor={getColor(todos, project.projectcode, date)}
-              onClick={() => handleClick(date, project.projectcode)}
+              onClick={() => handleClick(id)}
             >
               {project.projectname || project.projectcode}
             </Button>

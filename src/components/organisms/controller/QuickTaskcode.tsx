@@ -6,8 +6,14 @@ import { Taskcode } from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
 import { calcElapsedTime, toggleTimer, stopTimer } from "../../../logic/Time";
 
+export const getSummaryFromId = (id: string): string => {
+  const end = id.lastIndexOf(" ");
+  const start = id.lastIndexOf(" ", end - 1) + 1;
+  return id.slice(start, end);
+};
+
 export const getTaskcodeFromId = (id: string): string => {
-  return id.slice(15);
+  return id.slice(id.lastIndexOf(" ") + 1);
 };
 
 const hasQuickTaskcodeTodo = (todos: Todo[], id: string): boolean => {
@@ -18,12 +24,11 @@ const hasQuickTaskcodeTodo = (todos: Todo[], id: string): boolean => {
 };
 
 const createQuickTaskcodeTodo = (todos: Todo[], id: string, dt: string) => {
-  const projectcode = getTaskcodeFromId(id);
   todos.push({
     id: id,
     order: "",
-    summary: id,
-    taskcode: projectcode,
+    summary: getSummaryFromId(id),
+    taskcode: getTaskcodeFromId(id),
     estimate: "",
     times: [],
     memo: "",
@@ -105,7 +110,9 @@ export const QuickTaskcode: FC<Props> = memo((props) => {
   return (
     <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
       {taskcodes.map((taskcode) => {
-        const id = `PJT ${date} ${taskcode.taskcode}`;
+        const id = `PJT ${date} ${taskcode.name || taskcode.taskcode} ${
+          taskcode.taskcode
+        }`;
         return (
           <Stack borderWidth={2}>
             <Button

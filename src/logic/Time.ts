@@ -51,5 +51,7 @@ export const adjustEnd = (times: Time[], minutes: number): Time[] => {
     newTimes[newTimes.length - 1].end,
     minutes * 60
   );
-  return calcElapsedTime(newTimes) >= 0 ? newTimes : times;
+  return calcElapsedTime([newTimes[newTimes.length - 1]]) > 0
+    ? newTimes
+    : times;
 };

@@ -48,10 +48,17 @@ export const getTodoColor = (todo: Todo, date: string, renderingDt: string) => {
     if (isDone(todo)) return StatusColor.MEETING_DONE;
     return StatusColor.MEETING;
   } else {
-    if (isDone(todo)) return StatusColor.COMPLETED;
-    if (date < dt2date(renderingDt)) return StatusColor.EXPIRED;
-    if (isRunning(todo)) return StatusColor.RUNNING;
-    return StatusColor.NOT_COMPLETED;
+    if (isDone(todo)) {
+      if (dt2date(todo.done) === date) {
+        return StatusColor.COMPLETED;
+      } else {
+        return StatusColor.EXPIRED;
+      }
+    } else {
+      if (date < dt2date(renderingDt)) return StatusColor.EXPIRED;
+      if (isRunning(todo)) return StatusColor.RUNNING;
+      return StatusColor.NOT_COMPLETED;
+    }
   }
 };
 

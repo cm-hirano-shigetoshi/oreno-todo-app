@@ -123,28 +123,27 @@ test("getTodoColor", () => {
   };
 
   /*
-   * 完了タスク
+   * 10/16完了タスク
    */
-  // 登録当日の当日枠
-  expect(
-    getTodoColor(complete, "2024-10-14", "2024-10-14 00:00:00")
-  ).toStrictEqual(StatusColor.COMPLETED);
-  // 登録翌日＝完了前日の当日枠
-  expect(
-    getTodoColor(complete, "2024-10-15", "2024-10-15 00:00:00")
-  ).toStrictEqual(StatusColor.COMPLETED);
-  // 登録翌日＝完了前日の前日枠
-  expect(
-    getTodoColor(complete, "2024-10-15", "2024-10-16 00:00:00")
-  ).toStrictEqual(StatusColor.COMPLETED);
-  // 完了当日の当日枠
+  // 10/16
+  // 10/16に登録
   expect(
     getTodoColor(complete, "2024-10-16", "2024-10-16 00:00:00")
   ).toStrictEqual(StatusColor.COMPLETED);
-  // 完了当日の前日枠
+  // 10/15に登録
   expect(
     getTodoColor(complete, "2024-10-15", "2024-10-16 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
+
+  // 10/17
+  // 10/16に登録
+  expect(
+    getTodoColor(complete, "2024-10-16", "2024-10-17 00:00:00")
   ).toStrictEqual(StatusColor.COMPLETED);
+  // 10/15に登録
+  expect(
+    getTodoColor(complete, "2024-10-15", "2024-10-17 00:00:00")
+  ).toStrictEqual(StatusColor.EXPIRED);
 });
 
 test("getTodoByDate", () => {

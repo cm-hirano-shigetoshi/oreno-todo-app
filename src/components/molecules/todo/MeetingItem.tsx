@@ -4,6 +4,7 @@ import { Input, HStack } from "@chakra-ui/react";
 import { getTodoColor } from "../../../logic/List";
 import { Todo } from "../../../logic/Todo";
 import { Project } from "../../../logic/Project";
+import { calcElapsedTime } from "../../../logic/Time";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { AdjustButton } from "../../atoms/button/AdjustButton";
@@ -76,7 +77,7 @@ export const MeetingItem: FC<Props> = memo((props) => {
           adjustUnit={adjustUnit}
           handleClick={() => handleAdjustButtonClick(todo.id, adjustUnit)}
         />
-        <ElapsedTime times={todo.times} />
+        <ElapsedTime minutes={calcElapsedTime(todo.times)} />
         <Input
           px={2}
           value={todo.memo}

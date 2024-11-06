@@ -4,6 +4,8 @@ import { Input, HStack } from "@chakra-ui/react";
 import { getTodoColor } from "../../../logic/List";
 import { Todo } from "../../../logic/Todo";
 import { Project } from "../../../logic/Project";
+import { calcElapsedTime } from "../../../logic/Time";
+import { dt2date } from "../../../utils/Datetime";
 import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { StampingButton } from "../../atoms/button/StampingButton";
 import { DoneButton } from "../../atoms/button/DoneButton";
@@ -69,7 +71,12 @@ export const TaskItem: FC<Props> = memo((props) => {
         <StampingButton
           handleClick={() => handleStampingButtonClick(todo.id)}
         />
-        <ElapsedTime times={todo.times} />
+        <ElapsedTime
+          minutes={calcElapsedTime(
+            todo.times.filter((time) => dt2date(time.start) === date)
+          )}
+        />
+        <ElapsedTime minutes={calcElapsedTime(todo.times)} />
         <Input
           px={2}
           value={todo.memo}

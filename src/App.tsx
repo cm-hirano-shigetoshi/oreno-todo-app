@@ -153,7 +153,7 @@ function App() {
           {renderingDays
             .filter((date) => isWeekDay(date))
             .map((date) => (
-              <Stack>
+              <Stack key={date}>
                 <DateTitle date={date} handleClick={handleNewDayButtonClick} />
                 <AccumulatedTime
                   todos={useMemo(() => getTodoByDate(todos, date), [todos])}

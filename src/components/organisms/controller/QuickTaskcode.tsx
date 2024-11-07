@@ -114,7 +114,7 @@ export const QuickTaskcode: FC<Props> = memo((props) => {
           taskcode.taskcode
         }`;
         return (
-          <Stack borderWidth={2}>
+          <Stack key={taskcode.taskcode} borderWidth={2}>
             <Button
               bgColor={getColor(todos, id)}
               onClick={() => handleClick(id)}

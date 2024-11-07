@@ -2,7 +2,11 @@ import { memo, FC } from "react";
 import { Stack, HStack, Button, Badge } from "@chakra-ui/react";
 
 import { Todo, isRunning, adjustEndTime } from "../../../logic/Todo";
-import { Taskcode } from "../../../logic/Project";
+import {
+  Project,
+  Taskcode,
+  getProjectByTaskcode,
+} from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
 import { calcElapsedTime, toggleTimer, stopTimer } from "../../../logic/Time";
 
@@ -101,12 +105,13 @@ type Props = {
   date: string;
   todos: Partial<Todo>[];
   taskcodes: Taskcode[];
+  projects: Project[];
   handleClick: (id: string) => void;
   handleAdjust: (id: string, minutes: number) => void;
 };
 
 export const QuickTaskcode: FC<Props> = memo((props) => {
-  const { date, todos, taskcodes, handleClick, handleAdjust } = props;
+  const { date, todos, taskcodes, projects, handleClick, handleAdjust } = props;
   return (
     <HStack style={{ width: "100%", height: 120 }} marginBottom={3}>
       {taskcodes.map((taskcode) => {
@@ -114,14 +119,18 @@ export const QuickTaskcode: FC<Props> = memo((props) => {
           taskcode.taskcode
         }`;
         return (
-          <Stack key={taskcode.taskcode} borderWidth={2}>
+          <Stack
+            key={taskcode.taskcode}
+            bgColor={getColor(todos, id)}
+            borderWidth={2}
+          >
             <Button
-              bgColor={getColor(todos, id)}
+              bgColor={getProjectByTaskcode(projects, taskcode.taskcode).color}
               onClick={() => handleClick(id)}
             >
               {taskcode.name || taskcode.taskcode}
             </Button>
-            <Badge w="2rem">{calcElapsedTimeById(todos, id)}</Badge>;
+            <Badge w="2rem">{calcElapsedTimeById(todos, id)}</Badge>
             <HStack>
               <Button onClick={() => handleAdjust(id, -5)}>←</Button>
               <Button onClick={() => handleAdjust(id, 5)}>→</Button>

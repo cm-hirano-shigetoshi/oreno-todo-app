@@ -173,6 +173,10 @@ function App() {
                     () => getQuickTaskcodesByDate(quickTaskcodes, date),
                     [quickTaskcodes]
                   )}
+                  projects={useMemo(
+                    () => getProjectsByDate(projects, date),
+                    [projects]
+                  )}
                   handleClick={handleQuickTaskcodeButtonClick}
                   handleAdjust={handleAdjustButtonClick}
                 />

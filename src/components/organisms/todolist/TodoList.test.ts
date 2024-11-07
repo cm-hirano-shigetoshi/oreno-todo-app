@@ -2,36 +2,40 @@ import { Todo } from "../../../logic/Todo";
 import { stopAllTodos, upsertMeetings } from "./TodoList";
 
 test("stopAllTodos", () => {
-  const todos: Todo[] = [
-    {
-      id: "2024-01-01 00:00:00",
-      order: "",
-      summary: "summary",
-      taskcode: "taskcode",
-      estimate: "",
-      times: [],
-      memo: "hoge",
-      created: "2024-01-01 00:00:00",
-      updated: "2024-01-01 00:00:00",
-      done: "",
-    },
-    {
-      id: "2024-01-01 00:00:00",
-      order: "",
-      summary: "summary",
-      taskcode: "taskcode",
-      estimate: "",
-      times: [
-        { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
-        { start: "2024-01-01 00:00:00", end: null },
+  expect(
+    stopAllTodos(
+      [
+        {
+          id: "2024-01-01 00:00:00",
+          order: "",
+          summary: "summary",
+          taskcode: "taskcode",
+          estimate: "",
+          times: [],
+          memo: "hoge",
+          created: "2024-01-01 00:00:00",
+          updated: "2024-01-01 00:00:00",
+          done: "",
+        },
+        {
+          id: "2024-01-01 00:00:01",
+          order: "",
+          summary: "summary",
+          taskcode: "taskcode",
+          estimate: "",
+          times: [
+            { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
+            { start: "2024-01-01 00:00:00", end: null },
+          ],
+          memo: "hoge",
+          created: "2024-01-01 00:00:00",
+          updated: "2024-01-01 00:00:00",
+          done: "",
+        },
       ],
-      memo: "hoge",
-      created: "2024-01-01 00:00:00",
-      updated: "2024-01-01 00:00:00",
-      done: "",
-    },
-  ];
-  expect(stopAllTodos(todos, "2024-01-01 01:00:00")).toStrictEqual([
+      "2024-01-01 01:00:00"
+    )
+  ).toStrictEqual([
     {
       id: "2024-01-01 00:00:00",
       order: "",
@@ -45,7 +49,7 @@ test("stopAllTodos", () => {
       done: "",
     },
     {
-      id: "2024-01-01 00:00:00",
+      id: "2024-01-01 00:00:01",
       order: "",
       summary: "summary",
       taskcode: "taskcode",
@@ -57,6 +61,45 @@ test("stopAllTodos", () => {
       memo: "hoge",
       created: "2024-01-01 00:00:00",
       updated: "2024-01-01 01:00:00",
+      done: "",
+    },
+  ]);
+  expect(
+    stopAllTodos(
+      [
+        {
+          id: "2024-01-01 00:00:01",
+          order: "",
+          summary: "summary",
+          taskcode: "taskcode",
+          estimate: "",
+          times: [
+            { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
+            { start: "2024-01-01 00:00:00", end: null },
+          ],
+          memo: "hoge",
+          created: "2024-01-01 00:00:00",
+          updated: "2024-01-01 00:00:00",
+          done: "",
+        },
+      ],
+      "2024-01-01 01:00:00",
+      ["2024-01-01 00:00:01"]
+    )
+  ).toStrictEqual([
+    {
+      id: "2024-01-01 00:00:01",
+      order: "",
+      summary: "summary",
+      taskcode: "taskcode",
+      estimate: "",
+      times: [
+        { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
+        { start: "2024-01-01 00:00:00", end: null },
+      ],
+      memo: "hoge",
+      created: "2024-01-01 00:00:00",
+      updated: "2024-01-01 00:00:00",
       done: "",
     },
   ]);

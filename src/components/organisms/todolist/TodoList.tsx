@@ -1,9 +1,13 @@
 import { Todo, isRunning } from "../../../logic/Todo";
 import { stopTimer } from "../../../logic/Time";
 
-export const stopAllTodos = (todos: Todo[], dt: string): Todo[] => {
+export const stopAllTodos = (
+  todos: Todo[],
+  dt: string,
+  excludes: string[] = []
+): Todo[] => {
   return todos.map((todo) =>
-    isRunning(todo)
+    !excludes.includes(todo.id) && isRunning(todo)
       ? {
           ...todo,
           times: stopTimer(todo.times, dt, true),

@@ -111,7 +111,7 @@ function App() {
   const handleStampingButtonClick = useCallback((id: string) => {
     const currentDt = now();
     setTodos((prevTodos) => {
-      stopAllTodos(todos, currentDt);
+      prevTodos = stopAllTodos(prevTodos, currentDt, [id]);
       return prevTodos.map((todo) =>
         todo.id === id ? toggleRunning(todo, currentDt) : todo
       );

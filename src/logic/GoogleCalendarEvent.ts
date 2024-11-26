@@ -64,6 +64,8 @@ const isMeetingEvent = (event: Partial<GoogleCalendarEvent>): boolean => {
   if (event.summary.startsWith("[休日]")) return false;
   // 作業は除外
   if (event.summary.startsWith("[作業]")) return false;
+  // 時間指定なしの予定は除外
+  if (event.start.dateTime === undefined) return false;
   return true;
 };
 

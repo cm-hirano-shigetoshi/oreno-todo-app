@@ -8,7 +8,12 @@ import {
   getProjectByTaskcode,
 } from "../../../logic/Project";
 import { StatusColor } from "../../../logic/List";
-import { calcElapsedTime, toggleTimer, stopTimer } from "../../../logic/Time";
+import {
+  calcElapsedTime,
+  toggleTimer,
+  startTimer,
+  stopTimer,
+} from "../../../logic/Time";
 
 export const getSummaryFromId = (id: string): string => {
   const end = id.lastIndexOf(" ");
@@ -18,6 +23,10 @@ export const getSummaryFromId = (id: string): string => {
 
 export const getTaskcodeFromId = (id: string): string => {
   return id.slice(id.lastIndexOf(" ") + 1);
+};
+
+export const getDateFromId = (id: string): string => {
+  return id.slice(4, 14);
 };
 
 const hasQuickTaskcodeTodo = (todos: Todo[], id: string): boolean => {
@@ -73,6 +82,11 @@ export const adjustQuickTaskcode = (
 ): Todo[] => {
   if (!hasQuickTaskcodeTodo(todos, id)) createQuickTaskcodeTodo(todos, id, dt);
   return todos.map((todo) => {
+    if (todo.times.length === 0) {
+      const startDt = `${getDateFromId(todo.id)} 10:00:00`;
+      startTimer(todo.times, startDt);
+      stopTimer(todo.times, startDt);
+    }
     return todo.id === id ? adjustEndTime(todo, minutes, dt) : todo;
   });
 };

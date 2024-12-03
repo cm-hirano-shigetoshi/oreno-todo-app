@@ -10,6 +10,8 @@ export type GoogleCalendarEvent = {
   created: string;
   updated: string;
   eventType?: string;
+  hangoutLink?: string;
+  description?: string;
 };
 
 export const concatTaskcodes = (projects: Project[]): Taskcode[] => {
@@ -30,6 +32,39 @@ export const guessTaskcode = (
   return "";
 };
 
+export const getMeetingUrlFromDescription = (
+  event: Partial<GoogleCalendarEvent>
+): string | null => {
+  if (!event.description) return null;
+
+  // zoom
+  const zoom_regexp = /https:\/\/\w+\.zoom\.us\/[\w!?/+\-_~;.,*&@#$%()'\[\]=]+/;
+  const zoom_match = event.description?.match(zoom_regexp);
+  if (zoom_match !== null) return zoom_match[0];
+
+  // teams
+  const teams_regexp =
+    /https:\/\/teams\.microsoft\.com\/[\w!?/+\-_~;.,*&@#$%()'\[\]=]+/;
+  const teams_match = event.description?.match(teams_regexp);
+  if (teams_match !== null) return teams_match[0];
+
+  return null;
+};
+
+export const getMeetingUrlFromHangoutLink = (
+  event: Partial<GoogleCalendarEvent>
+): string | null => {
+  return event.hangoutLink ?? null;
+};
+
+const getMeetingUrl = (event: Partial<GoogleCalendarEvent>): string => {
+  return (
+    getMeetingUrlFromDescription(event) ??
+    getMeetingUrlFromHangoutLink(event) ??
+    ""
+  );
+};
+
 const getMeeting = (
   event: Partial<GoogleCalendarEvent>,
   projects: Project[]
@@ -47,7 +82,7 @@ const getMeeting = (
         end: getDt(event.end.dateTime),
       },
     ],
-    memo: "",
+    memo: getMeetingUrl(event),
     created: getDt(event.created),
     updated: getDt(event.updated),
     done: "",

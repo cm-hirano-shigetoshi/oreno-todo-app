@@ -2,6 +2,8 @@ import {
   getMeetingsWithTaskcode,
   concatTaskcodes,
   guessTaskcode,
+  getMeetingUrlFromDescription,
+  getMeetingUrlFromHangoutLink,
 } from "./GoogleCalendarEvent";
 
 test("concatTaskcodes", () => {
@@ -112,4 +114,83 @@ test("getMeetingsWithTaskcode", () => {
       done: "",
     },
   ]);
+});
+
+test("getMeetingUrlFromDescription", () => {
+  expect(
+    getMeetingUrlFromDescription({
+      start: {
+        dateTime: "2024-10-11T15:30:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      end: {
+        dateTime: "2024-10-11T17:00:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      summary: "定例会議",
+      created: "2024-10-10T06:48:17.000Z",
+      updated: "2024-10-10T06:48:17.859Z",
+      eventType: "default",
+    })
+  ).toStrictEqual(null);
+  expect(
+    getMeetingUrlFromDescription({
+      start: {
+        dateTime: "2024-10-11T15:30:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      end: {
+        dateTime: "2024-10-11T17:00:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      summary: "定例会議",
+      created: "2024-10-10T06:48:17.000Z",
+      updated: "2024-10-10T06:48:17.859Z",
+      eventType: "default",
+      description:
+        "\n\n\n\nZoomでの開催です。\n\n\n議事録: https://example.com/hoge\n\n\n参加 Zoom ミーティング\n\nhttps://hogehoge.zoom.us/j/99999999999?pwd=WUdXaVNKcmMwc2ZBZU4LQVZiSkNKQT80\n\n\n\nミーティング ID: 999 9999 9999\n\nパスコード: 999999\n\n\n\n---\n\n\n\nワンタップ モバイル",
+    })
+  ).toStrictEqual(
+    "https://hogehoge.zoom.us/j/99999999999?pwd=WUdXaVNKcmMwc2ZBZU4LQVZiSkNKQT80"
+  );
+  expect(
+    getMeetingUrlFromDescription({
+      start: {
+        dateTime: "2024-10-11T15:30:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      end: {
+        dateTime: "2024-10-11T17:00:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      summary: "定例会議",
+      created: "2024-10-10T06:48:17.000Z",
+      updated: "2024-10-10T06:48:17.859Z",
+      eventType: "default",
+      description:
+        '参加URLはこちらでです。<br>→ <a href="https://teams.microsoft.com/l/meetup-join/22%3ameeting_OTAyMWI4ZTEtYWNiO00%40thread.v2/0?context=%7b%25Tid%22%4a%22287e8982-cf74-46d1-9ea1-426797c98628%22%2c%22Oid%23%2a%2225b51900-e9f1-4450-9cbc-0f9ccba8cdd9%23%7d">Teams MTG URL（定例会）</a>',
+    })
+  ).toStrictEqual(
+    "https://teams.microsoft.com/l/meetup-join/22%3ameeting_OTAyMWI4ZTEtYWNiO00%40thread.v2/0?context=%7b%25Tid%22%4a%22287e8982-cf74-46d1-9ea1-426797c98628%22%2c%22Oid%23%2a%2225b51900-e9f1-4450-9cbc-0f9ccba8cdd9%23%7d"
+  );
+});
+
+test("getMeetingUrlFromHangoutLink", () => {
+  expect(
+    getMeetingUrlFromHangoutLink({
+      start: {
+        dateTime: "2024-10-11T15:30:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      end: {
+        dateTime: "2024-10-11T17:00:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      summary: "定例会議",
+      created: "2024-10-10T06:48:17.000Z",
+      updated: "2024-10-10T06:48:17.859Z",
+      eventType: "default",
+      hangoutLink: "https://meet.google.com/xxx-xxxx-xxx",
+    })
+  ).toStrictEqual("https://meet.google.com/xxx-xxxx-xxx");
 });

@@ -74,7 +74,7 @@ export const adjustEndTime = (
     : todo;
 };
 
-export const complete = (todo: Todo, dt: string): Todo => {
+export const toggleCompleted = (todo: Todo, dt: string): Todo => {
   return {
     ...todo,
     done: todo.done === "" ? dt : "",

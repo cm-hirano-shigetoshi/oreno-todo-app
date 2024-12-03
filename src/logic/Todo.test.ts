@@ -6,7 +6,7 @@ import {
   isDone,
   toggleRunning,
   adjustEndTime,
-  complete,
+  toggleCompleted,
 } from "./Todo";
 
 test("createNewTask", () => {
@@ -239,9 +239,9 @@ test("adjustEndTime", () => {
   });
 });
 
-test("complete", () => {
+test("toggleCompleted", () => {
   expect(
-    complete(
+    toggleCompleted(
       {
         id: "2024-01-01 00:00:00",
         order: "",
@@ -269,7 +269,7 @@ test("complete", () => {
     done: "2024-01-01 02:00:00",
   });
   expect(
-    complete(
+    toggleCompleted(
       {
         id: "2024-01-01 00:00:00",
         order: "",

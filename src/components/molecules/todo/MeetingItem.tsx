@@ -9,6 +9,7 @@ import { ElapsedTime } from "../../atoms/input/ElapsedTime";
 import { DoneButton } from "../../atoms/button/DoneButton";
 import { AdjustButton } from "../../atoms/button/AdjustButton";
 import { DeleteButton } from "../../atoms/button/DeleteButton";
+import { EnterMeetingButton } from "../../atoms/button/EnterMeetingButton";
 
 type Props = {
   todo: Todo;
@@ -21,6 +22,7 @@ type Props = {
   handleAdjustButtonClick: (id: string, minutes: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
+  handleEnterMeetingButtonClick: (id: string) => void;
 };
 
 export const MeetingItem: FC<Props> = memo((props) => {
@@ -35,6 +37,7 @@ export const MeetingItem: FC<Props> = memo((props) => {
     handleAdjustButtonClick,
     handleDoneButtonClick,
     handleDeleteButtonClick,
+    handleEnterMeetingButtonClick,
   } = props;
   return (
     <>
@@ -61,13 +64,8 @@ export const MeetingItem: FC<Props> = memo((props) => {
             handleInputChange("summary", todo.id, e.target.value)
           }
         />
-        <Input
-          px={2}
-          w="6rem"
-          value={todo.estimate}
-          onChange={(e) =>
-            handleInputChange("estimate", todo.id, e.target.value)
-          }
+        <EnterMeetingButton
+          handleClick={() => handleEnterMeetingButtonClick(todo.id)}
         />
         <AdjustButton
           adjustUnit={-adjustUnit}

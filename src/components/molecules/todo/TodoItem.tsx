@@ -16,6 +16,7 @@ type Props = {
   handleAdjustButtonClick: (id: string, minutes: number) => void;
   handleDeleteButtonClick: (id: string) => void;
   handleDoneButtonClick: (id: string) => void;
+  handleEnterMeetingButtonClick: (id: string) => void;
 };
 
 export const TodoItem: FC<Props> = memo((props) => {

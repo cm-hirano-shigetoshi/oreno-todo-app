@@ -4,7 +4,13 @@ import { ChakraProvider, Stack } from "@chakra-ui/react";
 import theme from "./theme/theme";
 import { now, dt2date, dateIter, isWeekDay } from "./utils/Datetime";
 import { useDebounce } from "./utils/Hooks";
-import { Todo, createNewTask, toggleRunning, complete } from "./logic/Todo";
+import { openUrl } from "./utils/Command";
+import {
+  Todo,
+  createNewTask,
+  toggleRunning,
+  toggleCompleted,
+} from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
 import { filterTodo, compareTodo, getTodoByDate } from "./logic/List";
 import { Timecard, getTimecardByDate } from "./logic/Timecard";
@@ -120,7 +126,9 @@ function App() {
 
   const handleDoneButtonClick = useCallback((id: string) => {
     setTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === id ? complete(todo, now()) : todo))
+      prevTodos.map((todo) =>
+        todo.id === id ? toggleCompleted(todo, now()) : todo
+      )
     );
   }, []);
 
@@ -134,6 +142,17 @@ function App() {
 
   const handleAdjustButtonClick = useCallback((id: string, minutes: number) => {
     setTodos((prevTodos) => adjustQuickTaskcode(prevTodos, id, minutes, now()));
+  }, []);
+
+  const handleEnterMeetingButtonClick = useCallback((id: string) => {
+    const currentDt = now();
+    setTodos((prevTodos) => {
+      prevTodos = stopAllTodos(prevTodos, currentDt, [id]);
+      return prevTodos.map((todo) => {
+        if (todo.id === id && todo.memo.startsWith("http")) openUrl(todo.memo);
+        return todo.id === id ? toggleCompleted(todo, now()) : todo;
+      });
+    });
   }, []);
 
   const getShowingDays = (renderingDt: string, len: number): string[] => {
@@ -201,6 +220,9 @@ function App() {
                           handleAdjustButtonClick={handleAdjustButtonClick}
                           handleDoneButtonClick={handleDoneButtonClick}
                           handleDeleteButtonClick={handleDeleteButtonClick}
+                          handleEnterMeetingButtonClick={
+                            handleEnterMeetingButtonClick
+                          }
                         />
                       );
                     })}

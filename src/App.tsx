@@ -35,6 +35,7 @@ import {
   upsertMeetings,
 } from "./components/organisms/todolist/TodoList";
 import { TodoItem } from "./components/molecules/todo/TodoItem";
+import { notepad } from "./extension/Notepad";
 
 function App() {
   const SHOWING_DAY_LENGTH = 35;
@@ -118,6 +119,7 @@ function App() {
     const currentDt = now();
     setTodos((prevTodos) => {
       prevTodos = stopAllTodos(prevTodos, currentDt, [id]);
+      notepad(prevTodos.find((todo) => todo.id === id));
       return prevTodos.map((todo) =>
         todo.id === id ? toggleRunning(todo, currentDt) : todo
       );
@@ -148,6 +150,7 @@ function App() {
     const currentDt = now();
     setTodos((prevTodos) => {
       prevTodos = stopAllTodos(prevTodos, currentDt, [id]);
+      notepad(prevTodos.find((todo) => todo.id === id));
       return prevTodos.map((todo) => {
         if (todo.id === id && todo.memo.startsWith("http")) openUrl(todo.memo);
         return todo.id === id ? toggleCompleted(todo, now()) : todo;

@@ -168,6 +168,26 @@ test("getMeetingUrlFromDescription", () => {
       updated: "2024-10-10T06:48:17.859Z",
       eventType: "default",
       description:
+        '<pre><a href="https://zoom.us/j/99999999999?pwd=dk9ycmVRRTlKZUxSQXI2aHpZY3BnQT09" target="_blank"><u>https://zoom.us/j/99999999999?pwd=dk9ycmVRRTlKZUxSQXI2aHpZY3BnQT09</u></a></pre><ul><li><pre>ミーティングID: 999 9999 9999</pre></li><li><pre>パスコード: 553023</pre></li></ul>はじめてZoomを利用する方は画面の指示に従ってZoomアプリをインストールしてください',
+    })
+  ).toStrictEqual(
+    "https://zoom.us/j/99999999999?pwd=dk9ycmVRRTlKZUxSQXI2aHpZY3BnQT09"
+  );
+  expect(
+    getMeetingUrlFromDescription({
+      start: {
+        dateTime: "2024-10-11T15:30:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      end: {
+        dateTime: "2024-10-11T17:00:00+09:00",
+        timeZone: "Asia/Tokyo",
+      },
+      summary: "定例会議",
+      created: "2024-10-10T06:48:17.000Z",
+      updated: "2024-10-10T06:48:17.859Z",
+      eventType: "default",
+      description:
         '参加URLはこちらでです。<br>→ <a href="https://teams.microsoft.com/l/meetup-join/22%3ameeting_OTAyMWI4ZTEtYWNiO00%40thread.v2/0?context=%7b%25Tid%22%4a%22287e8982-cf74-46d1-9ea1-426797c98628%22%2c%22Oid%23%2a%2225b51900-e9f1-4450-9cbc-0f9ccba8cdd9%23%7d">Teams MTG URL（定例会）</a>',
     })
   ).toStrictEqual(

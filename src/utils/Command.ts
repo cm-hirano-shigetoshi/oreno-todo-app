@@ -5,6 +5,7 @@ export const executeCommand = async (command: string) => {
 
 export const getCalendarEvents = async (date: string) => {
   const result = await window.electronAPI.getCalendarEvents(date);
+  console.log(JSON.stringify(result));
   return result;
 };
 

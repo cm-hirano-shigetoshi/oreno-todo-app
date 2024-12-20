@@ -38,7 +38,8 @@ export const getMeetingUrlFromDescription = (
   if (!event.description) return null;
 
   // zoom
-  const zoom_regexp = /https:\/\/\w+\.zoom\.us\/[\w!?/+\-_~;.,*&@#$%()'\[\]=]+/;
+  const zoom_regexp =
+    /https:\/\/(\w+\.)?zoom\.us\/[\w!?/+\-_~;.,*&@#$%()'\[\]=]+/;
   const zoom_match = event.description?.match(zoom_regexp);
   if (zoom_match !== null) return zoom_match[0];
 

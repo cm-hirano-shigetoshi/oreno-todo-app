@@ -10,6 +10,7 @@ test("filterTodo", () => {
     order: "100",
     summary: "新しいタスク",
     taskcode: "c123",
+    tags: "#hoge",
     estimate: "30",
     times: [],
     memo: "",
@@ -29,6 +30,7 @@ test("filterTodo", () => {
     order: "100",
     summary: "新しいタスク",
     taskcode: "c123",
+    tags: "#hoge",
     estimate: "30",
     times: [],
     memo: "",
@@ -61,6 +63,7 @@ test("getTodoColor", () => {
     order: "100",
     summary: "新しいタスク",
     taskcode: "c123",
+    tags: "#hoge",
     estimate: "30",
     times: [],
     memo: "",
@@ -89,6 +92,7 @@ test("getTodoColor", () => {
     order: "100",
     summary: "新しいタスク",
     taskcode: "c123",
+    tags: "#hoge",
     estimate: "30",
     times: [{ start: "2024-10-16 21:10:27", end: null }],
     memo: "",
@@ -114,6 +118,7 @@ test("getTodoColor", () => {
     order: "100",
     summary: "新しいタスク",
     taskcode: "c123",
+    tags: "#hoge",
     estimate: "30",
     times: [],
     memo: "",
@@ -153,6 +158,7 @@ test("getTodoByDate", () => {
       order: " 5",
       summary: "あれやる",
       taskcode: "XXX",
+      tags: "#hoge",
       estimate: "",
       times: [
         {
@@ -178,6 +184,7 @@ test("getTodoByDate", () => {
     {
       id: "2024-10-21 00:00:02",
       taskcode: "XXX",
+      tags: "#hoge",
       times: [
         {
           start: "2024-10-17 13:04:52",

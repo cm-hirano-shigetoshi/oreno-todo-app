@@ -10,6 +10,7 @@ test("stopAllTodos", () => {
           order: "",
           summary: "summary",
           taskcode: "taskcode",
+          tags: "tags",
           estimate: "",
           times: [],
           memo: "hoge",
@@ -22,6 +23,7 @@ test("stopAllTodos", () => {
           order: "",
           summary: "summary",
           taskcode: "taskcode",
+          tags: "tags",
           estimate: "",
           times: [
             { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
@@ -41,6 +43,7 @@ test("stopAllTodos", () => {
       order: "",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "",
       times: [],
       memo: "hoge",
@@ -53,6 +56,7 @@ test("stopAllTodos", () => {
       order: "",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "",
       times: [
         { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
@@ -72,6 +76,7 @@ test("stopAllTodos", () => {
           order: "",
           summary: "summary",
           taskcode: "taskcode",
+          tags: "tags",
           estimate: "",
           times: [
             { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
@@ -92,6 +97,7 @@ test("stopAllTodos", () => {
       order: "",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "",
       times: [
         { start: "2024-01-01 00:00:00", end: "2024-01-01 00:00:00" },
@@ -112,6 +118,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T15:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {
@@ -129,6 +136,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T16:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {
@@ -148,6 +156,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T15:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {
@@ -165,6 +174,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T16:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary changed",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {
@@ -185,6 +195,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T15:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {
@@ -203,6 +214,7 @@ test("upsertMeetings", () => {
       order: "MTG 2024-10-21T16:30:00+09:00 2024-10-18T06:02:07.000Z",
       summary: "summary changed",
       taskcode: "taskcode",
+      tags: "tags",
       estimate: "60",
       times: [
         {

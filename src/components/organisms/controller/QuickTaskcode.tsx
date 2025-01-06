@@ -42,6 +42,7 @@ const createQuickTaskcodeTodo = (todos: Todo[], id: string, dt: string) => {
     order: "",
     summary: getSummaryFromId(id),
     taskcode: getTaskcodeFromId(id),
+    tags: "",
     estimate: "",
     times: [],
     memo: "",

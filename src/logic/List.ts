@@ -15,6 +15,7 @@ export enum StatusColor {
 export type DailyTodo = {
   id: string;
   taskcode: string;
+  tags: string;
   times: Time[];
   done: string;
 };
@@ -76,6 +77,7 @@ export const getTodoByDate = (
       return {
         id: todo.id,
         taskcode: todo.taskcode,
+        tags: todo.tags,
         times: todo.id.startsWith("PJT")
           ? todo.times
           : todo.times.filter((time) => dt2date(time.start) === date),

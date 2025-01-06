@@ -106,6 +106,7 @@ test("getMeetingsWithTaskcode", () => {
       order: "MTG 2024-10-11T15:30:00+09:00 2024-10-10T06:48:17.000Z",
       summary: "定例会議",
       taskcode: "",
+      tags: "",
       estimate: "90",
       times: [{ start: "2024-10-11 15:30:00", end: "2024-10-11 17:00:00" }],
       memo: "",

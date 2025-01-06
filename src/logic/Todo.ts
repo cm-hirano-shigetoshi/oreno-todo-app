@@ -5,6 +5,7 @@ export type Todo = {
   order: string;
   summary: string;
   taskcode: string;
+  tags: string;
   estimate: string;
   times: Time[];
   memo: string;
@@ -29,6 +30,7 @@ export const createNewTask = (
     id: dt,
     order: "",
     summary: summary,
+    tags: "",
     taskcode: taskcode,
     estimate: "",
     times: [],

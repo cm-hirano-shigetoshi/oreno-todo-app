@@ -11,7 +11,7 @@ const getCanonicalId = (id: string): string => {
 const getHeadingString = (todo: Todo): string => {
   return `- ## [${todo.summary}](${getCanonicalId(todo.id)}) #${
     todo.taskcode
-  } ${todo.tags}`;
+  } ${todo.tags ? todo.tags : ""}`;
 };
 
 const addHeading = (prevContent: string, todo: Todo): string => {

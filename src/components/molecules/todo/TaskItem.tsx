@@ -55,14 +55,6 @@ export const TaskItem: FC<Props> = memo((props) => {
         />
         <Input
           px={2}
-          w="20rem"
-          value={todo.tags}
-          onChange={(e) =>
-            handleInputChange("tags", todo.id, e.target.value)
-          }
-        />
-        <Input
-          px={2}
           value={todo.summary}
           onChange={(e) =>
             handleInputChange("summary", todo.id, e.target.value)

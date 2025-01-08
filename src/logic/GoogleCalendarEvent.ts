@@ -76,7 +76,6 @@ const getMeeting = (
     order: `MTG ${event.start.dateTime} ${event.created}`,
     summary: event.summary,
     taskcode: taskcode,
-    tags: "",
     estimate: getEstimate(event.start.dateTime, event.end.dateTime).toString(),
     times: [
       {

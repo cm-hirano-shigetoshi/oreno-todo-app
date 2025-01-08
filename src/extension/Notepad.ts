@@ -35,7 +35,9 @@ export const notepad = async (todo: Todo | undefined) => {
   if (prevContent.includes(getCanonicalId(todo.id))) {
     newContent = prevContent
       .split("\n")
-      .map((line) => (line.includes(todo.id) ? getHeadingString(todo) : line))
+      .map((line) =>
+        line.includes(getCanonicalId(todo.id)) ? getHeadingString(todo) : line
+      )
       .join("\n");
   } else {
     newContent = addHeading(prevContent, todo);

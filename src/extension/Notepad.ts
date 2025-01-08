@@ -9,9 +9,9 @@ const getCanonicalId = (id: string): string => {
   return id.replace(/ /g, "_");
 };
 const getHeadingString = (todo: Todo): string => {
-  return `- ## [${todo.summary}](${getCanonicalId(todo.id)}) #${
+  return `- ## [#]([[${getCanonicalId(todo.id)}]])${todo.summary} #${
     todo.taskcode
-  } ${todo.tags ? todo.tags : ""}`;
+  }`;
 };
 
 const addHeading = (prevContent: string, todo: Todo): string => {

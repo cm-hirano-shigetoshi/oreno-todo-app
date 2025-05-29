@@ -10,6 +10,7 @@ import {
   createNewTask,
   toggleRunning,
   toggleCompleted,
+  isDone,
 } from "./logic/Todo";
 import { getMeetings } from "./logic/GoogleCalendarEvent";
 import { filterTodo, compareTodo, getTodoByDate } from "./logic/List";
@@ -153,7 +154,7 @@ function App() {
       notepad(prevTodos.find((todo) => todo.id === id));
       return prevTodos.map((todo) => {
         if (todo.id === id && todo.memo.startsWith("http")) openUrl(todo.memo);
-        return todo.id === id ? toggleCompleted(todo, now()) : todo;
+        return todo.id === id && !isDone(todo) ? toggleCompleted(todo, now()) : todo;
       });
     });
   }, []);

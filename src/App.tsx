@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ChakraProvider, Stack } from "@chakra-ui/react";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import theme from "./theme/theme";
 import { now, dt2date, dateIter, isWeekDay } from "./utils/Datetime";
@@ -56,7 +58,7 @@ function App() {
         setTodos((prevTodos) => {
           return [...prevTodos, createNewTask(summary, taskcode, memo, now())];
         });
-      }
+      },
     );
   }, []);
 
@@ -75,7 +77,7 @@ function App() {
       const timecard = await window.electronAPI.readFile("timecard.json");
       setTimecard(JSON.parse(timecard));
       const quickTaskcodes = await window.electronAPI.readFile(
-        "quick_taskcode.json"
+        "quick_taskcode.json",
       );
       setQuickTaskcodes(JSON.parse(quickTaskcodes));
     };
@@ -98,22 +100,24 @@ function App() {
     async (date: string) => {
       const meetings = await getMeetings(
         date,
-        getProjectsByDate(projects, date)
+        getProjectsByDate(projects, date),
       );
       setTodos((prevTodos) => upsertMeetings(prevTodos, meetings));
     },
-    [projects]
+    [projects],
   );
 
   const handleInputChange = useCallback(
     (attrib: string, id: string, newText: string) => {
       setTodos((prevTodos) =>
         prevTodos.map((todo) =>
-          todo.id === id ? { ...todo, [attrib]: newText, updated: now() } : todo
-        )
+          todo.id === id
+            ? { ...todo, [attrib]: newText, updated: now() }
+            : todo,
+        ),
       );
     },
-    []
+    [],
   );
 
   const handleStampingButtonClick = useCallback((id: string) => {
@@ -122,7 +126,7 @@ function App() {
       prevTodos = stopAllTodos(prevTodos, currentDt, [id]);
       notepad(prevTodos.find((todo) => todo.id === id));
       return prevTodos.map((todo) =>
-        todo.id === id ? toggleRunning(todo, currentDt) : todo
+        todo.id === id ? toggleRunning(todo, currentDt) : todo,
       );
     });
   }, []);
@@ -130,8 +134,8 @@ function App() {
   const handleDoneButtonClick = useCallback((id: string) => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
-        todo.id === id ? toggleCompleted(todo, now()) : todo
-      )
+        todo.id === id ? toggleCompleted(todo, now()) : todo,
+      ),
     );
   }, []);
 
@@ -159,6 +163,19 @@ function App() {
     });
   }, []);
 
+  const handleMoveTodo = useCallback((dragId: string, hoverId: string) => {
+    setTodos((prevTodos) => {
+      const dragIndex = prevTodos.findIndex((todo) => todo.id === dragId);
+      const hoverIndex = prevTodos.findIndex((todo) => todo.id === hoverId);
+
+      const newTodos = [...prevTodos];
+      const [removed] = newTodos.splice(dragIndex, 1);
+      newTodos.splice(hoverIndex, 0, removed);
+
+      return newTodos;
+    });
+  }, []);
+
   const getShowingDays = (renderingDt: string, len: number): string[] => {
     return [...dateIter(dt2date(renderingDt), len, -1)];
   };
@@ -166,74 +183,82 @@ function App() {
   const renderingDt = useMemo(() => now(), []);
   const renderingDays = useMemo(
     () => getShowingDays(renderingDt, SHOWING_DAY_LENGTH),
-    []
+    [],
   );
 
   return (
     <>
       <ChakraProvider theme={theme}>
-        <HeaderLayout>
-          {renderingDays
-            .filter((date) => isWeekDay(date))
-            .map((date) => (
-              <Stack key={date}>
-                <DateTitle date={date} handleClick={handleNewDayButtonClick} />
-                <AccumulatedTime
-                  todos={useMemo(() => getTodoByDate(todos, date), [todos])}
-                  projects={useMemo(
-                    () => getProjectsByDate(projects, date),
-                    [projects]
-                  )}
-                  timecard={useMemo(
-                    () => getTimecardByDate(timecard, date),
-                    [timecard]
-                  )}
-                />
-                <QuickTaskcode
-                  date={date}
-                  todos={useMemo(() => getTodoByDate(todos, date), [todos])}
-                  taskcodes={useMemo(
-                    () => getQuickTaskcodesByDate(quickTaskcodes, date),
-                    [quickTaskcodes]
-                  )}
-                  projects={useMemo(
-                    () => getProjectsByDate(projects, date),
-                    [projects]
-                  )}
-                  handleClick={handleQuickTaskcodeButtonClick}
-                  handleAdjust={handleAdjustButtonClick}
-                />
-                <Stack marginBottom={10}>
-                  {todos
-                    .filter((todo) => filterTodo(todo, date))
-                    .sort((a, b) => compareTodo(a, b))
-                    .map((todo: Todo) => {
-                      return (
-                        <TodoItem
-                          key={todo.id}
-                          todo={todo}
-                          date={date}
-                          renderingDt={renderingDt}
-                          project={getProjectByTaskcode(
-                            getProjectsByDate(projects, date),
-                            todo.taskcode
-                          )}
-                          adjustUnit={ADJUST_UNIT}
-                          handleInputChange={handleInputChange}
-                          handleStampingButtonClick={handleStampingButtonClick}
-                          handleAdjustButtonClick={handleAdjustButtonClick}
-                          handleDoneButtonClick={handleDoneButtonClick}
-                          handleDeleteButtonClick={handleDeleteButtonClick}
-                          handleEnterMeetingButtonClick={
-                            handleEnterMeetingButtonClick
-                          }
-                        />
-                      );
-                    })}
+        <DndProvider backend={HTML5Backend}>
+          <HeaderLayout>
+            {renderingDays
+              .filter((date) => isWeekDay(date))
+              .map((date) => (
+                <Stack key={date}>
+                  <DateTitle
+                    date={date}
+                    handleClick={handleNewDayButtonClick}
+                  />
+                  <AccumulatedTime
+                    todos={useMemo(() => getTodoByDate(todos, date), [todos])}
+                    projects={useMemo(
+                      () => getProjectsByDate(projects, date),
+                      [projects],
+                    )}
+                    timecard={useMemo(
+                      () => getTimecardByDate(timecard, date),
+                      [timecard],
+                    )}
+                  />
+                  <QuickTaskcode
+                    date={date}
+                    todos={useMemo(() => getTodoByDate(todos, date), [todos])}
+                    taskcodes={useMemo(
+                      () => getQuickTaskcodesByDate(quickTaskcodes, date),
+                      [quickTaskcodes],
+                    )}
+                    projects={useMemo(
+                      () => getProjectsByDate(projects, date),
+                      [projects],
+                    )}
+                    handleClick={handleQuickTaskcodeButtonClick}
+                    handleAdjust={handleAdjustButtonClick}
+                  />
+                  <Stack marginBottom={10}>
+                    {todos
+                      .filter((todo) => filterTodo(todo, date))
+                      .sort((a, b) => compareTodo(a, b))
+                      .map((todo: Todo) => {
+                        return (
+                          <TodoItem
+                            key={todo.id}
+                            todo={todo}
+                            date={date}
+                            renderingDt={renderingDt}
+                            project={getProjectByTaskcode(
+                              getProjectsByDate(projects, date),
+                              todo.taskcode,
+                            )}
+                            adjustUnit={ADJUST_UNIT}
+                            handleInputChange={handleInputChange}
+                            handleStampingButtonClick={
+                              handleStampingButtonClick
+                            }
+                            handleAdjustButtonClick={handleAdjustButtonClick}
+                            handleDoneButtonClick={handleDoneButtonClick}
+                            handleDeleteButtonClick={handleDeleteButtonClick}
+                            handleEnterMeetingButtonClick={
+                              handleEnterMeetingButtonClick
+                            }
+                            handleMoveTodo={handleMoveTodo}
+                          />
+                        );
+                      })}
+                  </Stack>
                 </Stack>
-              </Stack>
-            ))}
-        </HeaderLayout>
+              ))}
+          </HeaderLayout>
+        </DndProvider>
       </ChakraProvider>
     </>
   );

@@ -14,7 +14,7 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 const LOCAL_SETTINGS_DIR = path.join(
   process.env.HOME,
-  ".local/share/oreno-todo-app"
+  ".local/share/oreno-todo-app",
 );
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -38,7 +38,7 @@ const createWindow = (): void => {
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 const appExpress = express();
@@ -50,26 +50,26 @@ appExpress.post("/reload", async (_, res) => {
   try {
     // 今日の日付を取得
     const today = new Date().toISOString().slice(0, 10);
-    
+
     // timecard.jsonを読み込み
     const timecardData = await fs.promises.readFile(
       path.join(LOCAL_SETTINGS_DIR, "timecard.json"),
-      "utf-8"
+      "utf-8",
     );
     const timecards = JSON.parse(timecardData);
     const todayTimecard = timecards[today] || [];
-    
+
     mainWindow.reload();
-    res.status(200).send({ 
-      message: "リロードします。", 
-      timecard: todayTimecard 
+    res.status(200).send({
+      message: "リロードします。",
+      timecard: todayTimecard,
     });
   } catch (error) {
     console.error("Error reading timecard:", error);
     mainWindow.reload();
-    res.status(200).send({ 
-      message: "リロードします。", 
-      timecard: [] 
+    res.status(200).send({
+      message: "リロードします。",
+      timecard: [],
     });
   }
 });
@@ -151,7 +151,7 @@ ipcMain.handle("read-file", async (_, filename: string) => {
   try {
     const data = await fs.promises.readFile(
       path.join(LOCAL_SETTINGS_DIR, filename),
-      "utf-8"
+      "utf-8",
     );
     return data;
   } catch (error) {
@@ -165,7 +165,7 @@ ipcMain.handle("write-file", async (_, filename: string, content: string) => {
     await fs.promises.writeFile(
       path.join(LOCAL_SETTINGS_DIR, filename),
       content,
-      "utf-8"
+      "utf-8",
     );
     return true;
   } catch (error) {

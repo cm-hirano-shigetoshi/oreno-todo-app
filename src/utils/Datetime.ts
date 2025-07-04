@@ -11,11 +11,11 @@ export enum DayOfWeek {
 function toDtString(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
-    "0"
+    "0",
   )}-${String(date.getDate()).padStart(2, "0")} ${String(
-    date.getHours()
+    date.getHours(),
   ).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}:${String(
-    date.getSeconds()
+    date.getSeconds(),
   ).padStart(2, "0")}`;
 }
 
@@ -37,7 +37,7 @@ export function addSeconds(dt: string, sec: number): string {
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
   const date = new Date(
     // monthは0始まりで扱われる
-    Date.UTC(year, month - 1, day, hours, minutes, seconds)
+    Date.UTC(year, month - 1, day, hours, minutes, seconds),
   );
   date.setSeconds(date.getSeconds() + sec);
   return date.toISOString().slice(0, 19).replace("T", " ");
@@ -56,14 +56,14 @@ export function isWeekDay(dt: string): boolean {
 export function* dateIter(
   startDate: string,
   n: number,
-  step: number = 1
+  step = 1,
 ): Generator<string, void, undefined> {
   if (step === 0) {
     for (let i = 0; i < n; i++) {
       yield startDate;
     }
   } else {
-    let currentDate = new Date(startDate);
+    const currentDate = new Date(startDate);
     for (let i = 0; i < n; i++) {
       const formattedDate = currentDate.toISOString().split("T")[0];
       yield formattedDate;

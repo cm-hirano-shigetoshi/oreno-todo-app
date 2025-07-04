@@ -14,7 +14,7 @@ export const startTimer = (times: Time[], dt: string): Time[] => {
 export const stopTimer = (
   times: Time[],
   dt: string,
-  hesitate: boolean = false
+  hesitate = false,
 ): Time[] => {
   if (times.length > 0 && times[times.length - 1].end === null) {
     const start = times[times.length - 1].start;
@@ -49,7 +49,7 @@ export const adjustEnd = (times: Time[], minutes: number): Time[] => {
   const newTimes = JSON.parse(JSON.stringify(times));
   newTimes[newTimes.length - 1].end = addSeconds(
     newTimes[newTimes.length - 1].end,
-    minutes * 60
+    minutes * 60,
   );
   return calcElapsedTime([newTimes[newTimes.length - 1]]) >= 0
     ? newTimes

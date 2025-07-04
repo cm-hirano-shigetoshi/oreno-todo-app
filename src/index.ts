@@ -46,30 +46,34 @@ const PORT = 3001; // 任意のポート番号
 
 appExpress.use(bodyParser.json());
 
-appExpress.post("/reload", async (_, res) => {
-  try {
-    // 今日の日付を取得
-    const today = new Date().toISOString().slice(0, 10);
+appExpress.post("/reload", (_, res) => {
+  mainWindow.reload();
+  res.status(200).send({
+    message: "リロードします。",
+  });
+});
 
-    // timecard.jsonを読み込み
+appExpress.get("/getTimecard", async (req, res) => {
+  try {
+    const date =
+      (req.query.date as string) || new Date().toISOString().slice(0, 10);
+
     const timecardData = await fs.promises.readFile(
       path.join(LOCAL_SETTINGS_DIR, "timecard.json"),
       "utf-8",
     );
     const timecards = JSON.parse(timecardData);
-    const todayTimecard = timecards[today] || [];
+    const timecard = timecards[date] || [];
 
-    mainWindow.reload();
     res.status(200).send({
-      message: "リロードします。",
-      timecard: todayTimecard,
+      date,
+      timecard,
     });
   } catch (error) {
     console.error("Error reading timecard:", error);
-    mainWindow.reload();
-    res.status(200).send({
-      message: "リロードします。",
-      timecard: [],
+    res.status(500).send({
+      message: "タイムカードの読み込みに失敗しました。",
+      error: error.message,
     });
   }
 });

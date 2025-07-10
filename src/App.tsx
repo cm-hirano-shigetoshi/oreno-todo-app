@@ -50,7 +50,8 @@ function App() {
   const [quickTaskcodes, setQuickTaskcodes] = useState<{
     [date: string]: Taskcode[];
   }>({});
-  const [excludedTaskcodes, setExcludedTaskcodes] = useState<string>("");
+  const [filterTaskcodes, setFilterTaskcodes] = useState<string>("");
+  const [isExcludeMode, setIsExcludeMode] = useState<boolean>(true);
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
@@ -178,8 +179,12 @@ function App() {
     });
   }, []);
 
-  const handleExcludeChange = useCallback((value: string) => {
-    setExcludedTaskcodes(value);
+  const handleFilterChange = useCallback((value: string) => {
+    setFilterTaskcodes(value);
+  }, []);
+
+  const handleModeChange = useCallback((isExclude: boolean) => {
+    setIsExcludeMode(isExclude);
   }, []);
 
   const getShowingDays = (renderingDt: string, len: number): string[] => {
@@ -192,19 +197,22 @@ function App() {
     [],
   );
 
-  const excludedTaskcodeSet = useMemo(() => {
-    if (!excludedTaskcodes.trim()) return new Set<string>();
+  const filterTaskcodeSet = useMemo(() => {
+    if (!filterTaskcodes.trim()) return new Set<string>();
     return new Set(
-      excludedTaskcodes
+      filterTaskcodes
         .split(",")
         .map((code) => code.trim())
         .filter((code) => code.length > 0)
     );
-  }, [excludedTaskcodes]);
+  }, [filterTaskcodes]);
 
   const shouldShowTodo = useCallback((todo: Todo) => {
-    return !excludedTaskcodeSet.has(todo.taskcode);
-  }, [excludedTaskcodeSet]);
+    if (filterTaskcodeSet.size === 0) return true;
+    
+    const isMatched = filterTaskcodeSet.has(todo.taskcode);
+    return isExcludeMode ? !isMatched : isMatched;
+  }, [filterTaskcodeSet, isExcludeMode]);
 
   return (
     <>
@@ -212,8 +220,10 @@ function App() {
         <DndProvider backend={HTML5Backend}>
           <HeaderLayout>
             <TaskcodeFilter
-              excludedTaskcodes={excludedTaskcodes}
-              onExcludeChange={handleExcludeChange}
+              filterTaskcodes={filterTaskcodes}
+              isExcludeMode={isExcludeMode}
+              onFilterChange={handleFilterChange}
+              onModeChange={handleModeChange}
             />
             {renderingDays
               .filter((date) => isWeekDay(date))

@@ -1,32 +1,47 @@
 import React from "react";
-import { Box, Input, Text, VStack } from "@chakra-ui/react";
+import { Box, Input, InputGroup, InputRightElement, IconButton, Tooltip } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 interface TaskcodeFilterProps {
-  excludedTaskcodes: string;
-  onExcludeChange: (value: string) => void;
+  filterTaskcodes: string;
+  isExcludeMode: boolean;
+  onFilterChange: (value: string) => void;
+  onModeChange: (isExclude: boolean) => void;
 }
 
 export const TaskcodeFilter: React.FC<TaskcodeFilterProps> = ({
-  excludedTaskcodes,
-  onExcludeChange,
+  filterTaskcodes,
+  isExcludeMode,
+  onFilterChange,
+  onModeChange,
 }) => {
   return (
-    <Box bg="gray.50" p={4} borderRadius="md" mb={4}>
-      <VStack spacing={2} align="stretch">
-        <Text fontSize="sm" fontWeight="semibold">
-          非表示にするタスクコード
-        </Text>
+    <Box bg="gray.50" p={2} borderRadius="md" mb={2} width="60%">
+      <InputGroup size="md">
         <Input
-          placeholder="除外したいタスクコードを入力（カンマ区切り）"
-          value={excludedTaskcodes}
-          onChange={(e) => onExcludeChange(e.target.value)}
+          placeholder="フィルターしたいタスクコードを入力（カンマ区切り）"
+          value={filterTaskcodes}
+          onChange={(e) => onFilterChange(e.target.value)}
           bg="white"
-          size="sm"
+          pr="50px"
+          height="40px"
         />
-        <Text fontSize="xs" color="gray.600">
-          例: ABC,DEF,GHI
-        </Text>
-      </VStack>
+        <InputRightElement width="50px" height="40px">
+          <Tooltip 
+            label={isExcludeMode ? "該当するものは非表示" : "該当するもののみ表示"}
+            fontSize="xs"
+          >
+            <IconButton
+              aria-label="フィルターモード切り替え"
+              icon={isExcludeMode ? <ViewOffIcon /> : <ViewIcon />}
+              size="sm"
+              variant="ghost"
+              colorScheme={isExcludeMode ? "red" : "blue"}
+              onClick={() => onModeChange(!isExcludeMode)}
+            />
+          </Tooltip>
+        </InputRightElement>
+      </InputGroup>
     </Box>
   );
 };

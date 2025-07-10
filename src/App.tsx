@@ -38,6 +38,7 @@ import {
   upsertMeetings,
 } from "./components/organisms/todolist/TodoList";
 import { TodoItem } from "./components/molecules/todo/TodoItem";
+import { TaskcodeFilter } from "./components/organisms/filter/TaskcodeFilter";
 import { notepad } from "./extension/Notepad";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
   const [quickTaskcodes, setQuickTaskcodes] = useState<{
     [date: string]: Taskcode[];
   }>({});
+  const [excludedTaskcodes, setExcludedTaskcodes] = useState<string>("");
   const debouncedTodos = useDebounce(todos, 500);
   const prevTodosRef = useRef<Todo[]>();
 
@@ -176,6 +178,10 @@ function App() {
     });
   }, []);
 
+  const handleExcludeChange = useCallback((value: string) => {
+    setExcludedTaskcodes(value);
+  }, []);
+
   const getShowingDays = (renderingDt: string, len: number): string[] => {
     return [...dateIter(dt2date(renderingDt), len, -1)];
   };
@@ -186,11 +192,29 @@ function App() {
     [],
   );
 
+  const excludedTaskcodeSet = useMemo(() => {
+    if (!excludedTaskcodes.trim()) return new Set<string>();
+    return new Set(
+      excludedTaskcodes
+        .split(",")
+        .map((code) => code.trim())
+        .filter((code) => code.length > 0)
+    );
+  }, [excludedTaskcodes]);
+
+  const shouldShowTodo = useCallback((todo: Todo) => {
+    return !excludedTaskcodeSet.has(todo.taskcode);
+  }, [excludedTaskcodeSet]);
+
   return (
     <>
       <ChakraProvider theme={theme}>
         <DndProvider backend={HTML5Backend}>
           <HeaderLayout>
+            <TaskcodeFilter
+              excludedTaskcodes={excludedTaskcodes}
+              onExcludeChange={handleExcludeChange}
+            />
             {renderingDays
               .filter((date) => isWeekDay(date))
               .map((date) => (
@@ -226,7 +250,7 @@ function App() {
                   />
                   <Stack marginBottom={10}>
                     {todos
-                      .filter((todo) => filterTodo(todo, date))
+                      .filter((todo) => filterTodo(todo, date) && shouldShowTodo(todo))
                       .sort((a, b) => compareTodo(a, b))
                       .map((todo: Todo) => {
                         return (
